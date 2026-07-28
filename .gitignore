@@ -1,0 +1,104 @@
+# ==========================================
+# General
+# ==========================================
+
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+Thumbs.db
+
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# ==========================================
+# IntelliJ / VS Code
+# ==========================================
+
+*.iml
+*.ipr
+*.iws
+
+.idea/
+.vscode/
+
+# ==========================================
+# Flutter / Dart
+# ==========================================
+
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
+.dart_tool/
+.flutter-plugins-dependencies
+
+.pub-cache/
+.pub/
+
+build/
+coverage/
+
+app.*.symbols
+app.*.map.json
+
+# Android
+/android/.gradle/
+/android/local.properties
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# iOS
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+/ios/Flutter/ephemeral/
+/ios/Runner/GeneratedPluginRegistrant.*
+
+# Linux
+/linux/flutter/ephemeral/
+
+# macOS
+/macos/Flutter/ephemeral/
+
+# Windows
+/windows/flutter/ephemeral/
+
+# ==========================================
+# Backend (NestJS)
+# ==========================================
+
+backend/node_modules/
+backend/dist/
+backend/coverage/
+
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+backend/.nestjs-cache/
+backend/.turbo/
+
+backend/*.log
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+backend/pnpm-debug.log*
+
+# ==========================================
+# Package Managers
+# ==========================================
+
+node_modules/
+
+# ==========================================
+# OS
+# ==========================================
+
+Desktop.ini
+ehthumbs.db
