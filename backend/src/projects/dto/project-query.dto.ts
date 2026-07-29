@@ -1,0 +1,64 @@
+import { Transform } from 'class-transformer';
+import {
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  IsUUID,
+  Max,
+  MaxLength,
+  Min,
+} from 'class-validator';
+
+const SORT_FIELDS = [
+  'title',
+  'company',
+  'startDate',
+  'displayOrder',
+  'createdAt',
+  'updatedAt',
+] as const;
+const SORT_ORDERS = ['asc', 'desc'] as const;
+
+export class ProjectQueryDto {
+  @IsOptional()
+  @IsUUID()
+  careerProfileId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  company?: string;
+
+  @IsOptional()
+  @Transform(({ value }) => value === 'true')
+  @IsBoolean()
+  isCurrent?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  search?: string;
+
+  @IsOptional()
+  @IsEnum(SORT_FIELDS)
+  sortBy?: (typeof SORT_FIELDS)[number];
+
+  @IsOptional()
+  @IsEnum(SORT_ORDERS)
+  sortOrder?: 'asc' | 'desc';
+
+  @IsOptional()
+  @Transform(({ value }) => parseInt(value, 10))
+  @IsInt()
+  @Min(1)
+  page?: number;
+
+  @IsOptional()
+  @Transform(({ value }) => parseInt(value, 10))
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  limit?: number;
+}

@@ -26,14 +26,8 @@ export class UsersRepository {
     return result[0] ?? null;
   }
 
-  async create(data: {
-    email: string;
-    passwordHash: string;
-  }) {
-    const [user] = await db
-      .insert(users)
-      .values(data)
-      .returning();
+  async create(data: { email: string; passwordHash: string }) {
+    const [user] = await db.insert(users).values(data).returning();
 
     return user;
   }

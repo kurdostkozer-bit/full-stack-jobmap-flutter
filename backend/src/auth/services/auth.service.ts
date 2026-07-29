@@ -9,12 +9,14 @@ import * as bcrypt from 'bcrypt';
 import { LoginDto } from '../dto/login.dto';
 import { RegisterDto } from '../dto/register.dto';
 import { UsersRepository } from '../repositories/users.repository';
+import { ProfilesService } from '../../profiles/services/profiles.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly usersRepository: UsersRepository,
+    private readonly profilesService: ProfilesService,
   ) {}
 
   /**
@@ -34,10 +36,9 @@ export class AuthService {
       passwordHash,
     });
 
-    const accessToken = await this.generateAccessToken(
-      user.id,
-      user.email,
-    );
+    await this.profilesService.create(user.id);
+
+    const accessToken = await this.generateAccessToken(user.id, user.email);
 
     return {
       message: 'Registration completed successfully.',
@@ -70,10 +71,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password.');
     }
 
-    const accessToken = await this.generateAccessToken(
-      user.id,
-      user.email,
-    );
+    const accessToken = await this.generateAccessToken(user.id, user.email);
 
     return {
       message: 'Login successful.',
@@ -107,10 +105,7 @@ export class AuthService {
   /**
    * Generate JWT access token.
    */
-  async generateAccessToken(
-    userId: string,
-    email: string,
-  ): Promise<string> {
+  async generateAccessToken(userId: string, email: string): Promise<string> {
     return this.jwtService.signAsync({
       sub: userId,
       email,
