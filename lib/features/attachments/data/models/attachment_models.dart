@@ -5,7 +5,7 @@ part 'attachment_models.g.dart';
 
 @JsonSerializable()
 class AttachmentModel extends AttachmentEntity {
-  const AttachmentModel({
+  AttachmentModel({
     required super.id,
     required super.careerProfileId,
     required super.fileName,

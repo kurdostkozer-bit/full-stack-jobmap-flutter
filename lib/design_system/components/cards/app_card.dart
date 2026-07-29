@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../radius/app_radius.dart';
-import '../../shadows/app_shadows.dart';
 
 /// Basic card component
 class AppCard extends StatelessWidget {
@@ -12,15 +11,14 @@ class AppCard extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
 
   const AppCard({
-    Key? key,
+    super.key,
     required this.child,
     this.padding = const EdgeInsets.all(16),
     this.onTap,
     this.backgroundColor,
     this.elevation = 1,
     BorderRadiusGeometry? borderRadius,
-  })  : borderRadius = borderRadius ?? const BorderRadius.all(Radius.circular(12)),
-        super(key: key);
+  })  : borderRadius = borderRadius ?? const BorderRadius.all(Radius.circular(12));
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +43,10 @@ class AppCard extends StatelessWidget {
   }) {
     return AppCard(
       key: key,
-      child: child,
       padding: padding,
       onTap: onTap,
       elevation: 4,
+      child: child,
     );
   }
 
@@ -61,9 +59,9 @@ class AppCard extends StatelessWidget {
   }) {
     return _OutlinedCard(
       key: key,
-      child: child,
       padding: padding,
       onTap: onTap,
+      child: child,
     );
   }
 }
@@ -71,17 +69,11 @@ class AppCard extends StatelessWidget {
 /// Outlined card with border
 class _OutlinedCard extends AppCard {
   const _OutlinedCard({
-    Key? key,
-    required Widget child,
-    EdgeInsets padding = const EdgeInsets.all(16),
-    VoidCallback? onTap,
-  }) : super(
-    key: key,
-    child: child,
-    padding: padding,
-    onTap: onTap,
-    elevation: 0,
-  );
+    super.key,
+    required super.child,
+    super.padding = const EdgeInsets.all(16),
+    super.onTap,
+  }) : super(elevation: 0);
 
   @override
   Widget build(BuildContext context) {

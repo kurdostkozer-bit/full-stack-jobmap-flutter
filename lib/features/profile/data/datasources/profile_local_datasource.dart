@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/profile_models.dart';
 
@@ -31,7 +32,7 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
         value: jsonEncode(profile.toJson()),
       );
     } catch (e) {
-      print('Error caching profile: $e');
+      debugPrint('Error caching profile: $e');
       rethrow;
     }
   }
@@ -44,7 +45,7 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
         return CareerProfileResponse.fromJson(jsonDecode(json));
       }
     } catch (e) {
-      print('Error reading cached profile: $e');
+      debugPrint('Error reading cached profile: $e');
     }
     return null;
   }
@@ -54,7 +55,7 @@ class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
     try {
       await secureStorage.delete(key: _profileKey);
     } catch (e) {
-      print('Error clearing profile: $e');
+      debugPrint('Error clearing profile: $e');
     }
   }
 

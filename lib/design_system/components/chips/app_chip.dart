@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../spacing/app_spacing.dart';
 
 /// Custom chip component
 class AppChip extends StatefulWidget {
@@ -11,14 +10,14 @@ class AppChip extends StatefulWidget {
   final IconData? icon;
 
   const AppChip({
-    Key? key,
+    super.key,
     required this.label,
     this.selected = false,
     this.onSelected,
     this.onDeleted,
     this.avatar,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   State<AppChip> createState() => _AppChipState();
@@ -104,15 +103,11 @@ class _ActionChip extends AppChip {
   final VoidCallback? onPressed;
 
   const _ActionChip({
-    Key? key,
-    required String label,
+    super.key,
+    required super.label,
     this.onPressed,
-    IconData? icon,
-  }) : super(
-    key: key,
-    label: label,
-    icon: icon,
-  );
+    super.icon,
+  });
 
   @override
   State<AppChip> createState() => _ActionChipState();
@@ -121,11 +116,10 @@ class _ActionChip extends AppChip {
 class _ActionChipState extends State<_ActionChip> {
   @override
   Widget build(BuildContext context) {
-    final actionChip = widget as _ActionChip;
     return ActionChip(
-      label: Text(actionChip.label),
-      onPressed: actionChip.onPressed,
-      avatar: actionChip.icon != null ? Icon(actionChip.icon) : null,
+      label: Text(widget.label),
+      onPressed: widget.onPressed,
+      avatar: widget.icon != null ? Icon(widget.icon) : null,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
@@ -141,12 +135,12 @@ class AppBadge extends StatelessWidget {
   final Widget? child;
 
   const AppBadge({
-    Key? key,
+    super.key,
     required this.label,
     this.backgroundColor,
     this.textColor,
     this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

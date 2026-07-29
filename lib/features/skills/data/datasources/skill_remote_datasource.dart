@@ -28,7 +28,7 @@ class SkillRemoteDataSourceImpl implements SkillRemoteDataSource {
 
   @override
   Future<List<SkillResponse>> getSkills(String careerProfileId) async {
-    final response = await apiClient.get(
+    final response = await apiClient.get<List<SkillResponse>>(
       '/profile/skills',
       queryParameters: {'careerProfileId': careerProfileId},
       fromJson: (json) {

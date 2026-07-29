@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/skill_models.dart';
 
@@ -32,7 +33,7 @@ class SkillLocalDataSourceImpl implements SkillLocalDataSource {
         value: jsonEncode(json),
       );
     } catch (e) {
-      print('Error caching skills: $e');
+      debugPrint('Error caching skills: $e');
       rethrow;
     }
   }
@@ -48,7 +49,7 @@ class SkillLocalDataSourceImpl implements SkillLocalDataSource {
             .toList();
       }
     } catch (e) {
-      print('Error reading cached skills: $e');
+      debugPrint('Error reading cached skills: $e');
     }
     return null;
   }
@@ -58,7 +59,7 @@ class SkillLocalDataSourceImpl implements SkillLocalDataSource {
     try {
       await secureStorage.delete(key: _getKey(careerProfileId));
     } catch (e) {
-      print('Error clearing skills: $e');
+      debugPrint('Error clearing skills: $e');
     }
   }
 }

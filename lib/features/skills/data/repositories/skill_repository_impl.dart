@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../datasources/skill_local_datasource.dart';
 import '../datasources/skill_remote_datasource.dart';
 import '../models/skill_models.dart';
@@ -115,7 +116,7 @@ class SkillRepositoryImpl implements SkillRepository {
     try {
       await localDataSource.clearSkills(careerProfileId);
     } catch (e) {
-      print('Error clearing cached skills: $e');
+      debugPrint('Error clearing cached skills: $e');
     }
   }
 }

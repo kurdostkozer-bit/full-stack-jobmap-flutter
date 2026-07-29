@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../design_system/index.dart';
+import '../../../../core/extensions/build_context_extensions.dart';
 import '../../domain/entities/profile_entities.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
@@ -8,7 +9,7 @@ import '../bloc/profile_state.dart';
 
 /// Profile screen - View and edit user profile information
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  const ProfileScreen({super.key});
 
   static const String routeName = '/profile';
 

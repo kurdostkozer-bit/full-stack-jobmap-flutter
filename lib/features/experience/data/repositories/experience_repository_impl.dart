@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../datasources/experience_local_datasource.dart';
 import '../datasources/experience_remote_datasource.dart';
 import '../models/experience_models.dart';
@@ -130,7 +131,7 @@ class ExperienceRepositoryImpl implements ExperienceRepository {
     try {
       await localDataSource.clearExperiences(careerProfileId);
     } catch (e) {
-      print('Error clearing cached experiences: $e');
+      debugPrint('Error clearing cached experiences: $e');
     }
   }
 }

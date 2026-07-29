@@ -28,7 +28,7 @@ class CertificatesRemoteDataSourceImpl implements CertificatesRemoteDataSource {
 
   @override
   Future<List<CertificateResponse>> getCertificates(String careerProfileId) async {
-    final response = await apiClient.get(
+    final response = await apiClient.get<List<CertificateResponse>>(
       '/certificates/career-profile/$careerProfileId',
       fromJson: (json) {
         if (json is List) {

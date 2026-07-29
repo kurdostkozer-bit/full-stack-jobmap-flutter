@@ -19,16 +19,12 @@ class AuthLoading extends AuthState {
 
 /// Authenticated state
 class AuthAuthenticated extends AuthState {
-  final UserResponse user;
-  final String token;
+  final AuthSession session;
 
-  const AuthAuthenticated({
-    required this.user,
-    required this.token,
-  });
+  const AuthAuthenticated({required this.session});
 
   @override
-  List<Object?> get props => [user, token];
+  List<Object?> get props => [session];
 }
 
 /// Unauthenticated state

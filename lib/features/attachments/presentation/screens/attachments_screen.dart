@@ -31,8 +31,10 @@ class _AttachmentsViewState extends State<_AttachmentsView> {
   @override
   void initState() {
     super.initState();
-    careerProfileId = 'profile_id'; // TODO: Get from auth or profile
-    _loadAttachments();
+    // Replace with real profile id lookup (Auth/Profile)
+    careerProfileId = '';
+    // Only load attachments when we have a valid profile id.
+    if (careerProfileId.isNotEmpty) _loadAttachments();
   }
 
   void _loadAttachments() {
@@ -188,10 +190,13 @@ class _AttachmentsViewState extends State<_AttachmentsView> {
                 title: Text(category.label),
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: Implement file picker
+                  // File picker integration pending — replace with actual picker
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('File picker not implemented')),
+                  );
                 },
               );
-            }).toList(),
+            }),
           ],
         ),
       ),
@@ -223,7 +228,10 @@ class _AttachmentsViewState extends State<_AttachmentsView> {
               title: const Text('Edit'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Show edit dialog
+                // Placeholder: show simple acknowledgement. Replace with edit UI.
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Edit attachment (TODO)')),
+                );
               },
             ),
             ListTile(

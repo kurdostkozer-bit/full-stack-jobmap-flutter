@@ -8,3 +8,4 @@ export 'app_bar/app_app_bar.dart';
 export 'navigation/app_bottom_nav.dart';
 export 'dialogs/app_dialog.dart';
 export 'loading/app_loading.dart';
+export 'app_logo.dart';

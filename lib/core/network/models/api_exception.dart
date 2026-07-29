@@ -50,6 +50,9 @@ class ApiException implements Exception {
       case DioExceptionType.connectionError:
         message = 'Connection error. Check your internet connection.';
         break;
+      case DioExceptionType.transformTimeout:
+        message = 'Transform timeout. Please try again.';
+        break;
     }
 
     return ApiException(

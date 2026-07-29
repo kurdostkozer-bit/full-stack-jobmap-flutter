@@ -10,9 +10,7 @@ class SkillBloc extends Bloc<SkillEvent, SkillState> {
   final CreateSkillUseCase createSkillUseCase;
   final UpdateSkillUseCase updateSkillUseCase;
   final DeleteSkillUseCase deleteSkillUseCase;
-
-  String? _currentCareerProfileId;
-
+  
   SkillBloc({
     required this.getSkillsUseCase,
     required this.createSkillUseCase,
@@ -31,7 +29,6 @@ class SkillBloc extends Bloc<SkillEvent, SkillState> {
     LoadSkillsEvent event,
     Emitter<SkillState> emit,
   ) async {
-    _currentCareerProfileId = event.careerProfileId;
     emit(const SkillLoading());
     try {
       final skills = await getSkillsUseCase(event.careerProfileId);
@@ -49,7 +46,9 @@ class SkillBloc extends Bloc<SkillEvent, SkillState> {
     Emitter<SkillState> emit,
   ) async {
     final currentState = state;
-    final previousSkills = currentState is SkillsLoaded ? currentState.skills : [];
+    final previousSkills = currentState is SkillsLoaded 
+        ? currentState.skills 
+        : <Skill>[];
 
     try {
       emit(SkillCreating(currentSkills: previousSkills));
@@ -82,7 +81,7 @@ class SkillBloc extends Bloc<SkillEvent, SkillState> {
     Emitter<SkillState> emit,
   ) async {
     final currentState = state;
-    final previousSkills = currentState is SkillsLoaded ? currentState.skills : [];
+    final List<Skill> previousSkills = currentState is SkillsLoaded ? currentState.skills : <Skill>[];
 
     try {
       emit(SkillUpdating(currentSkills: previousSkills));
@@ -118,7 +117,7 @@ class SkillBloc extends Bloc<SkillEvent, SkillState> {
     Emitter<SkillState> emit,
   ) async {
     final currentState = state;
-    final previousSkills = currentState is SkillsLoaded ? currentState.skills : [];
+    final List<Skill> previousSkills = currentState is SkillsLoaded ? currentState.skills : <Skill>[];
 
     try {
       emit(SkillDeleting(currentSkills: previousSkills));
@@ -148,7 +147,6 @@ class SkillBloc extends Bloc<SkillEvent, SkillState> {
     RefreshSkillsEvent event,
     Emitter<SkillState> emit,
   ) async {
-    _currentCareerProfileId = event.careerProfileId;
     try {
       final skills = await getSkillsUseCase(event.careerProfileId);
       emit(SkillsLoaded(skills: skills));

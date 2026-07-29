@@ -24,7 +24,7 @@ class AppTextField extends StatefulWidget {
   final bool showCounter;
 
   const AppTextField({
-    Key? key,
+    super.key,
     this.label,
     this.hintText,
     this.helperText,
@@ -43,7 +43,71 @@ class AppTextField extends StatefulWidget {
     this.onTap,
     this.validator,
     this.showCounter = false,
-  }) : super(key: key);
+  });
+
+  /// Email field variant
+  factory AppTextField.email({
+    Key? key,
+    String? label,
+    String? hintText,
+    TextEditingController? controller,
+    ValueChanged<String>? onChanged,
+    String? Function(String?)? validator,
+  }) {
+    return AppTextField(
+      key: key,
+      label: label ?? 'Email',
+      hintText: hintText ?? 'Enter your email',
+      controller: controller,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.done,
+      prefixIcon: const Icon(Icons.email_outlined),
+      onChanged: onChanged,
+      validator: validator,
+    );
+  }
+
+  /// Password field variant
+  factory AppTextField.password({
+    Key? key,
+    String? label,
+    String? hintText,
+    TextEditingController? controller,
+    ValueChanged<String>? onChanged,
+    String? Function(String?)? validator,
+  }) {
+    return AppTextField(
+      key: key,
+      label: label ?? 'Password',
+      hintText: hintText ?? 'Enter your password',
+      controller: controller,
+      keyboardType: TextInputType.visiblePassword,
+      textInputAction: TextInputAction.done,
+      obscureText: true,
+      prefixIcon: const Icon(Icons.lock_outlined),
+      onChanged: onChanged,
+      validator: validator,
+    );
+  }
+
+  /// Search field variant
+  factory AppTextField.search({
+    Key? key,
+    String? hintText,
+    TextEditingController? controller,
+    ValueChanged<String>? onChanged,
+    VoidCallback? onTap,
+  }) {
+    return AppTextField(
+      key: key,
+      hintText: hintText ?? 'Search...',
+      controller: controller,
+      keyboardType: TextInputType.text,
+      prefixIcon: const Icon(Icons.search),
+      onChanged: onChanged,
+      onTap: onTap,
+    );
+  }
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -110,8 +174,8 @@ class _AppTextFieldState extends State<AppTextField> {
             counterText: widget.showCounter ? null : '',
             filled: true,
             fillColor: _focusNode.hasFocus
-                ? Theme.of(context).colorScheme.surface
-                : Theme.of(context).colorScheme.surfaceVariant,
+              ? Theme.of(context).colorScheme.surface
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(AppRadius.md),
               borderSide: BorderSide(
@@ -146,70 +210,6 @@ class _AppTextFieldState extends State<AppTextField> {
           ),
         ),
       ],
-    );
-  }
-
-  /// Email field variant
-  factory AppTextField.email({
-    Key? key,
-    String? label,
-    String? hintText,
-    TextEditingController? controller,
-    ValueChanged<String>? onChanged,
-    String? Function(String?)? validator,
-  }) {
-    return AppTextField(
-      key: key,
-      label: label ?? 'Email',
-      hintText: hintText ?? 'Enter your email',
-      controller: controller,
-      keyboardType: TextInputType.emailAddress,
-      textInputAction: TextInputAction.done,
-      prefixIcon: const Icon(Icons.email_outlined),
-      onChanged: onChanged,
-      validator: validator,
-    );
-  }
-
-  /// Password field variant
-  factory AppTextField.password({
-    Key? key,
-    String? label,
-    String? hintText,
-    TextEditingController? controller,
-    ValueChanged<String>? onChanged,
-    String? Function(String?)? validator,
-  }) {
-    return AppTextField(
-      key: key,
-      label: label ?? 'Password',
-      hintText: hintText ?? 'Enter your password',
-      controller: controller,
-      keyboardType: TextInputType.visiblePassword,
-      textInputAction: TextInputAction.done,
-      obscureText: true,
-      prefixIcon: const Icon(Icons.lock_outlined),
-      onChanged: onChanged,
-      validator: validator,
-    );
-  }
-
-  /// Search field variant
-  factory AppTextField.search({
-    Key? key,
-    String? hintText,
-    TextEditingController? controller,
-    ValueChanged<String>? onChanged,
-    VoidCallback? onTap,
-  }) {
-    return AppTextField(
-      key: key,
-      hintText: hintText ?? 'Search...',
-      controller: controller,
-      keyboardType: TextInputType.text,
-      prefixIcon: const Icon(Icons.search),
-      onChanged: onChanged,
-      onTap: onTap,
     );
   }
 }

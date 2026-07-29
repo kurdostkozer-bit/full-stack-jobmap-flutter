@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'models/api_exception.dart';
-import 'models/api_response.dart';
 
 /// Base API client with common methods
 class ApiClient {

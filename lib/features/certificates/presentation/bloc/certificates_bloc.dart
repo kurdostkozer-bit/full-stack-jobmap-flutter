@@ -44,8 +44,9 @@ class CertificatesBloc extends Bloc<CertificatesEvent, CertificatesState> {
     Emitter<CertificatesState> emit,
   ) async {
     final currentState = state;
-    final previousCertificates =
-        currentState is CertificatesLoaded ? currentState.certificates : [];
+    final List<Certificate> previousCertificates = currentState is CertificatesLoaded 
+        ? currentState.certificates 
+        : <Certificate>[];
 
     try {
       emit(CertificateCreating(currentCertificates: previousCertificates));
@@ -81,8 +82,8 @@ class CertificatesBloc extends Bloc<CertificatesEvent, CertificatesState> {
     Emitter<CertificatesState> emit,
   ) async {
     final currentState = state;
-    final previousCertificates =
-        currentState is CertificatesLoaded ? currentState.certificates : [];
+    final List<Certificate> previousCertificates =
+        currentState is CertificatesLoaded ? currentState.certificates : <Certificate>[];
 
     try {
       emit(CertificateUpdating(currentCertificates: previousCertificates));
@@ -121,8 +122,8 @@ class CertificatesBloc extends Bloc<CertificatesEvent, CertificatesState> {
     Emitter<CertificatesState> emit,
   ) async {
     final currentState = state;
-    final previousCertificates =
-        currentState is CertificatesLoaded ? currentState.certificates : [];
+    final List<Certificate> previousCertificates =
+        currentState is CertificatesLoaded ? currentState.certificates : <Certificate>[];
 
     try {
       emit(CertificateDeleting(currentCertificates: previousCertificates));

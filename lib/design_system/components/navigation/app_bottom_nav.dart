@@ -10,14 +10,14 @@ class AppBottomNav extends StatelessWidget {
   final Color? unselectedItemColor;
 
   const AppBottomNav({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onItemSelected,
     required this.items,
     this.backgroundColor,
     this.selectedItemColor,
     this.unselectedItemColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

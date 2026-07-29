@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../datasources/profile_local_datasource.dart';
 import '../datasources/profile_remote_datasource.dart';
 import '../models/profile_models.dart';
@@ -92,7 +93,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
     try {
       await localDataSource.clearProfile();
     } catch (e) {
-      print('Error clearing cached profile: $e');
+      debugPrint('Error clearing cached profile: $e');
     }
   }
 }

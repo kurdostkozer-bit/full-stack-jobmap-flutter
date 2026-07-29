@@ -28,7 +28,7 @@ class LanguagesRemoteDataSourceImpl implements LanguagesRemoteDataSource {
 
   @override
   Future<List<LanguageResponse>> getLanguages(String careerProfileId) async {
-    final response = await apiClient.get(
+    final response = await apiClient.get<List<LanguageResponse>>(
       '/languages/career-profile/$careerProfileId',
       fromJson: (json) {
         if (json is List) {
@@ -46,7 +46,7 @@ class LanguagesRemoteDataSourceImpl implements LanguagesRemoteDataSource {
                 .toList();
           }
         }
-        return [];
+        return <LanguageResponse>[];
       },
     );
     return response;

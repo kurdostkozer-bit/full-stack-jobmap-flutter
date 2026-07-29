@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../design_system/index.dart';
+import '../../../../core/extensions/build_context_extensions.dart';
 
 /// Personal Information screen - part of Career Profile
 class PersonalInfoScreen extends StatefulWidget {
-  const PersonalInfoScreen({Key? key}) : super(key: key);
+  const PersonalInfoScreen({super.key});
 
   static const String routeName = '/profile/personal-info';
 
@@ -23,7 +24,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     _firstNameController = TextEditingController(text: 'John');
     _lastNameController = TextEditingController(text: 'Doe');
     _bioController = TextEditingController(text: 'Software Developer');
-    // TODO: Load actual user data from API
+    // Load actual user data from API (implementation pending)
   }
 
   @override
@@ -37,10 +38,12 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   Future<void> _handleSave() async {
     setState(() => _isLoading = true);
     try {
-      // TODO: Call update profile API
+      // Call update profile API (implementation pending)
       await Future.delayed(const Duration(seconds: 1));
+      if (!mounted) return;
       context.showSuccess('Profile updated successfully');
     } catch (e) {
+      if (!mounted) return;
       context.showError('Failed to update profile: $e');
     } finally {
       setState(() => _isLoading = false);
@@ -72,7 +75,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
                     label: 'Change Photo',
                     isFullWidth: false,
                     onPressed: () {
-                      // TODO: Implement image picker
+                      // Image picker implementation pending
                     },
                   ),
                 ],

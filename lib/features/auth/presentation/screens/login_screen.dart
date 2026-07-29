@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../design_system/index.dart';
+import '../../../../core/extensions/build_context_extensions.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/navigation/navigation_map.dart';
 
 /// Login screen
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   static const String routeName = '/login';
 
@@ -38,11 +41,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() => _isLoading = true);
     try {
-      // TODO: Call login API
+      // Placeholder: replace with real login API call.
       await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
       context.showSuccess('Login successful!');
-      // TODO: Navigate to home
+      // Placeholder navigation: return to root. Replace with
+      // `GoRouter.of(context).go(NavigationMap.Auth.home)` or the
+      // app's preferred navigation approach.
+      Navigator.of(context).popUntil((route) => route.isFirst);
     } catch (e) {
+      if (!mounted) return;
       context.showError('Login failed: $e');
     } finally {
       setState(() => _isLoading = false);
@@ -95,7 +103,8 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () {
-                  // TODO: Navigate to forgot password
+                  // Navigate to forgot-password screen
+                  context.go(NavigationMap.authRoutes.forgotPassword);
                 },
                 child: Text(
                   'Forgot Password?',
@@ -133,7 +142,8 @@ class _LoginScreenState extends State<LoginScreen> {
               label: 'Continue with Google',
               prefixIcon: const Icon(Icons.login),
               onPressed: () {
-                // TODO: Google login
+                // Placeholder Google login flow. Replace with real OAuth logic.
+                context.showSnackBar('Google login (TODO)');
               },
             ),
             SizedBox(height: AppSpacing.md),

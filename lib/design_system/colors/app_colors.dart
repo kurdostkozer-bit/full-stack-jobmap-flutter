@@ -82,7 +82,7 @@ class AppColors {
 
   // ============= OPACITY HELPERS =============
   static Color withOpacity(Color color, double opacity) {
-    return color.withOpacity(opacity);
+    return color.withValues(alpha: opacity);
   }
 
   static Color blend(Color color1, Color color2, double value) {
@@ -101,9 +101,7 @@ class LightColorScheme {
     tertiaryContainer: AppColors.accentLight,
     error: AppColors.error,
     errorContainer: Color(0xFFFEE2E2),
-    background: AppColors.lightBackground,
     surface: AppColors.lightSurface,
-    onBackground: AppColors.lightOnBackground,
     onSurface: AppColors.lightOnSurface,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
@@ -111,10 +109,9 @@ class LightColorScheme {
     onError: Colors.white,
     outline: AppColors.lightOutline,
     outlineVariant: AppColors.lightOutlineVariant,
-    surfaceVariant: AppColors.lightSurfaceVariant,
+    surfaceContainerHighest: AppColors.lightSurfaceVariant,
     scrim: Colors.black,
     inverseSurface: AppColors.gray900,
-    inverseOnSurface: AppColors.gray50,
     inversePrimary: AppColors.primaryLight,
   );
 }
@@ -130,9 +127,7 @@ class DarkColorScheme {
     tertiaryContainer: AppColors.accent,
     error: Color(0xFFF87171),
     errorContainer: Color(0xFF7F1D1D),
-    background: AppColors.darkBackground,
     surface: AppColors.darkSurface,
-    onBackground: AppColors.darkOnBackground,
     onSurface: AppColors.darkOnSurface,
     onPrimary: Colors.white,
     onSecondary: Colors.white,
@@ -140,10 +135,9 @@ class DarkColorScheme {
     onError: Colors.white,
     outline: AppColors.darkOutline,
     outlineVariant: AppColors.darkOutlineVariant,
-    surfaceVariant: AppColors.darkSurfaceVariant,
+    surfaceContainerHighest: AppColors.darkSurfaceVariant,
     scrim: Colors.black,
     inverseSurface: AppColors.gray50,
-    inverseOnSurface: AppColors.gray900,
     inversePrimary: AppColors.primary,
   );
 }

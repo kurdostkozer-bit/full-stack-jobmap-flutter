@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../design_system/index.dart';
+import '../../../../core/extensions/build_context_extensions.dart';
 
 /// Register screen
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   static const String routeName = '/register';
 
@@ -58,11 +59,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     setState(() => _isLoading = true);
     try {
-      // TODO: Call register API
+      // Call register API (implementation pending)
       await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
       context.showSuccess('Registration successful!');
-      // TODO: Navigate to email verification or login
+      // Navigate to email verification or login (implementation pending)
     } catch (e) {
+      if (!mounted) return;
       context.showError('Registration failed: $e');
     } finally {
       setState(() => _isLoading = false);

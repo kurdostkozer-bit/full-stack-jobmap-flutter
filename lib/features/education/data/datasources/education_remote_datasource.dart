@@ -28,7 +28,7 @@ class EducationRemoteDataSourceImpl implements EducationRemoteDataSource {
 
   @override
   Future<List<EducationResponse>> getEducations(String careerProfileId) async {
-    final response = await apiClient.get(
+    final response = await apiClient.get<List<EducationResponse>>(
       '/education/career-profile/$careerProfileId',
       fromJson: (json) {
         if (json is List) {

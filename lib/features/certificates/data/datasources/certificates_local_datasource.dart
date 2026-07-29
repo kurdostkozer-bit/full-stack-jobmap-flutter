@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/certificates_models.dart';
 
@@ -35,7 +36,7 @@ class CertificatesLocalDataSourceImpl implements CertificatesLocalDataSource {
         value: jsonEncode(json),
       );
     } catch (e) {
-      print('Error caching certificates: $e');
+      debugPrint('Error caching certificates: $e');
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class CertificatesLocalDataSourceImpl implements CertificatesLocalDataSource {
             .toList();
       }
     } catch (e) {
-      print('Error reading cached certificates: $e');
+      debugPrint('Error reading cached certificates: $e');
     }
     return null;
   }
@@ -64,7 +65,7 @@ class CertificatesLocalDataSourceImpl implements CertificatesLocalDataSource {
     try {
       await secureStorage.delete(key: _getKey(careerProfileId));
     } catch (e) {
-      print('Error clearing certificates: $e');
+      debugPrint('Error clearing certificates: $e');
     }
   }
 }

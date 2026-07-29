@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/projects_models.dart';
 
@@ -35,7 +36,7 @@ class ProjectsLocalDataSourceImpl implements ProjectsLocalDataSource {
         value: jsonEncode(json),
       );
     } catch (e) {
-      print('Error caching projects: $e');
+      debugPrint('Error caching projects: $e');
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class ProjectsLocalDataSourceImpl implements ProjectsLocalDataSource {
             .toList();
       }
     } catch (e) {
-      print('Error reading cached projects: $e');
+      debugPrint('Error reading cached projects: $e');
     }
     return null;
   }
@@ -64,7 +65,7 @@ class ProjectsLocalDataSourceImpl implements ProjectsLocalDataSource {
     try {
       await secureStorage.delete(key: _getKey(careerProfileId));
     } catch (e) {
-      print('Error clearing projects: $e');
+      debugPrint('Error clearing projects: $e');
     }
   }
 }

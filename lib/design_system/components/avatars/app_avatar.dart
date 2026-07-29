@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../spacing/app_spacing.dart';
 
 /// Avatar component with multiple variants
 class AppAvatar extends StatelessWidget {
@@ -13,7 +12,7 @@ class AppAvatar extends StatelessWidget {
   final EdgeInsets? padding;
 
   const AppAvatar({
-    Key? key,
+    super.key,
     this.initials,
     this.imageUrl,
     this.size = 40,
@@ -22,7 +21,7 @@ class AppAvatar extends StatelessWidget {
     this.onTap,
     this.isOnline = false,
     this.padding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

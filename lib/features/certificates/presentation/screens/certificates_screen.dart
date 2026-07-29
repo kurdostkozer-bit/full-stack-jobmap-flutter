@@ -8,7 +8,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 
 /// Certificates screen - View and manage certificates
 class CertificatesScreen extends StatefulWidget {
-  const CertificatesScreen({Key? key}) : super(key: key);
+  const CertificatesScreen({super.key});
 
   static const String routeName = '/certificates';
 
@@ -43,7 +43,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       context.read<CertificatesBloc>().add(
-            LoadCertificatesEvent(authState.user.careerProfileId!),
+            LoadCertificatesEvent(authState.session.user.id),
           );
     }
   }
@@ -209,7 +209,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
                   if (certificate == null) {
                     context.read<CertificatesBloc>().add(
                           CreateCertificateEvent(
-                            authState.user.careerProfileId!,
+                            authState.session.user.id,
                             _nameController.text,
                             _issuerController.text,
                             _issueDate!,
@@ -360,7 +360,7 @@ class _CertificatesScreenState extends State<CertificatesScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: statusColor.withOpacity(0.2),
+                              color: statusColor.withValues(alpha: 0.2),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(

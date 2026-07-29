@@ -44,8 +44,9 @@ class ProjectsBloc extends Bloc<ProjectsEvent, ProjectsState> {
     Emitter<ProjectsState> emit,
   ) async {
     final currentState = state;
-    final previousProjects =
-        currentState is ProjectsLoaded ? currentState.projects : [];
+    final List<Project> previousProjects = currentState is ProjectsLoaded 
+        ? currentState.projects 
+        : <Project>[];
 
     try {
       emit(ProjectCreating(currentProjects: previousProjects));
@@ -82,8 +83,8 @@ class ProjectsBloc extends Bloc<ProjectsEvent, ProjectsState> {
     Emitter<ProjectsState> emit,
   ) async {
     final currentState = state;
-    final previousProjects =
-        currentState is ProjectsLoaded ? currentState.projects : [];
+    final List<Project> previousProjects =
+        currentState is ProjectsLoaded ? currentState.projects : <Project>[];
 
     try {
       emit(ProjectUpdating(currentProjects: previousProjects));
@@ -123,8 +124,8 @@ class ProjectsBloc extends Bloc<ProjectsEvent, ProjectsState> {
     Emitter<ProjectsState> emit,
   ) async {
     final currentState = state;
-    final previousProjects =
-        currentState is ProjectsLoaded ? currentState.projects : [];
+    final List<Project> previousProjects =
+        currentState is ProjectsLoaded ? currentState.projects : <Project>[];
 
     try {
       emit(ProjectDeleting(currentProjects: previousProjects));

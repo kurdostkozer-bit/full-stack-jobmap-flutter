@@ -16,7 +16,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     final response = await apiClient.post(
       '/auth/login',
-      body: {
+      data: {
         'email': email,
         'password': password,
       },
@@ -34,15 +34,55 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }) async {
     final response = await apiClient.post(
       '/auth/register',
-      body: {
+      data: {
         'fullName': fullName,
         'email': email,
         'password': password,
-        'phone': phone,
+        ...?phone != null ? {'phone': phone} : null,
       },
     );
 
     return AuthSessionModel.fromJson(response);
+  }
+
+  @override
+  Future<void> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
+    await apiClient.post(
+      '/auth/verify-email',
+      data: {
+        'email': email,
+        'code': code,
+      },
+    );
+  }
+
+  @override
+  Future<void> forgotPassword({required String email}) async {
+    await apiClient.post(
+      '/auth/forgot-password',
+      data: {
+        'email': email,
+      },
+    );
+  }
+
+  @override
+  Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    await apiClient.post(
+      '/auth/reset-password',
+      data: {
+        'email': email,
+        'code': code,
+        'newPassword': newPassword,
+      },
+    );
   }
 
   @override
@@ -51,7 +91,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   ) async {
     final response = await apiClient.post(
       '/auth/refresh',
-      body: {
+      data: {
         'refreshToken': refreshToken,
       },
     );
@@ -63,7 +103,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<void> logout() async {
     await apiClient.post(
       '/auth/logout',
-      body: {},
+      data: const {},
     );
   }
 }

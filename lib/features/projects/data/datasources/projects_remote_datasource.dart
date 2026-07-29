@@ -28,7 +28,7 @@ class ProjectsRemoteDataSourceImpl implements ProjectsRemoteDataSource {
 
   @override
   Future<List<ProjectResponse>> getProjects(String careerProfileId) async {
-    final response = await apiClient.get(
+    final response = await apiClient.get<List<ProjectResponse>>(
       '/projects/career-profile/$careerProfileId',
       fromJson: (json) {
         if (json is List) {

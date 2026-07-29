@@ -3,8 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
-import '../../../auth/presentation/bloc/auth_event.dart';
-import '../../../auth/presentation/bloc/auth_state.dart';
 import '../../../onboarding/presentation/screens/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
   if (!mounted) return;
 
   context.read<AuthBloc>().add(
-    const CheckAuthenticationRequested(),
+    const CheckAuthEvent(),
   );
 });
   }
@@ -50,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
           );
         }
 
-        if (state is AuthFailure) {
+        if (state is AuthError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(state.message),

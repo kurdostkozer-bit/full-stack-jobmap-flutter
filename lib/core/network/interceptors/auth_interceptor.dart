@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Authentication interceptor with token refresh support
@@ -6,7 +7,6 @@ class AuthInterceptor extends Interceptor {
   final FlutterSecureStorage secureStorage;
   final Dio? dio; // For token refresh calls
   bool _isRefreshing = false;
-  final List<RequestInterceptorHandler> _requestQueue = [];
 
   AuthInterceptor({
     required this.secureStorage,
@@ -24,7 +24,7 @@ class AuthInterceptor extends Interceptor {
         options.headers['Authorization'] = 'Bearer $token';
       }
     } catch (e) {
-      print('Error reading token: $e');
+      debugPrint('Error reading token: $e');
     }
     return handler.next(options);
   }
@@ -39,13 +39,7 @@ class AuthInterceptor extends Interceptor {
       try {
         final refreshToken = await secureStorage.read(key: 'refresh_token');
         
-        if (refreshToken != null && dio != null) {
-          // Prevent multiple refresh attempts
-          if (_isRefreshing) {
-            _requestQueue.add(handler);
-            return;
-          }
-
+        if (refreshToken != null && dio != null && !_isRefreshing) {
           _isRefreshing = true;
 
           try {
@@ -69,12 +63,6 @@ class AuthInterceptor extends Interceptor {
             err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
             
             _isRefreshing = false;
-            
-            // Process queued requests
-            for (var h in _requestQueue) {
-              h.next(err.requestOptions);
-            }
-            _requestQueue.clear();
 
             // Retry original request
             return handler.resolve(
@@ -91,23 +79,24 @@ class AuthInterceptor extends Interceptor {
           } on DioException catch (refreshErr) {
             // Token refresh failed
             _isRefreshing = false;
-            _requestQueue.clear();
             
             // Clear tokens and force logout
             await secureStorage.delete(key: 'auth_token');
             await secureStorage.delete(key: 'refresh_token');
             
-            print('Token refresh failed: ${refreshErr.message}');
+            debugPrint('Token refresh failed: ${refreshErr.message}');
             return handler.next(err);
           }
         } else {
-          // No refresh token, clear stored token
-          await secureStorage.delete(key: 'auth_token');
-          await secureStorage.delete(key: 'refresh_token');
-          print('No refresh token available');
+          // No refresh token or already refreshing, clear stored token
+          if (!_isRefreshing) {
+            await secureStorage.delete(key: 'auth_token');
+            await secureStorage.delete(key: 'refresh_token');
+          }
+          debugPrint('No refresh token available or already refreshing');
         }
       } catch (e) {
-        print('Error handling 401: $e');
+        debugPrint('Error handling 401: $e');
       }
     }
     return handler.next(err);

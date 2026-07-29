@@ -200,27 +200,27 @@ class AppTransitionValues {
   AppTransitionValues._();
 
   /// Default opacity range
-  static const Tween<double> opacity = Tween<double>(begin: 0.0, end: 1.0);
+  static final Tween<double> opacity = Tween<double>(begin: 0.0, end: 1.0);
 
   /// Default scale range
-  static const Tween<double> scale = Tween<double>(begin: 0.8, end: 1.0);
+  static final Tween<double> scale = Tween<double>(begin: 0.8, end: 1.0);
 
   /// Default rotation range
-  static const Tween<double> rotation = Tween<double>(begin: 0.0, end: 1.0);
+  static final Tween<double> rotation = Tween<double>(begin: 0.0, end: 1.0);
 
   /// Slide from left
-  static const Tween<Offset> slideFromLeft =
-      Tween<Offset>(begin: Offset(-1.0, 0.0), end: Offset.zero);
+  static final Tween<Offset> slideFromLeft =
+      Tween<Offset>(begin: const Offset(-1.0, 0.0), end: Offset.zero);
 
   /// Slide from right
-  static const Tween<Offset> slideFromRight =
-      Tween<Offset>(begin: Offset(1.0, 0.0), end: Offset.zero);
+  static final Tween<Offset> slideFromRight =
+      Tween<Offset>(begin: const Offset(1.0, 0.0), end: Offset.zero);
 
   /// Slide from top
-  static const Tween<Offset> slideFromTop =
-      Tween<Offset>(begin: Offset(0.0, -1.0), end: Offset.zero);
+  static final Tween<Offset> slideFromTop =
+      Tween<Offset>(begin: const Offset(0.0, -1.0), end: Offset.zero);
 
   /// Slide from bottom
-  static const Tween<Offset> slideFromBottom =
-      Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero);
+  static final Tween<Offset> slideFromBottom =
+      Tween<Offset>(begin: const Offset(0.0, 1.0), end: Offset.zero);
 }

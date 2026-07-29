@@ -52,7 +52,7 @@ class AttachmentRemoteDataSourceImpl implements AttachmentRemoteDataSource {
       final response = await apiClient.get(
         '/career-profiles/$careerProfileId/attachments',
         queryParameters: {
-          if (category != null) 'category': category,
+          ...?category != null ? {'category': category} : null,
           'page': page,
           'limit': limit,
         },

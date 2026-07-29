@@ -1,8 +1,7 @@
 import '../datasources/auth_local_datasource.dart';
-import '../datasources/auth_remote_datasource.dart';
-import '../models/auth_models.dart';
+import '../datasources/auth_remote_data_source.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../domain/entities/auth_entities.dart';
+import '../../domain/entities/auth_session.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -14,40 +13,41 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Future<AuthResponse> register(
-    String email,
-    String password,
-    String firstName,
-    String lastName,
-  ) async {
-    final request = RegisterRequest(
+  Future<AuthSession> register({
+    required String fullName,
+    required String email,
+    required String password,
+    String? phone,
+  }) async {
+    final session = await remoteDataSource.register(
+      fullName: fullName,
       email: email,
       password: password,
-      firstName: firstName,
-      lastName: lastName,
+      phone: phone,
     );
-    final response = await remoteDataSource.register(request);
-    await localDataSource.saveAuthResponse(response);
-    return response;
+    await localDataSource.saveAuthSession(session);
+    return session;
   }
 
   @override
-  Future<void> verifyEmail(String email, String code) async {
-    final request = VerifyEmailRequest(email: email, code: code);
-    await remoteDataSource.verifyEmail(request);
+  Future<void> verifyEmail({
+    required String email,
+    required String code,
+  }) async {
+    await remoteDataSource.verifyEmail(email: email, code: code);
   }
 
   @override
-  Future<AuthResponse> login(String email, String password) async {
-    final request = LoginRequest(email: email, password: password);
-    final response = await remoteDataSource.login(request);
-    await localDataSource.saveAuthResponse(response);
-    return response;
-  }
-
-  @override
-  Future<UserResponse> getCurrentUser() async {
-    return await remoteDataSource.getCurrentUser();
+  Future<AuthSession> login({
+    required String email,
+    required String password,
+  }) async {
+    final session = await remoteDataSource.login(
+      email: email,
+      password: password,
+    );
+    await localDataSource.saveAuthSession(session);
+    return session;
   }
 
   @override
@@ -57,40 +57,37 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> forgotPassword(String email) async {
-    final request = ForgotPasswordRequest(email: email);
-    await remoteDataSource.forgotPassword(request);
+  Future<void> forgotPassword({required String email}) async {
+    await remoteDataSource.forgotPassword(email: email);
   }
 
   @override
-  Future<void> resetPassword(String email, String code, String newPassword) async {
-    final request = ResetPasswordRequest(
+  Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) async {
+    await remoteDataSource.resetPassword(
       email: email,
       code: code,
       newPassword: newPassword,
     );
-    await remoteDataSource.resetPassword(request);
   }
 
   @override
-  Future<AuthResponse> refreshToken(String refreshToken) async {
-    final response = await remoteDataSource.refreshToken(refreshToken);
-    await localDataSource.saveAuthResponse(response);
-    return response;
+  Future<AuthSession> refreshSession({required String refreshToken}) async {
+    final session = await remoteDataSource.refreshSession(refreshToken);
+    await localDataSource.saveAuthSession(session);
+    return session;
   }
 
   @override
-  Future<bool> isUserAuthenticated() async {
+  Future<bool> isAuthenticated() async {
     return await localDataSource.hasValidToken();
   }
 
   @override
-  Future<AuthResponse?> getCachedAuthResponse() async {
-    return await localDataSource.getAuthResponse();
-  }
-
-  @override
-  Future<UserResponse?> getCachedUser() async {
-    return await localDataSource.getCachedUser();
+  Future<AuthSession?> getCurrentSession() async {
+    return await localDataSource.getAuthSession();
   }
 }

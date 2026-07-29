@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../design_system/index.dart';
+import '../../../../core/extensions/build_context_extensions.dart';
 import '../bloc/auth_bloc.dart';
 
 /// Splash screen with auto-login
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   static const String routeName = '/splash';
 
@@ -84,7 +85,7 @@ class _SplashScreenState extends State<SplashScreen>
                   color: context.colorScheme.surface,
                   boxShadow: [
                     BoxShadow(
-                      color: context.colorScheme.primary.withOpacity(0.3),
+                      color: context.colorScheme.primary.withValues(alpha: 0.3),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -112,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen>
               Text(
                 'Find Your Perfect Job',
                 style: context.textTheme.bodyLarge?.copyWith(
-                  color: context.colorScheme.surface.withOpacity(0.8),
+                  color: context.colorScheme.surface.withValues(alpha: 0.8),
                 ),
               ),
               SizedBox(height: AppSpacing.xl),

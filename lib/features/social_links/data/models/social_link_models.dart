@@ -5,7 +5,7 @@ part 'social_link_models.g.dart';
 
 @JsonSerializable()
 class SocialLinkModel extends SocialLinkEntity {
-  const SocialLinkModel({
+  SocialLinkModel({
     required super.id,
     required super.careerProfileId,
     required super.platform,

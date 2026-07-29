@@ -44,8 +44,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     Emitter<EducationState> emit,
   ) async {
     final currentState = state;
-    final previousEducations =
-        currentState is EducationsLoaded ? currentState.educations : [];
+    final List<Education> previousEducations =
+        currentState is EducationsLoaded ? currentState.educations : <Education>[];
 
     try {
       emit(EducationCreating(currentEducations: previousEducations));
@@ -81,8 +81,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     Emitter<EducationState> emit,
   ) async {
     final currentState = state;
-    final previousEducations =
-        currentState is EducationsLoaded ? currentState.educations : [];
+    final List<Education> previousEducations =
+        currentState is EducationsLoaded ? currentState.educations : <Education>[];
 
     try {
       emit(EducationUpdating(currentEducations: previousEducations));
@@ -121,8 +121,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     Emitter<EducationState> emit,
   ) async {
     final currentState = state;
-    final previousEducations =
-        currentState is EducationsLoaded ? currentState.educations : [];
+    final List<Education> previousEducations =
+        currentState is EducationsLoaded ? currentState.educations : <Education>[];
 
     try {
       emit(EducationDeleting(currentEducations: previousEducations));

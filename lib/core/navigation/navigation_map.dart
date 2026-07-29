@@ -1,83 +1,130 @@
 /// Complete navigation map for JobMap application
 /// This serves as documentation and reference for all screens
-
 class NavigationMap {
   static const String root = '/';
 
   /// Authentication Flow
-  class Auth {
-    static const String splash = '/';
-    static const String welcome = '/welcome';
-    static const String login = '/login';
-    static const String register = '/register';
-    static const String verifyEmail = '/verify-email';
-    static const String forgotPassword = '/forgot-password';
-    static const String resetPassword = '/reset-password';
-  }
+  static const AuthRoutes auth = AuthRoutes();
 
   /// Main Application (Job Seeker)
-  class JobSeeker {
-    static const String home = '/home';
-    static const String searchJobs = '/search-jobs';
-    static const String jobDetails = '/job-details/:id';
-    static const String savedJobs = '/saved-jobs';
-    static const String applications = '/applications';
-    static const String applicationDetails = '/application-details/:id';
-    static const String notifications = '/notifications';
-    static const String messages = '/messages';
-    static const String chat = '/chat/:conversationId';
+  static const JobSeekerRoutes jobseeker = JobSeekerRoutes();
 
-    /// Career Profile Section
-    class Profile {
-      static const String root = '/profile';
-      static const String personalInfo = '/profile/personal-info';
-      static const String skills = '/profile/skills';
-      static const String experience = '/profile/experience';
-      static const String education = '/profile/education';
-      static const String languages = '/profile/languages';
-      static const String projects = '/profile/projects';
-      static const String certificates = '/profile/certificates';
-      static const String socialLinks = '/profile/social-links';
-      static const String attachments = '/profile/attachments';
-      static const String jobPreferences = '/profile/job-preferences';
-      static const String profileCompletion = '/profile/completion';
-    }
-
-    static const String referral = '/referral';
-    static const String settings = '/settings';
-  }
+  /// Career Profile Section (nested in JobSeeker)
+  static const ProfileRoutes profile = ProfileRoutes();
 
   /// Company Dashboard
-  class Company {
-    static const String dashboard = '/company/dashboard';
-    static const String jobs = '/company/jobs';
-    static const String jobDetails = '/company/job-details/:id';
-    static const String applications = '/company/applications';
-    static const String applicationDetails = '/company/application-details/:id';
-    static const String recruiters = '/company/recruiters';
-    static const String departments = '/company/departments';
-    static const String companyProfile = '/company/profile';
-    static const String settings = '/company/settings';
-  }
+  static const CompanyRoutes company = CompanyRoutes();
 
   /// Admin Dashboard
-  class Admin {
-    static const String dashboard = '/admin/dashboard';
-    static const String users = '/admin/users';
-    static const String companies = '/admin/companies';
-    static const String jobs = '/admin/jobs';
-    static const String reports = '/admin/reports';
-    static const String settings = '/admin/settings';
-  }
+  static const AdminRoutes admin = AdminRoutes();
 
-  /// Modals & Overlays (not full routes)
-  class Modals {
-    static const String filterJobs = 'filter_jobs';
-    static const String sortJobs = 'sort_jobs';
-    static const String shareJob = 'share_job';
-    static const String reportJob = 'report_job';
-    static const String confirmApplication = 'confirm_application';
-  }
+  /// Modals & Overlays
+  static const ModalRoutes modals = ModalRoutes();
+
+  // Getters for backward compatibility
+  static AuthRoutes get authRoutes => auth;
+  static JobSeekerRoutes get jobSeekerRoutes => jobseeker;
+  static CompanyRoutes get companyRoutes => company;
+  static AdminRoutes get adminRoutes => admin;
+  // Legacy getters (uppercase) used across the codebase
+  // ignore: non_constant_identifier_names
+  static AuthRoutes get Auth => auth;
+  // ignore: non_constant_identifier_names
+  static JobSeekerRoutes get JobSeeker => jobseeker;
+  // ignore: non_constant_identifier_names
+  static ProfileRoutes get Profile => profile;
+  // ignore: non_constant_identifier_names
+  static CompanyRoutes get Company => company;
+  // ignore: non_constant_identifier_names
+  static AdminRoutes get Admin => admin;
+  // ignore: non_constant_identifier_names
+  static ModalRoutes get Modals => modals;
+}
+
+/// Authentication Flow Routes
+class AuthRoutes {
+  const AuthRoutes();
+  
+  final String splash = '/';
+  final String welcome = '/welcome';
+  final String login = '/login';
+  final String register = '/register';
+  final String verifyEmail = '/verify-email';
+  final String forgotPassword = '/forgot-password';
+  final String resetPassword = '/reset-password';
+}
+
+/// Career Profile Section Routes
+class ProfileRoutes {
+  const ProfileRoutes();
+  
+  final String root = '/profile';
+  final String personalInfo = '/profile/personal-info';
+  final String skills = '/profile/skills';
+  final String experience = '/profile/experience';
+  final String education = '/profile/education';
+  final String languages = '/profile/languages';
+  final String projects = '/profile/projects';
+  final String certificates = '/profile/certificates';
+  final String socialLinks = '/profile/social-links';
+  final String attachments = '/profile/attachments';
+  final String jobPreferences = '/profile/job-preferences';
+  final String profileCompletion = '/profile/completion';
+}
+
+/// Main Application (Job Seeker) Routes
+class JobSeekerRoutes {
+  const JobSeekerRoutes();
+  
+  final String home = '/home';
+  final String searchJobs = '/search-jobs';
+  final String jobDetails = '/job-details/:id';
+  final String savedJobs = '/saved-jobs';
+  final String applications = '/applications';
+  final String applicationDetails = '/application-details/:id';
+  final String notifications = '/notifications';
+  final String messages = '/messages';
+  final String chat = '/chat/:conversationId';
+  final String referral = '/referral';
+  final String settings = '/settings';
+  
+  final ProfileRoutes profile = const ProfileRoutes();
+  ProfileRoutes get profileRoutes => profile;
+  // Legacy getter to match existing codebase usage: `NavigationMap.JobSeeker.Profile`
+  // ignore: non_constant_identifier_names
+  ProfileRoutes get Profile => profile;
+}
+
+/// Company Dashboard Routes
+class CompanyRoutes {
+  const CompanyRoutes();
+  
+  final String dashboard = '/company/dashboard';
+  final String jobs = '/company/jobs';
+  final String jobDetails = '/company/job-details/:id';
+  final String applications = '/company/applications';
+  final String applicationDetails = '/company/application-details/:id';
+  final String recruiters = '/company/recruiters';
+  final String departments = '/company/departments';
+  final String companyProfile = '/company/profile';
+  final String settings = '/company/settings';
+}
+
+/// Admin Dashboard Routes
+class AdminRoutes {
+  const AdminRoutes();
+  
+  final String dashboard = '/admin/dashboard';
+  final String users = '/admin/users';
+  final String companies = '/admin/companies';
+  final String jobs = '/admin/jobs';
+  final String reports = '/admin/reports';
+  final String settings = '/admin/settings';
+}
+
+/// Modals & Overlays (not full routes)
+class ModalRoutes {
+  const ModalRoutes();
 }
 
 /// Screen metadata (for navigation tracking)
@@ -100,146 +147,146 @@ final screens = [
   // Auth screens
   ScreenMetadata(
     name: 'Splash',
-    route: NavigationMap.Auth.splash,
+    route: NavigationMap.authRoutes.splash,
     category: 'auth',
   ),
   ScreenMetadata(
     name: 'Welcome',
-    route: NavigationMap.Auth.welcome,
+    route: NavigationMap.authRoutes.welcome,
     category: 'auth',
   ),
   ScreenMetadata(
     name: 'Login',
-    route: NavigationMap.Auth.login,
+    route: NavigationMap.authRoutes.login,
     category: 'auth',
   ),
   ScreenMetadata(
     name: 'Register',
-    route: NavigationMap.Auth.register,
+    route: NavigationMap.authRoutes.register,
     category: 'auth',
   ),
   ScreenMetadata(
     name: 'Verify Email',
-    route: NavigationMap.Auth.verifyEmail,
+    route: NavigationMap.authRoutes.verifyEmail,
     category: 'auth',
   ),
   ScreenMetadata(
     name: 'Forgot Password',
-    route: NavigationMap.Auth.forgotPassword,
+    route: NavigationMap.authRoutes.forgotPassword,
     category: 'auth',
   ),
   ScreenMetadata(
     name: 'Reset Password',
-    route: NavigationMap.Auth.resetPassword,
+    route: NavigationMap.authRoutes.resetPassword,
     category: 'auth',
   ),
 
   // Job Seeker screens
   ScreenMetadata(
     name: 'Home',
-    route: NavigationMap.JobSeeker.home,
+    route: NavigationMap.jobSeekerRoutes.home,
     category: 'job_seeker',
     description: 'Main dashboard with featured jobs',
   ),
   ScreenMetadata(
     name: 'Search Jobs',
-    route: NavigationMap.JobSeeker.searchJobs,
+    route: NavigationMap.jobSeekerRoutes.searchJobs,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Job Details',
-    route: NavigationMap.JobSeeker.jobDetails,
+    route: NavigationMap.jobSeekerRoutes.jobDetails,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Saved Jobs',
-    route: NavigationMap.JobSeeker.savedJobs,
+    route: NavigationMap.jobSeekerRoutes.savedJobs,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Applications',
-    route: NavigationMap.JobSeeker.applications,
+    route: NavigationMap.jobSeekerRoutes.applications,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Notifications',
-    route: NavigationMap.JobSeeker.notifications,
+    route: NavigationMap.jobSeekerRoutes.notifications,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Messages',
-    route: NavigationMap.JobSeeker.messages,
+    route: NavigationMap.jobSeekerRoutes.messages,
     category: 'job_seeker',
   ),
 
   // Career Profile screens
   ScreenMetadata(
     name: 'Profile - Personal Info',
-    route: NavigationMap.JobSeeker.Profile.personalInfo,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.personalInfo,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Profile - Skills',
-    route: NavigationMap.JobSeeker.Profile.skills,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.skills,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Profile - Experience',
-    route: NavigationMap.JobSeeker.Profile.experience,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.experience,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Profile - Education',
-    route: NavigationMap.JobSeeker.Profile.education,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.education,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Profile - Languages',
-    route: NavigationMap.JobSeeker.Profile.languages,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.languages,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Profile - Projects',
-    route: NavigationMap.JobSeeker.Profile.projects,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.projects,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Profile - Certificates',
-    route: NavigationMap.JobSeeker.Profile.certificates,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.certificates,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Profile - Social Links',
-    route: NavigationMap.JobSeeker.Profile.socialLinks,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.socialLinks,
     category: 'job_seeker',
   ),
   ScreenMetadata(
     name: 'Profile - Job Preferences',
-    route: NavigationMap.JobSeeker.Profile.jobPreferences,
+    route: NavigationMap.jobSeekerRoutes.profileRoutes.jobPreferences,
     category: 'job_seeker',
   ),
 
   // Company screens
   ScreenMetadata(
     name: 'Company Dashboard',
-    route: NavigationMap.Company.dashboard,
+    route: NavigationMap.companyRoutes.dashboard,
     category: 'company',
   ),
   ScreenMetadata(
     name: 'Company Jobs',
-    route: NavigationMap.Company.jobs,
+    route: NavigationMap.companyRoutes.jobs,
     category: 'company',
   ),
   ScreenMetadata(
     name: 'Company Applications',
-    route: NavigationMap.Company.applications,
+    route: NavigationMap.companyRoutes.applications,
     category: 'company',
   ),
 
   // Admin screens
   ScreenMetadata(
     name: 'Admin Dashboard',
-    route: NavigationMap.Admin.dashboard,
+    route: NavigationMap.adminRoutes.dashboard,
     category: 'admin',
   ),
 ];

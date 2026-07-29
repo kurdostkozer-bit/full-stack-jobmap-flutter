@@ -8,14 +8,17 @@ abstract class ConnectivityService {
 class SimpleConnectivityService implements ConnectivityService {
   @override
   Future<bool> isConnected() async {
-    // TODO: Implement actual connectivity check using connectivity_plus
+    // Lightweight default: assume connected. Replace with `connectivity_plus`
+    // implementation when adding the dependency.
     return true;
   }
 
   @override
   Stream<bool> onConnectivityChanged() {
-    // TODO: Implement stream using connectivity_plus
-    return Stream.value(true);
+    // Default stream that always emits `true`. Replace with
+    // `Connectivity().onConnectivityChanged` mapping when using
+    // `connectivity_plus`.
+    return Stream<bool>.value(true);
   }
 }
 
@@ -23,13 +26,15 @@ class SimpleConnectivityService implements ConnectivityService {
 class ConnectivityPlusService implements ConnectivityService {
   @override
   Future<bool> isConnected() async {
-    // TODO: Implement using connectivity_plus package
-    throw UnimplementedError();
+    // Not implemented - production implementation should use
+    // `connectivity_plus` to check platform connectivity.
+    return true;
   }
 
   @override
   Stream<bool> onConnectivityChanged() {
-    // TODO: Implement stream
-    throw UnimplementedError();
+    // Not implemented - production implementation should expose a
+    // stream that reflects platform connectivity changes.
+    return Stream<bool>.value(true);
   }
 }

@@ -5,7 +5,7 @@ part 'job_preference_models.g.dart';
 
 @JsonSerializable()
 class JobPreferenceModel extends JobPreferenceEntity {
-  const JobPreferenceModel({
+  JobPreferenceModel({
     required super.id,
     required super.careerProfileId,
     required super.jobTitles,

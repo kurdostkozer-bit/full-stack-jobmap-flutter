@@ -8,7 +8,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 
 /// Languages screen - View and manage languages
 class LanguagesScreen extends StatefulWidget {
-  const LanguagesScreen({Key? key}) : super(key: key);
+  const LanguagesScreen({super.key});
 
   static const String routeName = '/languages';
 
@@ -31,7 +31,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       context.read<LanguagesBloc>().add(
-            LoadLanguagesEvent(authState.user.careerProfileId!),
+            LoadLanguagesEvent(authState.session.user.id),
           );
     }
   }
@@ -64,7 +64,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<LanguageProficiency>(
-                value: _selectedProficiency,
+                initialValue: _selectedProficiency,
                 decoration: const InputDecoration(
                   labelText: 'مستوى الإتقان',
                   border: OutlineInputBorder(),
@@ -107,7 +107,7 @@ class _LanguagesScreenState extends State<LanguagesScreen> {
                   if (language == null) {
                     context.read<LanguagesBloc>().add(
                           CreateLanguageEvent(
-                            authState.user.careerProfileId!,
+                            authState.session.user.id,
                             _nameController.text,
                             _selectedProficiency!,
                           ),

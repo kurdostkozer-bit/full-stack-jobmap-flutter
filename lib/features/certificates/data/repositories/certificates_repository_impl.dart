@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../datasources/certificates_local_datasource.dart';
 import '../datasources/certificates_remote_datasource.dart';
 import '../models/certificates_models.dart';
@@ -128,7 +129,7 @@ class CertificatesRepositoryImpl implements CertificatesRepository {
     try {
       await localDataSource.clearCertificates(careerProfileId);
     } catch (e) {
-      print('Error clearing cached certificates: $e');
+      debugPrint('Error clearing cached certificates: $e');
     }
   }
 }

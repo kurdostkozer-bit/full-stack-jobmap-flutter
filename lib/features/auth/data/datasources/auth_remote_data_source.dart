@@ -15,6 +15,22 @@ abstract class AuthRemoteDataSource {
     String? phone,
   });
 
+  /// Verify email with code.
+  Future<void> verifyEmail({
+    required String email,
+    required String code,
+  });
+
+  /// Request password reset.
+  Future<void> forgotPassword({required String email});
+
+  /// Reset password with code and new password.
+  Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  });
+
   /// Refresh an expired session.
   Future<AuthSessionModel> refreshSession(
     String refreshToken,

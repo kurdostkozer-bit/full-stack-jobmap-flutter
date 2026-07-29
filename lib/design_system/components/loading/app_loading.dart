@@ -12,18 +12,18 @@ class AppSkeletonLoader extends StatelessWidget {
   final bool isCircular;
 
   const AppSkeletonLoader({
-    Key? key,
+    super.key,
     this.itemCount = 3,
     this.height = 20,
     this.width = double.infinity,
     this.padding = const EdgeInsets.all(16),
     this.isCircular = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Theme.of(context).colorScheme.surfaceVariant,
+      baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
       highlightColor: Theme.of(context).colorScheme.surface,
       child: ListView.builder(
         itemCount: itemCount,
@@ -35,7 +35,7 @@ class AppSkeletonLoader extends StatelessWidget {
               padding: padding,
               child: CircleAvatar(
                 radius: height / 2,
-                backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
               ),
             );
           }
@@ -44,7 +44,7 @@ class AppSkeletonLoader extends StatelessWidget {
             height: height,
             width: width,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceVariant,
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(AppRadius.md),
             ),
           );
@@ -63,13 +63,13 @@ class AppProgressIndicator extends StatelessWidget {
   final double height;
 
   const AppProgressIndicator({
-    Key? key,
+    super.key,
     required this.value,
     this.label,
     this.backgroundColor,
     this.valueColor,
     this.height = 8,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class AppProgressIndicator extends StatelessWidget {
           child: LinearProgressIndicator(
             value: value,
             minHeight: height,
-            backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.surfaceVariant,
+            backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
             valueColor: AlwaysStoppedAnimation(
               valueColor ?? Theme.of(context).colorScheme.primary,
             ),
@@ -103,11 +103,11 @@ class AppCircularLoading extends StatelessWidget {
   final double strokeWidth;
 
   const AppCircularLoading({
-    Key? key,
+    super.key,
     this.size = 48,
     this.color,
     this.strokeWidth = 4,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -131,11 +131,11 @@ class AppLoadingOverlay extends StatelessWidget {
   final String? message;
 
   const AppLoadingOverlay({
-    Key? key,
+    super.key,
     required this.isLoading,
     required this.child,
     this.message,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +144,7 @@ class AppLoadingOverlay extends StatelessWidget {
         child,
         if (isLoading)
           Container(
-            color: Colors.black.withOpacity(0.3),
+            color: Colors.black.withValues(alpha: 0.3),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

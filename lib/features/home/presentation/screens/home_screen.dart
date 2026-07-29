@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../design_system/index.dart';
+import '../../../../core/extensions/build_context_extensions.dart';
 
 /// Home screen - main dashboard
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   static const String routeName = '/home';
 
@@ -53,7 +54,10 @@ class _HomeScreenState extends State<HomeScreen> {
             AppTextField.search(
               hintText: 'Search jobs, companies...',
               onTap: () {
-                // TODO: Open search
+                // Placeholder: open search implementation pending.
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Search (TODO)')),
+                );
               },
             ),
             SizedBox(height: AppSpacing.lg),
@@ -73,9 +77,12 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (context, index) => Padding(
                 padding: EdgeInsets.only(bottom: AppSpacing.md),
                 child: AppCard(
-                  onTap: () {
-                    // TODO: Navigate to job details
-                  },
+                    onTap: () {
+                      // Placeholder: navigate to job details (TODO)
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Open job details (TODO)')),
+                      );
+                    },
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

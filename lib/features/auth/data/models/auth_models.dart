@@ -54,6 +54,7 @@ class UserResponse with _$UserResponse {
     String? bio,
     bool? emailVerified,
     DateTime? createdAt,
+    String? careerProfileId,
   }) = _UserResponse;
 
   factory UserResponse.fromJson(Map<String, dynamic> json) =>

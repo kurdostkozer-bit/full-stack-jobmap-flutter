@@ -44,8 +44,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
     Emitter<LanguagesState> emit,
   ) async {
     final currentState = state;
-    final previousLanguages =
-        currentState is LanguagesLoaded ? currentState.languages : [];
+    final List<Language> previousLanguages =
+        currentState is LanguagesLoaded ? currentState.languages : <Language>[];
 
     try {
       emit(LanguageCreating(currentLanguages: previousLanguages));
@@ -76,8 +76,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
     Emitter<LanguagesState> emit,
   ) async {
     final currentState = state;
-    final previousLanguages =
-        currentState is LanguagesLoaded ? currentState.languages : [];
+    final List<Language> previousLanguages =
+        currentState is LanguagesLoaded ? currentState.languages : <Language>[];
 
     try {
       emit(LanguageUpdating(currentLanguages: previousLanguages));
@@ -111,8 +111,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
     Emitter<LanguagesState> emit,
   ) async {
     final currentState = state;
-    final previousLanguages =
-        currentState is LanguagesLoaded ? currentState.languages : [];
+    final List<Language> previousLanguages =
+        currentState is LanguagesLoaded ? currentState.languages : <Language>[];
 
     try {
       emit(LanguageDeleting(currentLanguages: previousLanguages));

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../design_system/index.dart';
 import '../../domain/entities/education_entities.dart';
 import '../bloc/education_bloc.dart';
 import '../bloc/education_event.dart';
@@ -9,7 +8,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 
 /// Education screen - View and manage education records
 class EducationScreen extends StatefulWidget {
-  const EducationScreen({Key? key}) : super(key: key);
+  const EducationScreen({super.key});
 
   static const String routeName = '/education';
 
@@ -44,7 +43,7 @@ class _EducationScreenState extends State<EducationScreen> {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       context.read<EducationBloc>().add(
-            LoadEducationsEvent(authState.user.careerProfileId!),
+            LoadEducationsEvent(authState.session.user.id),
           );
     }
   }
@@ -194,7 +193,7 @@ class _EducationScreenState extends State<EducationScreen> {
                   if (education == null) {
                     context.read<EducationBloc>().add(
                           CreateEducationEvent(
-                            authState.user.careerProfileId!,
+                            authState.session.user.id,
                             _schoolController.text,
                             _degreeController.text,
                             fieldOfStudy:

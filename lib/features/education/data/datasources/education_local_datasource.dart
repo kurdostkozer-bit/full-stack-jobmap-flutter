@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/education_models.dart';
 
@@ -35,7 +36,7 @@ class EducationLocalDataSourceImpl implements EducationLocalDataSource {
         value: jsonEncode(json),
       );
     } catch (e) {
-      print('Error caching educations: $e');
+      debugPrint('Error caching educations: $e');
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class EducationLocalDataSourceImpl implements EducationLocalDataSource {
             .toList();
       }
     } catch (e) {
-      print('Error reading cached educations: $e');
+      debugPrint('Error reading cached educations: $e');
     }
     return null;
   }
@@ -64,7 +65,7 @@ class EducationLocalDataSourceImpl implements EducationLocalDataSource {
     try {
       await secureStorage.delete(key: _getKey(careerProfileId));
     } catch (e) {
-      print('Error clearing educations: $e');
+      debugPrint('Error clearing educations: $e');
     }
   }
 }

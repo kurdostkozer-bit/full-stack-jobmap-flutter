@@ -44,8 +44,8 @@ class ExperienceBloc extends Bloc<ExperienceEvent, ExperienceState> {
     Emitter<ExperienceState> emit,
   ) async {
     final currentState = state;
-    final previousExperiences =
-        currentState is ExperiencesLoaded ? currentState.experiences : [];
+    final List<Experience> previousExperiences =
+        currentState is ExperiencesLoaded ? currentState.experiences : <Experience>[];
 
     try {
       emit(ExperienceCreating(currentExperiences: previousExperiences));
@@ -82,8 +82,8 @@ class ExperienceBloc extends Bloc<ExperienceEvent, ExperienceState> {
     Emitter<ExperienceState> emit,
   ) async {
     final currentState = state;
-    final previousExperiences =
-        currentState is ExperiencesLoaded ? currentState.experiences : [];
+    final List<Experience> previousExperiences =
+        currentState is ExperiencesLoaded ? currentState.experiences : <Experience>[];
 
     try {
       emit(ExperienceUpdating(currentExperiences: previousExperiences));
@@ -122,8 +122,8 @@ class ExperienceBloc extends Bloc<ExperienceEvent, ExperienceState> {
     Emitter<ExperienceState> emit,
   ) async {
     final currentState = state;
-    final previousExperiences =
-        currentState is ExperiencesLoaded ? currentState.experiences : [];
+    final List<Experience> previousExperiences =
+        currentState is ExperiencesLoaded ? currentState.experiences : <Experience>[];
 
     try {
       emit(ExperienceDeleting(currentExperiences: previousExperiences));

@@ -1,3 +1,6 @@
+import 'dart:convert' as convert;
+const utf8Codec = convert.utf8;
+
 /// String extensions for common operations
 extension StringExtensions on String {
   /// Check if string is email
@@ -163,7 +166,7 @@ extension StringExtensions on String {
 
   /// Get byte size
   int get byteLength {
-    return utf8.encode(this).length;
+    return utf8Codec.encode(this).length;
   }
 
   /// Check if empty or whitespace only
@@ -172,5 +175,5 @@ extension StringExtensions on String {
   }
 }
 
-/// Required for UTF-8 encoding in byteLength
-import 'dart:convert' as utf8;
+
+

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/experience_models.dart';
 
@@ -35,7 +36,7 @@ class ExperienceLocalDataSourceImpl implements ExperienceLocalDataSource {
         value: jsonEncode(json),
       );
     } catch (e) {
-      print('Error caching experiences: $e');
+      debugPrint('Error caching experiences: $e');
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class ExperienceLocalDataSourceImpl implements ExperienceLocalDataSource {
             .toList();
       }
     } catch (e) {
-      print('Error reading cached experiences: $e');
+      debugPrint('Error reading cached experiences: $e');
     }
     return null;
   }
@@ -64,7 +65,7 @@ class ExperienceLocalDataSourceImpl implements ExperienceLocalDataSource {
     try {
       await secureStorage.delete(key: _getKey(careerProfileId));
     } catch (e) {
-      print('Error clearing experiences: $e');
+      debugPrint('Error clearing experiences: $e');
     }
   }
 }

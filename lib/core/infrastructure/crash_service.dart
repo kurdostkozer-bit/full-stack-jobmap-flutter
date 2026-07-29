@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// Crash reporting service
 abstract class CrashService {
   Future<void> recordException(Object exception, StackTrace? stackTrace);
@@ -10,25 +12,25 @@ abstract class CrashService {
 class SimpleCrashService implements CrashService {
   @override
   Future<void> recordException(Object exception, StackTrace? stackTrace) async {
-    print('💥 Exception: $exception');
+    debugPrint('💥 Exception: $exception');
     if (stackTrace != null) {
-      print(stackTrace);
+      debugPrint(stackTrace.toString());
     }
   }
 
   @override
   Future<void> recordFlutterError(FlutterErrorDetails details) async {
-    print('💥 Flutter Error: ${details.exceptionAsString()}');
+    debugPrint('💥 Flutter Error: ${details.exceptionAsString()}');
   }
 
   @override
   Future<void> setUserIdentifier(String userId) async {
-    print('👤 User ID: $userId');
+    debugPrint('👤 User ID: $userId');
   }
 
   @override
   Future<void> setBreadcrumb(String message) async {
-    print('🔗 Breadcrumb: $message');
+    debugPrint('🔗 Breadcrumb: $message');
   }
 }
 
@@ -36,25 +38,24 @@ class SimpleCrashService implements CrashService {
 class SentryCrashService implements CrashService {
   @override
   Future<void> recordException(Object exception, StackTrace? stackTrace) async {
-    // TODO: Implement Sentry
-    throw UnimplementedError();
+    // No-op placeholder. Replace with Sentry SDK calls when adding
+    // `sentry_flutter` dependency.
+    debugPrint('SentryCrashService.recordException: $exception');
+    if (stackTrace != null) debugPrint(stackTrace.toString());
   }
 
   @override
   Future<void> recordFlutterError(FlutterErrorDetails details) async {
-    // TODO: Implement Sentry Flutter errors
-    throw UnimplementedError();
+    debugPrint('SentryCrashService.recordFlutterError: ${details.exceptionAsString()}');
   }
 
   @override
   Future<void> setUserIdentifier(String userId) async {
-    // TODO: Implement Sentry user ID
-    throw UnimplementedError();
+    debugPrint('SentryCrashService.setUserIdentifier: $userId');
   }
 
   @override
   Future<void> setBreadcrumb(String message) async {
-    // TODO: Implement Sentry breadcrumbs
-    throw UnimplementedError();
+    debugPrint('SentryCrashService.setBreadcrumb: $message');
   }
 }

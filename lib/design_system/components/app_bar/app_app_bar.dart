@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../spacing/app_spacing.dart';
 
 /// Custom app bar
 class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -13,7 +12,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
   final PreferredSizeWidget? bottom;
 
   const AppAppBar({
-    Key? key,
+    super.key,
     this.title,
     this.titleWidget,
     this.actions,
@@ -22,7 +21,7 @@ class AppAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.backgroundColor,
     this.elevation = 0,
     this.bottom,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -88,16 +87,12 @@ class _SearchAppBar extends AppAppBar {
   final ValueChanged<String> onSearch;
 
   const _SearchAppBar({
-    Key? key,
+    super.key,
     required this.hintText,
     required this.onSearch,
-    VoidCallback? onBackPressed,
-    List<Widget>? actions,
-  }) : super(
-    key: key,
-    onBackPressed: onBackPressed,
-    actions: actions,
-  );
+    super.onBackPressed,
+    super.actions,
+  });
 
   @override
   Widget build(BuildContext context) {

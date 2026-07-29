@@ -84,13 +84,13 @@ class AppSpacing {
   static double get(int multiplier) => sm * multiplier;
 
   /// Half spacing
-  static double half(double spacing) => spacing / 2;
+  static double half(double value) => value / 2;
 
   /// Double spacing
-  static double double(double spacing) => spacing * 2;
+  static double doubled(double value) => value * 2;
 
   /// Ratio based spacing
-  static double ratio(double base, double ratio) => base * ratio;
+  static double ratio(double base, double ratioValue) => base * ratioValue;
 }
 
 /// Spacing constants for EdgeInsets

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../datasources/languages_local_datasource.dart';
 import '../datasources/languages_remote_datasource.dart';
 import '../models/languages_models.dart';
@@ -108,7 +109,7 @@ class LanguagesRepositoryImpl implements LanguagesRepository {
     try {
       await localDataSource.clearLanguages(careerProfileId);
     } catch (e) {
-      print('Error clearing cached languages: $e');
+      debugPrint('Error clearing cached languages: $e');
     }
   }
 }

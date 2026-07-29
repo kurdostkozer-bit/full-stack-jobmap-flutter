@@ -1,30 +1,36 @@
-import '../../data/models/auth_models.dart';
+import '../entities/auth_session.dart';
 
 abstract class AuthRepository {
-  Future<AuthResponse> register(
-    String email,
-    String password,
-    String firstName,
-    String lastName,
-  );
+  Future<AuthSession> register({
+    required String fullName,
+    required String email,
+    required String password,
+    String? phone,
+  });
 
-  Future<void> verifyEmail(String email, String code);
+  Future<void> verifyEmail({
+    required String email,
+    required String code,
+  });
 
-  Future<AuthResponse> login(String email, String password);
-
-  Future<UserResponse> getCurrentUser();
+  Future<AuthSession> login({
+    required String email,
+    required String password,
+  });
 
   Future<void> logout();
 
-  Future<void> forgotPassword(String email);
+  Future<void> forgotPassword({required String email});
 
-  Future<void> resetPassword(String email, String code, String newPassword);
+  Future<void> resetPassword({
+    required String email,
+    required String code,
+    required String newPassword,
+  });
 
-  Future<AuthResponse> refreshToken(String refreshToken);
+  Future<AuthSession> refreshSession({required String refreshToken});
 
-  Future<bool> isUserAuthenticated();
+  Future<bool> isAuthenticated();
 
-  Future<AuthResponse?> getCachedAuthResponse();
-
-  Future<UserResponse?> getCachedUser();
+  Future<AuthSession?> getCurrentSession();
 }

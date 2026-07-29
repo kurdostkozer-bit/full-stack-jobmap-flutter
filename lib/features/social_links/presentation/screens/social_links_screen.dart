@@ -31,8 +31,9 @@ class _SocialLinksViewState extends State<_SocialLinksView> {
   @override
   void initState() {
     super.initState();
-    careerProfileId = 'profile_id'; // TODO: Get from auth or profile
-    _loadSocialLinks();
+    // Replace with real profile id lookup (Auth/Profile)
+    careerProfileId = '';
+    if (careerProfileId.isNotEmpty) _loadSocialLinks();
   }
 
   void _loadSocialLinks() {
@@ -161,7 +162,7 @@ class _SocialLinksViewState extends State<_SocialLinksView> {
       case SocialLinkPlatform.linkedin:
         return Icons.business;
       case SocialLinkPlatform.portfolio:
-        return Icons.briefcase;
+        return Icons.business;
       case SocialLinkPlatform.twitter:
         return Icons.share;
       case SocialLinkPlatform.instagram:
@@ -205,7 +206,7 @@ class _SocialLinksViewState extends State<_SocialLinksView> {
                     _showUrlDialog(platform);
                   },
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),
@@ -234,8 +235,11 @@ class _SocialLinksViewState extends State<_SocialLinksView> {
           ),
           ElevatedButton(
             onPressed: () {
-              // TODO: Create new social link
+              // Placeholder: create social link implementation pending.
               Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Create social link (TODO)')),
+              );
             },
             child: const Text('Add'),
           ),
@@ -260,8 +264,12 @@ class _SocialLinksViewState extends State<_SocialLinksView> {
                 link.isVisible ? 'Hide Link' : 'Show Link',
               ),
               onTap: () {
-                // TODO: Toggle visibility
+                // Placeholder: toggle not implemented yet. Replace with
+                // dispatching an UpdateSocialLinkEvent to change visibility.
                 Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Toggle visibility (TODO)')),
+                );
               },
             ),
             ListTile(
@@ -269,7 +277,10 @@ class _SocialLinksViewState extends State<_SocialLinksView> {
               title: const Text('Edit'),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: Show edit dialog
+                // Placeholder: show edit dialog not implemented yet.
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Edit social link (TODO)')),
+                );
               },
             ),
             ListTile(

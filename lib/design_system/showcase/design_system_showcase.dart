@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../index.dart';
+import '../../core/extensions/build_context_extensions.dart';
 
 /// Complete Design System Showcase - Demonstrates all tokens and components
 class DesignSystemShowcase extends StatefulWidget {
-  const DesignSystemShowcase({Key? key}) : super(key: key);
+  const DesignSystemShowcase({super.key});
 
   @override
   State<DesignSystemShowcase> createState() => _DesignSystemShowcaseState();
@@ -70,7 +71,7 @@ class _DesignSystemShowcaseState extends State<DesignSystemShowcase>
             children: [
               _colorBox('Primary', AppColors.primary),
               _colorBox('Secondary', AppColors.secondary),
-              _colorBox('Tertiary', AppColors.tertiary),
+              _colorBox('Accent', AppColors.accent),
               _colorBox('Error', AppColors.error),
               _colorBox('Success', AppColors.success),
               _colorBox('Warning', AppColors.warning),
@@ -86,7 +87,7 @@ class _DesignSystemShowcaseState extends State<DesignSystemShowcase>
             children: [
               _colorBox('Primary Light', AppColors.primaryLight),
               _colorBox('Secondary Light', AppColors.secondaryLight),
-              _colorBox('Tertiary Light', AppColors.tertiaryLight),
+              _colorBox('Accent Light', AppColors.accentLight),
             ],
           ),
           SizedBox(height: AppSpacing.lg),
@@ -96,16 +97,16 @@ class _DesignSystemShowcaseState extends State<DesignSystemShowcase>
             spacing: AppSpacing.sm,
             runSpacing: AppSpacing.sm,
             children: [
-              _colorBox('Neutral 50', AppColors.neutral50),
-              _colorBox('Neutral 100', AppColors.neutral100),
-              _colorBox('Neutral 200', AppColors.neutral200),
-              _colorBox('Neutral 300', AppColors.neutral300),
-              _colorBox('Neutral 400', AppColors.neutral400),
-              _colorBox('Neutral 500', AppColors.neutral500),
-              _colorBox('Neutral 600', AppColors.neutral600),
-              _colorBox('Neutral 700', AppColors.neutral700),
-              _colorBox('Neutral 800', AppColors.neutral800),
-              _colorBox('Neutral 900', AppColors.neutral900),
+              _colorBox('Gray 50', AppColors.gray50),
+              _colorBox('Gray 100', AppColors.gray100),
+              _colorBox('Gray 200', AppColors.gray200),
+              _colorBox('Gray 300', AppColors.gray300),
+              _colorBox('Gray 400', AppColors.gray400),
+              _colorBox('Gray 500', AppColors.gray500),
+              _colorBox('Gray 600', AppColors.gray600),
+              _colorBox('Gray 700', AppColors.gray700),
+              _colorBox('Gray 800', AppColors.gray800),
+              _colorBox('Gray 900', AppColors.gray900),
             ],
           ),
         ],

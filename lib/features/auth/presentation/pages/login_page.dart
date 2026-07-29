@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/auth_bloc.dart';
-import '../bloc/auth_event.dart';
-import '../bloc/auth_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -25,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login() {
     context.read<AuthBloc>().add(
-          LoginRequested(
+          LoginEvent(
             email: _emailController.text.trim(),
             password: _passwordController.text,
           ),
@@ -40,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthFailure) {
+          if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),

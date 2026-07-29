@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../datasources/projects_local_datasource.dart';
 import '../datasources/projects_remote_datasource.dart';
 import '../models/projects_models.dart';
@@ -132,7 +133,7 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
     try {
       await localDataSource.clearProjects(careerProfileId);
     } catch (e) {
-      print('Error clearing cached projects: $e');
+      debugPrint('Error clearing cached projects: $e');
     }
   }
 }

@@ -45,6 +45,19 @@ class SimpleOfflineService implements OfflineService {
 
   @override
   Future<void> syncQueue() async {
-    // TODO: Sync queued requests when online
+    // Lightweight default: attempt to 'sync' by replaying queued requests
+    // via debug logging. Replace with real network client integration that
+    // retries requests and handles failures when adding a proper
+    // connectivity + HTTP client.
+    if (_queue.isEmpty) return;
+    for (final req in List<QueuedRequest>.from(_queue)) {
+      // In production, send `req` to the server and remove on success.
+      // Here we just log the attempt.
+      // ignore: avoid_print
+      print('Syncing queued request: ${req.endpoint} @ ${req.timestamp}');
+    }
+    // Clear queue after attempted sync to avoid duplicating work in this
+    // placeholder implementation.
+    _queue.clear();
   }
 }

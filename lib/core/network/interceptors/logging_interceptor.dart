@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 /// Logging interceptor for API calls
 class LoggingInterceptor extends Interceptor {
@@ -7,12 +8,12 @@ class LoggingInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    print('🚀 API Request:');
-    print('URL: ${options.baseUrl}${options.path}');
-    print('Method: ${options.method}');
-    print('Headers: ${options.headers}');
+    debugPrint('🚀 API Request:');
+    debugPrint('URL: ${options.baseUrl}${options.path}');
+    debugPrint('Method: ${options.method}');
+    debugPrint('Headers: ${options.headers}');
     if (options.data != null) {
-      print('Body: ${options.data}');
+      debugPrint('Body: ${options.data}');
     }
     return handler.next(options);
   }
@@ -22,10 +23,10 @@ class LoggingInterceptor extends Interceptor {
     Response response,
     ResponseInterceptorHandler handler,
   ) async {
-    print('✅ API Response:');
-    print('URL: ${response.requestOptions.baseUrl}${response.requestOptions.path}');
-    print('Status Code: ${response.statusCode}');
-    print('Data: ${response.data}');
+    debugPrint('✅ API Response:');
+    debugPrint('URL: ${response.requestOptions.baseUrl}${response.requestOptions.path}');
+    debugPrint('Status Code: ${response.statusCode}');
+    debugPrint('Data: ${response.data}');
     return handler.next(response);
   }
 
@@ -34,11 +35,11 @@ class LoggingInterceptor extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) async {
-    print('❌ API Error:');
-    print('URL: ${err.requestOptions.baseUrl}${err.requestOptions.path}');
-    print('Status Code: ${err.response?.statusCode}');
-    print('Message: ${err.message}');
-    print('Response: ${err.response?.data}');
+    debugPrint('❌ API Error:');
+    debugPrint('URL: ${err.requestOptions.baseUrl}${err.requestOptions.path}');
+    debugPrint('Status Code: ${err.response?.statusCode}');
+    debugPrint('Message: ${err.message}');
+    debugPrint('Response: ${err.response?.data}');
     return handler.next(err);
   }
 }

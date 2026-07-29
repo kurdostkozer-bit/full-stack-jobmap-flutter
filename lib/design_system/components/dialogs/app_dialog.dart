@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../spacing/app_spacing.dart';
-import '../buttons/app_button.dart';
 
 /// Alert dialog component
 class AppDialog extends StatelessWidget {
@@ -13,7 +12,7 @@ class AppDialog extends StatelessWidget {
   final bool isDangerous;
 
   const AppDialog({
-    Key? key,
+    super.key,
     required this.title,
     required this.message,
     this.confirmButtonLabel,
@@ -21,7 +20,7 @@ class AppDialog extends StatelessWidget {
     this.onConfirm,
     this.onCancel,
     this.isDangerous = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +81,12 @@ class AppBottomSheet extends StatelessWidget {
   final Color? backgroundColor;
 
   const AppBottomSheet({
-    Key? key,
+    super.key,
     this.title,
     required this.child,
     this.onClose,
     this.backgroundColor,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -138,17 +137,17 @@ class AppBottomSheet extends StatelessWidget {
   static Future<void> show(
     BuildContext context, {
     String? title,
-    required Widget child,
     VoidCallback? onClose,
     Color? backgroundColor,
+    required Widget child,
   }) {
     return showModalBottomSheet(
       context: context,
       builder: (_) => AppBottomSheet(
         title: title,
-        child: child,
         onClose: onClose,
         backgroundColor: backgroundColor,
+        child: child,
       ),
     );
   }

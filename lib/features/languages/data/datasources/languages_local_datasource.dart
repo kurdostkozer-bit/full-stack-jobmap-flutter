@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/languages_models.dart';
 
@@ -35,7 +36,7 @@ class LanguagesLocalDataSourceImpl implements LanguagesLocalDataSource {
         value: jsonEncode(json),
       );
     } catch (e) {
-      print('Error caching languages: $e');
+      debugPrint('Error caching languages: $e');
       rethrow;
     }
   }
@@ -54,7 +55,7 @@ class LanguagesLocalDataSourceImpl implements LanguagesLocalDataSource {
             .toList();
       }
     } catch (e) {
-      print('Error reading cached languages: $e');
+      debugPrint('Error reading cached languages: $e');
     }
     return null;
   }
@@ -64,7 +65,7 @@ class LanguagesLocalDataSourceImpl implements LanguagesLocalDataSource {
     try {
       await secureStorage.delete(key: _getKey(careerProfileId));
     } catch (e) {
-      print('Error clearing languages: $e');
+      debugPrint('Error clearing languages: $e');
     }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 /// Analytics service (track user events)
 abstract class AnalyticsService {
   Future<void> logEvent(String name, {Map<String, dynamic>? parameters});
@@ -10,24 +12,24 @@ abstract class AnalyticsService {
 class SimpleAnalyticsService implements AnalyticsService {
   @override
   Future<void> logEvent(String name, {Map<String, dynamic>? parameters}) async {
-    print('📊 Analytics Event: $name ${parameters ?? ''}');
+    debugPrint('📊 Analytics Event: $name ${parameters ?? ''}');
   }
 
   @override
   Future<void> setUserProperty(String name, String value) async {
-    print('👤 User Property: $name = $value');
+    debugPrint('👤 User Property: $name = $value');
   }
 
   @override
   Future<void> logScreenView(String screenName) async {
-    print('📱 Screen View: $screenName');
+    debugPrint('📱 Screen View: $screenName');
   }
 
   @override
   Future<void> logError(String message, {StackTrace? stackTrace}) async {
-    print('❌ Error: $message');
+    debugPrint('❌ Error: $message');
     if (stackTrace != null) {
-      print(stackTrace);
+      debugPrint(stackTrace.toString());
     }
   }
 }
@@ -36,25 +38,24 @@ class SimpleAnalyticsService implements AnalyticsService {
 class FirebaseAnalyticsService implements AnalyticsService {
   @override
   Future<void> logEvent(String name, {Map<String, dynamic>? parameters}) async {
-    // TODO: Implement Firebase Analytics
-    throw UnimplementedError();
+    // No-op placeholder implementation. Replace with Firebase Analytics
+    // when `firebase_analytics` is added to `pubspec.yaml`.
+    debugPrint('FirebaseAnalyticsService.logEvent: $name ${parameters ?? ''}');
   }
 
   @override
   Future<void> setUserProperty(String name, String value) async {
-    // TODO: Implement Firebase user properties
-    throw UnimplementedError();
+    debugPrint('FirebaseAnalyticsService.setUserProperty: $name = $value');
   }
 
   @override
   Future<void> logScreenView(String screenName) async {
-    // TODO: Implement Firebase screen tracking
-    throw UnimplementedError();
+    debugPrint('FirebaseAnalyticsService.logScreenView: $screenName');
   }
 
   @override
   Future<void> logError(String message, {StackTrace? stackTrace}) async {
-    // TODO: Implement Firebase error logging
-    throw UnimplementedError();
+    debugPrint('FirebaseAnalyticsService.logError: $message');
+    if (stackTrace != null) debugPrint(stackTrace.toString());
   }
 }

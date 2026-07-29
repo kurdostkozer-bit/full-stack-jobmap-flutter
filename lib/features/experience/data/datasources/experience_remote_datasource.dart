@@ -28,7 +28,7 @@ class ExperienceRemoteDataSourceImpl implements ExperienceRemoteDataSource {
 
   @override
   Future<List<ExperienceResponse>> getExperiences(String careerProfileId) async {
-    final response = await apiClient.get(
+    final response = await apiClient.get<List<ExperienceResponse>>(
       '/profile/experience',
       queryParameters: {'careerProfileId': careerProfileId},
       fromJson: (json) {

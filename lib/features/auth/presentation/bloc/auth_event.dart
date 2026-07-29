@@ -14,20 +14,20 @@ class CheckAuthEvent extends AuthEvent {
 
 /// Register event
 class RegisterEvent extends AuthEvent {
+  final String fullName;
   final String email;
   final String password;
-  final String firstName;
-  final String lastName;
+  final String? phone;
 
   const RegisterEvent({
+    required this.fullName,
     required this.email,
     required this.password,
-    required this.firstName,
-    required this.lastName,
+    this.phone,
   });
 
   @override
-  List<Object?> get props => [email, password, firstName, lastName];
+  List<Object?> get props => [fullName, email, password, phone];
 }
 
 /// Verify email event
@@ -52,14 +52,19 @@ class LoginEvent extends AuthEvent {
   List<Object?> get props => [email, password];
 }
 
-/// Get current user event
-class GetCurrentUserEvent extends AuthEvent {
-  const GetCurrentUserEvent();
-}
-
 /// Logout event
 class LogoutEvent extends AuthEvent {
   const LogoutEvent();
+}
+
+/// Refresh session event
+class RefreshSessionEvent extends AuthEvent {
+  final String refreshToken;
+
+  const RefreshSessionEvent({required this.refreshToken});
+
+  @override
+  List<Object?> get props => [refreshToken];
 }
 
 /// Forgot password event

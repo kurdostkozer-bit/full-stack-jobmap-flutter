@@ -1,5 +1,5 @@
 import '../repositories/auth_repository.dart';
-import '../../data/models/auth_models.dart';
+import '../entities/auth_session.dart';
 
 /// Register usecase
 class RegisterUseCase {
@@ -7,13 +7,18 @@ class RegisterUseCase {
 
   RegisterUseCase({required this.repository});
 
-  Future<AuthResponse> call(
-    String email,
-    String password,
-    String firstName,
-    String lastName,
-  ) {
-    return repository.register(email, password, firstName, lastName);
+  Future<AuthSession> call({
+    required String fullName,
+    required String email,
+    required String password,
+    String? phone,
+  }) {
+    return repository.register(
+      fullName: fullName,
+      email: email,
+      password: password,
+      phone: phone,
+    );
   }
 }
 
@@ -23,8 +28,11 @@ class LoginUseCase {
 
   LoginUseCase({required this.repository});
 
-  Future<AuthResponse> call(String email, String password) {
-    return repository.login(email, password);
+  Future<AuthSession> call({
+    required String email,
+    required String password,
+  }) {
+    return repository.login(email: email, password: password);
   }
 }
 
@@ -34,19 +42,11 @@ class VerifyEmailUseCase {
 
   VerifyEmailUseCase({required this.repository});
 
-  Future<void> call(String email, String code) {
-    return repository.verifyEmail(email, code);
-  }
-}
-
-/// Get current user usecase
-class GetCurrentUserUseCase {
-  final AuthRepository repository;
-
-  GetCurrentUserUseCase({required this.repository});
-
-  Future<UserResponse> call() {
-    return repository.getCurrentUser();
+  Future<void> call({
+    required String email,
+    required String code,
+  }) {
+    return repository.verifyEmail(email: email, code: code);
   }
 }
 
@@ -67,8 +67,8 @@ class ForgotPasswordUseCase {
 
   ForgotPasswordUseCase({required this.repository});
 
-  Future<void> call(String email) {
-    return repository.forgotPassword(email);
+  Future<void> call({required String email}) {
+    return repository.forgotPassword(email: email);
   }
 }
 
@@ -78,8 +78,16 @@ class ResetPasswordUseCase {
 
   ResetPasswordUseCase({required this.repository});
 
-  Future<void> call(String email, String code, String newPassword) {
-    return repository.resetPassword(email, code, newPassword);
+  Future<void> call({
+    required String email,
+    required String code,
+    required String newPassword,
+  }) {
+    return repository.resetPassword(
+      email: email,
+      code: code,
+      newPassword: newPassword,
+    );
   }
 }
 
@@ -90,17 +98,28 @@ class CheckAuthUseCase {
   CheckAuthUseCase({required this.repository});
 
   Future<bool> call() {
-    return repository.isUserAuthenticated();
+    return repository.isAuthenticated();
   }
 }
 
-/// Get cached user usecase
-class GetCachedUserUseCase {
+/// Get current session usecase
+class GetCurrentSessionUseCase {
   final AuthRepository repository;
 
-  GetCachedUserUseCase({required this.repository});
+  GetCurrentSessionUseCase({required this.repository});
 
-  Future<UserResponse?> call() {
-    return repository.getCachedUser();
+  Future<AuthSession?> call() {
+    return repository.getCurrentSession();
+  }
+}
+
+/// Refresh session usecase
+class RefreshSessionUseCase {
+  final AuthRepository repository;
+
+  RefreshSessionUseCase({required this.repository});
+
+  Future<AuthSession> call({required String refreshToken}) {
+    return repository.refreshSession(refreshToken: refreshToken);
   }
 }

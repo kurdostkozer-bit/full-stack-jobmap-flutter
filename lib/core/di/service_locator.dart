@@ -6,7 +6,8 @@ import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/domain/usecases/auth_usecases.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
-import '../../features/auth/data/datasources/auth_remote_datasource.dart';
+import '../../features/auth/data/datasources/auth_remote_data_source.dart';
+import '../../features/auth/data/datasources/auth_remote_data_source_impl.dart';
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
 import '../../features/profile/presentation/bloc/profile_bloc.dart';
 import '../../features/profile/domain/usecases/profile_usecases.dart';
@@ -145,10 +146,6 @@ Future<void> setupServiceLocator() async {
     () => LoginUseCase(repository: sl<AuthRepository>()),
   );
 
-  sl.registerLazySingleton<GetCurrentUserUseCase>(
-    () => GetCurrentUserUseCase(repository: sl<AuthRepository>()),
-  );
-
   sl.registerLazySingleton<LogoutUseCase>(
     () => LogoutUseCase(repository: sl<AuthRepository>()),
   );
@@ -165,8 +162,12 @@ Future<void> setupServiceLocator() async {
     () => CheckAuthUseCase(repository: sl<AuthRepository>()),
   );
 
-  sl.registerLazySingleton<GetCachedUserUseCase>(
-    () => GetCachedUserUseCase(repository: sl<AuthRepository>()),
+  sl.registerLazySingleton<GetCurrentSessionUseCase>(
+    () => GetCurrentSessionUseCase(repository: sl<AuthRepository>()),
+  );
+
+  sl.registerLazySingleton<RefreshSessionUseCase>(
+    () => RefreshSessionUseCase(repository: sl<AuthRepository>()),
   );
 
   // Auth Bloc
@@ -175,12 +176,12 @@ Future<void> setupServiceLocator() async {
       registerUseCase: sl<RegisterUseCase>(),
       verifyEmailUseCase: sl<VerifyEmailUseCase>(),
       loginUseCase: sl<LoginUseCase>(),
-      getCurrentUserUseCase: sl<GetCurrentUserUseCase>(),
       logoutUseCase: sl<LogoutUseCase>(),
       forgotPasswordUseCase: sl<ForgotPasswordUseCase>(),
       resetPasswordUseCase: sl<ResetPasswordUseCase>(),
       checkAuthUseCase: sl<CheckAuthUseCase>(),
-      getCachedUserUseCase: sl<GetCachedUserUseCase>(),
+      getCurrentSessionUseCase: sl<GetCurrentSessionUseCase>(),
+      refreshSessionUseCase: sl<RefreshSessionUseCase>(),
     ),
   );
 

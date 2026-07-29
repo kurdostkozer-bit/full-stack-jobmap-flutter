@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import '../../domain/entities/profile_entities.dart';
 import '../../domain/usecases/profile_usecases.dart';
 import '../../../../core/network/app_exception.dart';
 import 'profile_event.dart';

@@ -1,13 +1,12 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-import '../models/auth_models.dart';
+import '../models/auth_session_model.dart';
 
 abstract class AuthLocalDataSource {
-  Future<void> saveAuthResponse(AuthResponse response);
-  Future<AuthResponse?> getAuthResponse();
+  Future<void> saveAuthSession(AuthSessionModel session);
+  Future<AuthSessionModel?> getAuthSession();
   Future<String?> getToken();
   Future<String?> getRefreshToken();
-  Future<UserResponse?> getCachedUser();
   Future<void> clearAuth();
   Future<bool> hasValidToken();
 }
@@ -15,47 +14,41 @@ abstract class AuthLocalDataSource {
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static const String _tokenKey = 'auth_token';
   static const String _refreshTokenKey = 'refresh_token';
-  static const String _authResponseKey = 'auth_response';
-  static const String _userKey = 'user_profile';
+  static const String _authSessionKey = 'auth_session';
 
   final FlutterSecureStorage secureStorage;
 
   AuthLocalDataSourceImpl({required this.secureStorage});
 
   @override
-  Future<void> saveAuthResponse(AuthResponse response) async {
+  Future<void> saveAuthSession(AuthSessionModel session) async {
     try {
       // Save tokens
-      await secureStorage.write(key: _tokenKey, value: response.token);
+      await secureStorage.write(key: _tokenKey, value: session.accessToken);
       await secureStorage.write(
         key: _refreshTokenKey,
-        value: response.refreshToken,
+        value: session.refreshToken,
       );
 
-      // Save full response and user
+      // Save full session
       await secureStorage.write(
-        key: _authResponseKey,
-        value: jsonEncode(response.toJson()),
-      );
-      await secureStorage.write(
-        key: _userKey,
-        value: jsonEncode(response.user.toJson()),
+        key: _authSessionKey,
+        value: jsonEncode(session.toJson()),
       );
     } catch (e) {
-      print('Error saving auth response: $e');
       rethrow;
     }
   }
 
   @override
-  Future<AuthResponse?> getAuthResponse() async {
+  Future<AuthSessionModel?> getAuthSession() async {
     try {
-      final json = await secureStorage.read(key: _authResponseKey);
+      final json = await secureStorage.read(key: _authSessionKey);
       if (json != null) {
-        return AuthResponse.fromJson(jsonDecode(json));
+        return AuthSessionModel.fromJson(jsonDecode(json));
       }
     } catch (e) {
-      print('Error reading auth response: $e');
+      rethrow;
     }
     return null;
   }
@@ -65,9 +58,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     try {
       return await secureStorage.read(key: _tokenKey);
     } catch (e) {
-      print('Error reading token: $e');
+      rethrow;
     }
-    return null;
   }
 
   @override
@@ -75,22 +67,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     try {
       return await secureStorage.read(key: _refreshTokenKey);
     } catch (e) {
-      print('Error reading refresh token: $e');
+      rethrow;
     }
-    return null;
-  }
-
-  @override
-  Future<UserResponse?> getCachedUser() async {
-    try {
-      final json = await secureStorage.read(key: _userKey);
-      if (json != null) {
-        return UserResponse.fromJson(jsonDecode(json));
-      }
-    } catch (e) {
-      print('Error reading cached user: $e');
-    }
-    return null;
   }
 
   @override
@@ -99,11 +77,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       await Future.wait([
         secureStorage.delete(key: _tokenKey),
         secureStorage.delete(key: _refreshTokenKey),
-        secureStorage.delete(key: _authResponseKey),
-        secureStorage.delete(key: _userKey),
+        secureStorage.delete(key: _authSessionKey),
       ]);
     } catch (e) {
-      print('Error clearing auth: $e');
+      rethrow;
     }
   }
 
@@ -113,8 +90,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       final token = await getToken();
       return token != null && token.isNotEmpty;
     } catch (e) {
-      print('Error checking token: $e');
+      rethrow;
     }
-    return false;
   }
 }

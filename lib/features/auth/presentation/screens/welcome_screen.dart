@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../../design_system/index.dart';
+import '../../../../core/extensions/build_context_extensions.dart';
 import 'login_screen.dart';
 import 'register_screen.dart';
 
 /// Welcome screen with login and register options
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   static const String routeName = '/welcome';
 
@@ -27,7 +28,7 @@ class WelcomeScreen extends StatelessWidget {
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: context.colorScheme.primary.withOpacity(0.1),
+                        color: context.colorScheme.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(AppRadius.lg),
                       ),
                       child: Icon(

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../datasources/education_local_datasource.dart';
 import '../datasources/education_remote_datasource.dart';
 import '../models/education_models.dart';
@@ -128,7 +129,7 @@ class EducationRepositoryImpl implements EducationRepository {
     try {
       await localDataSource.clearEducations(careerProfileId);
     } catch (e) {
-      print('Error clearing cached educations: $e');
+      debugPrint('Error clearing cached educations: $e');
     }
   }
 }

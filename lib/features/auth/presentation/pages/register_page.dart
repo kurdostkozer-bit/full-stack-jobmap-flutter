@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/auth_bloc.dart';
-import '../bloc/auth_event.dart';
-import '../bloc/auth_state.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -29,13 +27,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   void _register() {
     context.read<AuthBloc>().add(
-          RegisterRequested(
+          RegisterEvent(
             fullName: _fullNameController.text.trim(),
             email: _emailController.text.trim(),
             password: _passwordController.text,
-            phone: _phoneController.text.trim().isEmpty
-                ? null
-                : _phoneController.text.trim(),
+            phone: _phoneController.text.trim().isEmpty ? null : _phoneController.text.trim(),
           ),
         );
   }
@@ -48,7 +44,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthFailure) {
+          if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(state.message),

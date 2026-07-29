@@ -4,7 +4,7 @@ part 'api_response.freezed.dart';
 part 'api_response.g.dart';
 
 /// Generic API Response wrapper
-@freezed
+@Freezed(genericArgumentFactories: true)
 class ApiResponse<T> with _$ApiResponse<T> {
   const factory ApiResponse({
     required bool success,
@@ -38,7 +38,7 @@ class PaginationMeta with _$PaginationMeta {
 }
 
 /// Paginated response
-@freezed
+@Freezed(genericArgumentFactories: true)
 class PaginatedResponse<T> with _$PaginatedResponse<T> {
   const factory PaginatedResponse({
     required List<T> data,

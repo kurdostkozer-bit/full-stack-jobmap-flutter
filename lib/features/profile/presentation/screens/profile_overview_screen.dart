@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/navigation/navigation_map.dart';
+import '../../../../core/extensions/build_context_extensions.dart';
 
 /// Career Profile Overview - main hub for all profile sections
 class ProfileOverviewScreen extends StatelessWidget {
-  const ProfileOverviewScreen({Key? key}) : super(key: key);
+  const ProfileOverviewScreen({super.key});
 
   static const String routeName = '/profile';
 
@@ -77,7 +79,7 @@ class ProfileOverviewScreen extends StatelessWidget {
               context,
               title: 'Personal Information',
               description: 'Your name, bio, and profile picture',
-              icon: AppIcons.person,
+              icon: AppIcons.user,
               onTap: () => context.push(NavigationMap.JobSeeker.Profile.personalInfo),
               isComplete: true,
             ),
@@ -148,9 +150,9 @@ class ProfileOverviewScreen extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: isComplete
-                  ? context.colorScheme.primary.withOpacity(0.1)
-                  : context.colorScheme.surfaceVariant,
+                color: isComplete
+                  ? context.colorScheme.primary.withValues(alpha: 0.1)
+                  : context.colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(AppRadius.md),
             ),
             child: Icon(

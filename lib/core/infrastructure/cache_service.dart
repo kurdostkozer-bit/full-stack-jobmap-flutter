@@ -39,33 +39,34 @@ class MemoryCacheService implements CacheService {
 
 /// HiveCache implementation (future)
 class HiveCacheService implements CacheService {
+  // NOTE: Lightweight local implementation that mimics a Hive box using
+  // a static in-memory map. This avoids adding a Hive dependency while
+  // keeping the `CacheService` API usable. Replace with real Hive
+  // implementation when `hive` is added to `pubspec.yaml`.
+  static final Map<String, String> _box = {};
+
   @override
   Future<void> set(String key, String value) async {
-    // TODO: Implement Hive storage
-    throw UnimplementedError();
+    _box[key] = value;
   }
 
   @override
   Future<String?> get(String key) async {
-    // TODO: Implement Hive retrieval
-    throw UnimplementedError();
+    return _box[key];
   }
 
   @override
   Future<void> remove(String key) async {
-    // TODO: Implement Hive removal
-    throw UnimplementedError();
+    _box.remove(key);
   }
 
   @override
   Future<void> clear() async {
-    // TODO: Implement Hive clear
-    throw UnimplementedError();
+    _box.clear();
   }
 
   @override
   Future<bool> hasKey(String key) async {
-    // TODO: Implement Hive key check
-    throw UnimplementedError();
+    return _box.containsKey(key);
   }
 }

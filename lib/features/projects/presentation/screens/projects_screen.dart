@@ -8,7 +8,7 @@ import '../../../auth/presentation/bloc/auth_bloc.dart';
 
 /// Projects screen - View and manage projects
 class ProjectsScreen extends StatefulWidget {
-  const ProjectsScreen({Key? key}) : super(key: key);
+  const ProjectsScreen({super.key});
 
   static const String routeName = '/projects';
 
@@ -46,7 +46,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     final authState = context.read<AuthBloc>().state;
     if (authState is AuthAuthenticated) {
       context.read<ProjectsBloc>().add(
-            LoadProjectsEvent(authState.user.careerProfileId!),
+            LoadProjectsEvent(authState.session.user.id),
           );
     }
   }
@@ -251,7 +251,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                   if (project == null) {
                     context.read<ProjectsBloc>().add(
                           CreateProjectEvent(
-                            authState.user.careerProfileId!,
+                            authState.session.user.id,
                             _titleController.text,
                             _technologies,
                             description: _descriptionController.text.isNotEmpty
@@ -380,7 +380,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                             spacing: 4,
                             children: project.technologies
                                 .map((tech) =>
-                                    Chip(label: Text(tech), compact: true))
+                                    Chip(label: Text(tech), visualDensity: VisualDensity.compact))
                                 .toList(),
                           ),
                         ],

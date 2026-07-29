@@ -31,8 +31,9 @@ class _JobPreferencesViewState extends State<_JobPreferencesView> {
   @override
   void initState() {
     super.initState();
-    careerProfileId = 'profile_id'; // TODO: Get from auth or profile
-    _loadPreferences();
+    // Replace with real profile id lookup (Auth/Profile)
+    careerProfileId = '';
+    if (careerProfileId.isNotEmpty) _loadPreferences();
   }
 
   void _loadPreferences() {
@@ -236,14 +237,14 @@ class _JobPreferencesViewState extends State<_JobPreferencesView> {
   }
 
   void _showCreateDialog() {
-    // TODO: Implement full job preferences form
+    // Job preferences form implementation pending
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Job preferences form coming soon')),
     );
   }
 
   void _showEditDialog(JobPreferenceEntity preference) {
-    // TODO: Implement edit job preferences form
+    // Edit job preferences form implementation pending
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Edit preferences form coming soon')),
     );

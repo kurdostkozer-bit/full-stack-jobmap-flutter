@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../spacing/app_spacing.dart';
 import '../../radius/app_radius.dart';
-import '../../shadows/app_shadows.dart';
 
 /// Elevated Button with primary styling
 class AppButton extends StatelessWidget {
@@ -14,7 +13,7 @@ class AppButton extends StatelessWidget {
   final Icon? suffixIcon;
 
   const AppButton({
-    Key? key,
+    super.key,
     required this.label,
     this.onPressed,
     this.isLoading = false,
@@ -22,7 +21,7 @@ class AppButton extends StatelessWidget {
     this.padding,
     this.prefixIcon,
     this.suffixIcon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -160,22 +159,14 @@ class AppButton extends StatelessWidget {
 /// Secondary button (filled with secondary color)
 class _SecondaryButton extends AppButton {
   const _SecondaryButton({
-    Key? key,
-    required String label,
-    VoidCallback? onPressed,
-    bool isLoading = false,
-    bool isFullWidth = true,
-    Icon? prefixIcon,
-    Icon? suffixIcon,
-  }) : super(
-    key: key,
-    label: label,
-    onPressed: onPressed,
-    isLoading: isLoading,
-    isFullWidth: isFullWidth,
-    prefixIcon: prefixIcon,
-    suffixIcon: suffixIcon,
-  );
+    super.key,
+    required super.label,
+    super.onPressed,
+    super.isLoading = false,
+    super.isFullWidth = true,
+    super.prefixIcon,
+    super.suffixIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -229,22 +220,14 @@ class _SecondaryButton extends AppButton {
 /// Tertiary button (text only)
 class _TertiaryButton extends AppButton {
   const _TertiaryButton({
-    Key? key,
-    required String label,
-    VoidCallback? onPressed,
-    bool isLoading = false,
-    bool isFullWidth = true,
-    Icon? prefixIcon,
-    Icon? suffixIcon,
-  }) : super(
-    key: key,
-    label: label,
-    onPressed: onPressed,
-    isLoading: isLoading,
-    isFullWidth: isFullWidth,
-    prefixIcon: prefixIcon,
-    suffixIcon: suffixIcon,
-  );
+    super.key,
+    required super.label,
+    super.onPressed,
+    super.isLoading = false,
+    super.isFullWidth = true,
+    super.prefixIcon,
+    super.suffixIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -293,22 +276,14 @@ class _TertiaryButton extends AppButton {
 /// Outline button (border only)
 class _OutlineButton extends AppButton {
   const _OutlineButton({
-    Key? key,
-    required String label,
-    VoidCallback? onPressed,
-    bool isLoading = false,
-    bool isFullWidth = true,
-    Icon? prefixIcon,
-    Icon? suffixIcon,
-  }) : super(
-    key: key,
-    label: label,
-    onPressed: onPressed,
-    isLoading: isLoading,
-    isFullWidth: isFullWidth,
-    prefixIcon: prefixIcon,
-    suffixIcon: suffixIcon,
-  );
+    super.key,
+    required super.label,
+    super.onPressed,
+    super.isLoading = false,
+    super.isFullWidth = true,
+    super.prefixIcon,
+    super.suffixIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -366,19 +341,14 @@ class _IconButton extends AppButton {
   final double size;
 
   const _IconButton({
-    Key? key,
+    super.key,
     required this.icon,
-    VoidCallback? onPressed,
-    bool isLoading = false,
+    super.onPressed,
+    super.isLoading = false,
     this.backgroundColor,
     this.foregroundColor,
     this.size = 24,
-  }) : super(
-    key: key,
-    label: '',
-    onPressed: onPressed,
-    isLoading: isLoading,
-  );
+  }) : super(label: '');
 
   @override
   Widget build(BuildContext context) {

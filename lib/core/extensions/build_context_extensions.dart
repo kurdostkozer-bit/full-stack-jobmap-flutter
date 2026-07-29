@@ -35,13 +35,13 @@ extension BuildContextExtensions on BuildContext {
   Color get error => colorScheme.error;
 
   /// Background color
-  Color get background => colorScheme.background;
+  Color get background => colorScheme.surface;
 
   /// Surface color
   Color get surface => colorScheme.surface;
 
   /// OnBackground color
-  Color get onBackground => colorScheme.onBackground;
+  Color get onBackground => colorScheme.onSurface;
 
   /// OnSurface color
   Color get onSurface => colorScheme.onSurface;
@@ -124,19 +124,9 @@ extension BuildContextExtensions on BuildContext {
   }
 
   // ============= NAVIGATION SHORTCUTS =============
-  /// Push route
-  Future<T?> push<T>(Route<T> route) {
-    return Navigator.of(this).push(route);
-  }
-
   /// Pop route
   void pop<T>([T? result]) {
     Navigator.of(this).pop(result);
-  }
-
-  /// Replace route
-  Future<T?> pushReplacement<T>(Route<T> route) {
-    return Navigator.of(this).pushReplacement(route);
   }
 
   /// Can pop?
