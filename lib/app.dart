@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/di/service_locator.dart';
-import 'core/theme/app_theme.dart';
+import 'core/router/app_router.dart';
+import 'design_system/theme.dart';
 
 import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'features/splash/presentation/screens/splash_screen.dart';
 
 class JobMapApp extends StatelessWidget {
   const JobMapApp({super.key});
@@ -18,11 +18,13 @@ class JobMapApp extends StatelessWidget {
           create: (_) => sl<AuthBloc>(),
         ),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         title: 'JobMap',
-        theme: AppTheme.light(),
-        home: const SplashScreen(),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.system,
+        routerConfig: goRouter,
       ),
     );
   }

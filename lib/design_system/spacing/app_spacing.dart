@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// JobMap Spacing System (8dp Base Scale)
 /// 
 /// Spacing follows an 8dp base scale for consistency:

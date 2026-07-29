@@ -185,4 +185,42 @@ class AppTypography {
   static TextStyle withLineHeight(TextStyle style, double lineHeight) {
     return style.copyWith(height: lineHeight);
   }
+
+  /// Light theme TextTheme
+  static TextTheme get lightTextTheme => TextTheme(
+    displayLarge: displayLarge.copyWith(color: const Color(0xFF1C1B1F)),
+    displayMedium: displayMedium.copyWith(color: const Color(0xFF1C1B1F)),
+    displaySmall: displaySmall.copyWith(color: const Color(0xFF1C1B1F)),
+    headlineLarge: headingLarge.copyWith(color: const Color(0xFF1C1B1F)),
+    headlineMedium: headingMedium.copyWith(color: const Color(0xFF1C1B1F)),
+    headlineSmall: headingSmall.copyWith(color: const Color(0xFF1C1B1F)),
+    titleLarge: headingXL.copyWith(color: const Color(0xFF1C1B1F)),
+    titleMedium: headingLarge.copyWith(color: const Color(0xFF1C1B1F)),
+    titleSmall: headingMedium.copyWith(color: const Color(0xFF1C1B1F)),
+    bodyLarge: bodyLarge.copyWith(color: const Color(0xFF1C1B1F)),
+    bodyMedium: bodyMedium.copyWith(color: const Color(0xFF49454E)),
+    bodySmall: bodySmall.copyWith(color: const Color(0xFF49454E)),
+    labelLarge: labelLarge.copyWith(color: const Color(0xFF1C1B1F)),
+    labelMedium: labelMedium.copyWith(color: const Color(0xFF49454E)),
+    labelSmall: labelSmall.copyWith(color: const Color(0xFF49454E)),
+  );
+
+  /// Dark theme TextTheme
+  static TextTheme get darkTextTheme => TextTheme(
+    displayLarge: displayLarge.copyWith(color: const Color(0xFFFEF7EE)),
+    displayMedium: displayMedium.copyWith(color: const Color(0xFFFEF7EE)),
+    displaySmall: displaySmall.copyWith(color: const Color(0xFFFEF7EE)),
+    headlineLarge: headingLarge.copyWith(color: const Color(0xFFFEF7EE)),
+    headlineMedium: headingMedium.copyWith(color: const Color(0xFFFEF7EE)),
+    headlineSmall: headingSmall.copyWith(color: const Color(0xFFFEF7EE)),
+    titleLarge: headingXL.copyWith(color: const Color(0xFFFEF7EE)),
+    titleMedium: headingLarge.copyWith(color: const Color(0xFFFEF7EE)),
+    titleSmall: headingMedium.copyWith(color: const Color(0xFFFEF7EE)),
+    bodyLarge: bodyLarge.copyWith(color: const Color(0xFFE6E1E5)),
+    bodyMedium: bodyMedium.copyWith(color: const Color(0xFFCAC7D0)),
+    bodySmall: bodySmall.copyWith(color: const Color(0xFFCAC7D0)),
+    labelLarge: labelLarge.copyWith(color: const Color(0xFFFEF7EE)),
+    labelMedium: labelMedium.copyWith(color: const Color(0xFFCAC7D0)),
+    labelSmall: labelSmall.copyWith(color: const Color(0xFFCAC7D0)),
+  );
 }

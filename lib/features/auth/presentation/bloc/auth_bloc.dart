@@ -1,134 +1,149 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import '../../data/models/auth_models.dart';
+import '../../domain/usecases/auth_usecases.dart';
+import '../../../../core/network/models/api_exception.dart';
 
-import '../../domain/usecases/get_current_session.dart';
-import '../../domain/usecases/is_authenticated.dart';
-import '../../domain/usecases/login.dart';
-import '../../domain/usecases/logout.dart';
-import '../../domain/usecases/refresh_session.dart';
-import '../../domain/usecases/register.dart';
-import 'auth_event.dart';
-import 'auth_state.dart';
+part 'auth_event.dart';
+part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final Login login;
-  final Register register;
-  final Logout logout;
-  final GetCurrentSession getCurrentSession;
-  final IsAuthenticated isAuthenticated;
-  final RefreshSession refreshSession;
+  final RegisterUseCase registerUseCase;
+  final VerifyEmailUseCase verifyEmailUseCase;
+  final LoginUseCase loginUseCase;
+  final GetCurrentUserUseCase getCurrentUserUseCase;
+  final LogoutUseCase logoutUseCase;
+  final ForgotPasswordUseCase forgotPasswordUseCase;
+  final ResetPasswordUseCase resetPasswordUseCase;
+  final CheckAuthUseCase checkAuthUseCase;
+  final GetCachedUserUseCase getCachedUserUseCase;
 
   AuthBloc({
-    required this.login,
-    required this.register,
-    required this.logout,
-    required this.getCurrentSession,
-    required this.isAuthenticated,
-    required this.refreshSession,
+    required this.registerUseCase,
+    required this.verifyEmailUseCase,
+    required this.loginUseCase,
+    required this.getCurrentUserUseCase,
+    required this.logoutUseCase,
+    required this.forgotPasswordUseCase,
+    required this.resetPasswordUseCase,
+    required this.checkAuthUseCase,
+    required this.getCachedUserUseCase,
   }) : super(const AuthInitial()) {
-    on<LoginRequested>(_onLoginRequested);
-    on<RegisterRequested>(_onRegisterRequested);
-    on<LogoutRequested>(_onLogoutRequested);
-    on<CheckAuthenticationRequested>(_onCheckAuthenticationRequested);
-    on<RefreshSessionRequested>(_onRefreshSessionRequested);
+    on<CheckAuthEvent>(_onCheckAuth);
+    on<RegisterEvent>(_onRegister);
+    on<VerifyEmailEvent>(_onVerifyEmail);
+    on<LoginEvent>(_onLogin);
+    on<GetCurrentUserEvent>(_onGetCurrentUser);
+    on<LogoutEvent>(_onLogout);
+    on<ForgotPasswordEvent>(_onForgotPassword);
+    on<ResetPasswordEvent>(_onResetPassword);
   }
 
-  Future<void> _onLoginRequested(
-    LoginRequested event,
-    Emitter<AuthState> emit,
-  ) async {
+  Future<void> _onCheckAuth(CheckAuthEvent event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
-
     try {
-      final session = await login(
-        email: event.email,
-        password: event.password,
-      );
-
-      emit(AuthAuthenticated(session));
+      final isAuthenticated = await checkAuthUseCase();
+      if (isAuthenticated) {
+        final user = await getCachedUserUseCase();
+        if (user != null) {
+          emit(AuthAuthenticated(user: user, token: ''));
+        } else {
+          emit(const AuthUnauthenticated());
+        }
+      } else {
+        emit(const AuthUnauthenticated());
+      }
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(const AuthUnauthenticated());
     }
   }
 
-  Future<void> _onRegisterRequested(
-    RegisterRequested event,
-    Emitter<AuthState> emit,
-  ) async {
+  Future<void> _onRegister(RegisterEvent event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
-
     try {
-      final session = await register(
-        fullName: event.fullName,
-        email: event.email,
-        password: event.password,
-        phone: event.phone,
+      await registerUseCase(
+        event.email,
+        event.password,
+        event.firstName,
+        event.lastName,
       );
-
-      emit(AuthAuthenticated(session));
+      emit(EmailVerificationNeeded(email: event.email));
+    } on ApiException catch (e) {
+      emit(AuthError(message: e.message));
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthError(message: 'Registration failed: $e'));
     }
   }
 
-  Future<void> _onLogoutRequested(
-    LogoutRequested event,
-    Emitter<AuthState> emit,
-  ) async {
+  Future<void> _onVerifyEmail(VerifyEmailEvent event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
-
     try {
-      await logout();
+      await verifyEmailUseCase(event.email, event.code);
+      emit(const AuthSuccess(message: 'Email verified successfully'));
+    } on ApiException catch (e) {
+      emit(AuthError(message: e.message));
+    } catch (e) {
+      emit(AuthError(message: 'Verification failed: $e'));
+    }
+  }
+
+  Future<void> _onLogin(LoginEvent event, Emitter<AuthState> emit) async {
+    emit(const AuthLoading());
+    try {
+      final response = await loginUseCase(event.email, event.password);
+      emit(AuthAuthenticated(user: response.user, token: response.token));
+    } on ApiException catch (e) {
+      emit(AuthError(message: e.message));
+    } catch (e) {
+      emit(AuthError(message: 'Login failed: $e'));
+    }
+  }
+
+  Future<void> _onGetCurrentUser(GetCurrentUserEvent event, Emitter<AuthState> emit) async {
+    emit(const AuthLoading());
+    try {
+      final user = await getCurrentUserUseCase();
+      emit(AuthAuthenticated(user: user, token: ''));
+    } on ApiException catch (e) {
+      emit(AuthError(message: e.message));
+    } catch (e) {
+      emit(AuthError(message: 'Failed to get user: $e'));
+    }
+  }
+
+  Future<void> _onLogout(LogoutEvent event, Emitter<AuthState> emit) async {
+    emit(const AuthLoading());
+    try {
+      await logoutUseCase();
       emit(const AuthUnauthenticated());
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthError(message: 'Logout failed: $e'));
     }
   }
 
-  Future<void> _onCheckAuthenticationRequested(
-    CheckAuthenticationRequested event,
-    Emitter<AuthState> emit,
-  ) async {
+  Future<void> _onForgotPassword(ForgotPasswordEvent event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
-
     try {
-      final authenticated = await isAuthenticated();
-
-      if (!authenticated) {
-        emit(const AuthUnauthenticated());
-        return;
-      }
-
-      final session = await getCurrentSession();
-
-      if (session == null) {
-        emit(const AuthUnauthenticated());
-      } else {
-        emit(AuthAuthenticated(session));
-      }
+      await forgotPasswordUseCase(event.email);
+      emit(const PasswordResetSent(
+        message: 'Password reset code sent to your email',
+      ));
+    } on ApiException catch (e) {
+      emit(AuthError(message: e.message));
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthError(message: 'Forgot password failed: $e'));
     }
   }
 
-  Future<void> _onRefreshSessionRequested(
-    RefreshSessionRequested event,
-    Emitter<AuthState> emit,
-  ) async {
+  Future<void> _onResetPassword(ResetPasswordEvent event, Emitter<AuthState> emit) async {
+    emit(const AuthLoading());
     try {
-      final session = await getCurrentSession();
-
-      if (session == null) {
-        emit(const AuthUnauthenticated());
-        return;
-      }
-
-      final refreshedSession = await refreshSession(
-        session.refreshToken,
-      );
-
-      emit(AuthAuthenticated(refreshedSession));
+      await resetPasswordUseCase(event.email, event.code, event.newPassword);
+      emit(const AuthSuccess(message: 'Password reset successfully'));
+    } on ApiException catch (e) {
+      emit(AuthError(message: e.message));
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      emit(AuthError(message: 'Password reset failed: $e'));
     }
   }
 }

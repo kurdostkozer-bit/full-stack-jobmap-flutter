@@ -1,0 +1,164 @@
+import 'package:flutter/material.dart';
+import '../../../../design_system/index.dart';
+
+/// Login screen
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  static const String routeName = '/login';
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      context.showError('Please fill all fields');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      // TODO: Call login API
+      await Future.delayed(const Duration(seconds: 2));
+      context.showSuccess('Login successful!');
+      // TODO: Navigate to home
+    } catch (e) {
+      context.showError('Login failed: $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppAppBar(
+        title: 'Login',
+        showBackButton: true,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Welcome Back',
+              style: context.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: AppSpacing.sm),
+            Text(
+              'Login to continue',
+              style: context.textTheme.bodyMedium?.copyWith(
+                color: context.colorScheme.outline,
+              ),
+            ),
+            SizedBox(height: AppSpacing.lg),
+
+            // Email field
+            AppTextField.email(
+              controller: _emailController,
+              hintText: 'Enter your email',
+            ),
+            SizedBox(height: AppSpacing.md),
+
+            // Password field
+            AppTextField.password(
+              controller: _passwordController,
+              hintText: 'Enter your password',
+            ),
+            SizedBox(height: AppSpacing.md),
+
+            // Forgot password
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () {
+                  // TODO: Navigate to forgot password
+                },
+                child: Text(
+                  'Forgot Password?',
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colorScheme.primary,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: AppSpacing.lg),
+
+            // Login button
+            AppButton(
+              label: 'Login',
+              isLoading: _isLoading,
+              onPressed: _handleLogin,
+            ),
+            SizedBox(height: AppSpacing.md),
+
+            // Divider
+            Row(
+              children: [
+                Expanded(child: Divider(color: context.colorScheme.outline)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                  child: Text('OR', style: context.textTheme.labelSmall),
+                ),
+                Expanded(child: Divider(color: context.colorScheme.outline)),
+              ],
+            ),
+            SizedBox(height: AppSpacing.md),
+
+            // Social login buttons
+            AppButton.outline(
+              label: 'Continue with Google',
+              prefixIcon: const Icon(Icons.login),
+              onPressed: () {
+                // TODO: Google login
+              },
+            ),
+            SizedBox(height: AppSpacing.md),
+
+            // Sign up link
+            Center(
+              child: RichText(
+                text: TextSpan(
+                  text: "Don't have an account? ",
+                  style: context.textTheme.bodySmall,
+                  children: [
+                    TextSpan(
+                      text: 'Sign up',
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
