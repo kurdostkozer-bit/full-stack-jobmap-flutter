@@ -51,7 +51,7 @@ class AuthInterceptor extends Interceptor {
           try {
             // Attempt to refresh token
             final response = await dio!.post(
-              '/auth/refresh-token',
+              'auth/refresh-token',
               data: {'refreshToken': refreshToken},
             );
 

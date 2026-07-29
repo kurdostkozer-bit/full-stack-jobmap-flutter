@@ -40,7 +40,7 @@ abstract class _EnvironmentConfig {
 /// Development environment
 class _DevelopmentConfig extends _EnvironmentConfig {
   @override
-  String get apiBaseUrl => 'http://localhost:3000/api';
+  String get apiBaseUrl => 'http://159.69.54.76:3000/api';
 
   @override
   bool get enableLogging => true;

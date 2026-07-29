@@ -38,6 +38,27 @@ import '../../features/certificates/data/repositories/certificates_repository_im
 import '../../features/certificates/domain/repositories/certificates_repository.dart';
 import '../../features/certificates/data/datasources/certificates_remote_datasource.dart';
 import '../../features/certificates/data/datasources/certificates_local_datasource.dart';
+import '../../features/attachments/presentation/bloc/attachment_bloc.dart';
+import '../../features/attachments/domain/usecases/attachment_usecases.dart';
+import '../../features/attachments/data/repositories/attachment_repository_impl.dart';
+import '../../features/attachments/domain/repositories/attachment_repository.dart';
+import '../../features/attachments/data/datasources/attachment_remote_datasource.dart';
+import '../../features/attachments/data/datasources/attachment_local_datasource.dart';
+import '../../features/social_links/presentation/bloc/social_link_bloc.dart';
+import '../../features/social_links/domain/usecases/social_link_usecases.dart';
+import '../../features/social_links/data/repositories/social_link_repository_impl.dart';
+import '../../features/social_links/domain/repositories/social_link_repository.dart';
+import '../../features/social_links/data/datasources/social_link_remote_datasource.dart';
+import '../../features/social_links/data/datasources/social_link_local_datasource.dart';
+import '../../features/job_preferences/presentation/bloc/job_preference_bloc.dart';
+import '../../features/job_preferences/domain/usecases/job_preference_usecases.dart';
+import '../../features/job_preferences/data/repositories/job_preference_repository_impl.dart';
+import '../../features/job_preferences/domain/repositories/job_preference_repository.dart';
+import '../../features/job_preferences/data/datasources/job_preference_remote_datasource.dart';
+import '../../features/job_preferences/data/datasources/job_preference_local_datasource.dart';
+import '../../features/profile_completion/domain/usecases/profile_completion_usecases.dart';
+import '../../features/profile_completion/data/repositories/profile_completion_repository_impl.dart';
+import '../../features/profile_completion/domain/repositories/profile_completion_repository.dart';
 import '../network/api_client.dart';
 import '../network/dio_provider.dart';
 import '../config/app_config.dart';
@@ -389,5 +410,196 @@ Future<void> setupServiceLocator() async {
       updateCertificateUseCase: sl<UpdateCertificateUseCase>(),
       deleteCertificateUseCase: sl<DeleteCertificateUseCase>(),
     ),
+  );
+
+  // ============ ATTACHMENTS FEATURE ============
+
+  // Attachments Remote DataSource
+  sl.registerLazySingleton<AttachmentRemoteDataSource>(
+    () => AttachmentRemoteDataSourceImpl(
+      apiClient: sl<ApiClient>(),
+      secureStorage: sl<FlutterSecureStorage>(),
+    ),
+  );
+
+  // Attachments Local DataSource
+  sl.registerLazySingleton<AttachmentLocalDataSource>(
+    () => AttachmentLocalDataSourceImpl(secureStorage: sl<FlutterSecureStorage>()),
+  );
+
+  // Attachments Repository
+  sl.registerLazySingleton<AttachmentRepository>(
+    () => AttachmentRepositoryImpl(
+      remoteDataSource: sl<AttachmentRemoteDataSource>(),
+      localDataSource: sl<AttachmentLocalDataSource>(),
+    ),
+  );
+
+  // Attachments UseCases
+  sl.registerLazySingleton<GetAttachmentsUseCase>(
+    () => GetAttachmentsUseCase(sl<AttachmentRepository>()),
+  );
+
+  sl.registerLazySingleton<GetAttachmentUseCase>(
+    () => GetAttachmentUseCase(sl<AttachmentRepository>()),
+  );
+
+  sl.registerLazySingleton<UploadAttachmentUseCase>(
+    () => UploadAttachmentUseCase(sl<AttachmentRepository>()),
+  );
+
+  sl.registerLazySingleton<UpdateAttachmentUseCase>(
+    () => UpdateAttachmentUseCase(sl<AttachmentRepository>()),
+  );
+
+  sl.registerLazySingleton<SetPrimaryResumeUseCase>(
+    () => SetPrimaryResumeUseCase(sl<AttachmentRepository>()),
+  );
+
+  sl.registerLazySingleton<DeleteAttachmentUseCase>(
+    () => DeleteAttachmentUseCase(sl<AttachmentRepository>()),
+  );
+
+  // Attachments Bloc
+  sl.registerLazySingleton<AttachmentBloc>(
+    () => AttachmentBloc(
+      getAttachments: sl<GetAttachmentsUseCase>(),
+      uploadAttachment: sl<UploadAttachmentUseCase>(),
+      updateAttachment: sl<UpdateAttachmentUseCase>(),
+      setPrimaryResume: sl<SetPrimaryResumeUseCase>(),
+      deleteAttachment: sl<DeleteAttachmentUseCase>(),
+    ),
+  );
+
+  // ============ SOCIAL LINKS FEATURE ============
+
+  // Social Links Remote DataSource
+  sl.registerLazySingleton<SocialLinkRemoteDataSource>(
+    () => SocialLinkRemoteDataSourceImpl(
+      apiClient: sl<ApiClient>(),
+      secureStorage: sl<FlutterSecureStorage>(),
+    ),
+  );
+
+  // Social Links Local DataSource
+  sl.registerLazySingleton<SocialLinkLocalDataSource>(
+    () => SocialLinkLocalDataSourceImpl(secureStorage: sl<FlutterSecureStorage>()),
+  );
+
+  // Social Links Repository
+  sl.registerLazySingleton<SocialLinkRepository>(
+    () => SocialLinkRepositoryImpl(
+      remoteDataSource: sl<SocialLinkRemoteDataSource>(),
+      localDataSource: sl<SocialLinkLocalDataSource>(),
+    ),
+  );
+
+  // Social Links UseCases
+  sl.registerLazySingleton<GetSocialLinksUseCase>(
+    () => GetSocialLinksUseCase(sl<SocialLinkRepository>()),
+  );
+
+  sl.registerLazySingleton<GetSocialLinkUseCase>(
+    () => GetSocialLinkUseCase(sl<SocialLinkRepository>()),
+  );
+
+  sl.registerLazySingleton<CreateSocialLinkUseCase>(
+    () => CreateSocialLinkUseCase(sl<SocialLinkRepository>()),
+  );
+
+  sl.registerLazySingleton<UpdateSocialLinkUseCase>(
+    () => UpdateSocialLinkUseCase(sl<SocialLinkRepository>()),
+  );
+
+  sl.registerLazySingleton<DeleteSocialLinkUseCase>(
+    () => DeleteSocialLinkUseCase(sl<SocialLinkRepository>()),
+  );
+
+  // Social Links Bloc
+  sl.registerLazySingleton<SocialLinkBloc>(
+    () => SocialLinkBloc(
+      getSocialLinks: sl<GetSocialLinksUseCase>(),
+      createSocialLink: sl<CreateSocialLinkUseCase>(),
+      updateSocialLink: sl<UpdateSocialLinkUseCase>(),
+      deleteSocialLink: sl<DeleteSocialLinkUseCase>(),
+    ),
+  );
+
+  // ============ JOB PREFERENCES FEATURE ============
+
+  // Job Preferences Remote DataSource
+  sl.registerLazySingleton<JobPreferenceRemoteDataSource>(
+    () => JobPreferenceRemoteDataSourceImpl(
+      apiClient: sl<ApiClient>(),
+      secureStorage: sl<FlutterSecureStorage>(),
+    ),
+  );
+
+  // Job Preferences Local DataSource
+  sl.registerLazySingleton<JobPreferenceLocalDataSource>(
+    () => JobPreferenceLocalDataSourceImpl(secureStorage: sl<FlutterSecureStorage>()),
+  );
+
+  // Job Preferences Repository
+  sl.registerLazySingleton<JobPreferenceRepository>(
+    () => JobPreferenceRepositoryImpl(
+      remoteDataSource: sl<JobPreferenceRemoteDataSource>(),
+      localDataSource: sl<JobPreferenceLocalDataSource>(),
+    ),
+  );
+
+  // Job Preferences UseCases
+  sl.registerLazySingleton<GetJobPreferenceUseCase>(
+    () => GetJobPreferenceUseCase(sl<JobPreferenceRepository>()),
+  );
+
+  sl.registerLazySingleton<GetJobPreferenceByIdUseCase>(
+    () => GetJobPreferenceByIdUseCase(sl<JobPreferenceRepository>()),
+  );
+
+  sl.registerLazySingleton<CreateJobPreferenceUseCase>(
+    () => CreateJobPreferenceUseCase(sl<JobPreferenceRepository>()),
+  );
+
+  sl.registerLazySingleton<UpdateJobPreferenceUseCase>(
+    () => UpdateJobPreferenceUseCase(sl<JobPreferenceRepository>()),
+  );
+
+  sl.registerLazySingleton<DeleteJobPreferenceUseCase>(
+    () => DeleteJobPreferenceUseCase(sl<JobPreferenceRepository>()),
+  );
+
+  // Job Preferences Bloc
+  sl.registerLazySingleton<JobPreferenceBloc>(
+    () => JobPreferenceBloc(
+      getJobPreference: sl<GetJobPreferenceUseCase>(),
+      createJobPreference: sl<CreateJobPreferenceUseCase>(),
+      updateJobPreference: sl<UpdateJobPreferenceUseCase>(),
+      deleteJobPreference: sl<DeleteJobPreferenceUseCase>(),
+    ),
+  );
+
+  // ============ PROFILE COMPLETION FEATURE ============
+
+  // Profile Completion Repository
+  sl.registerLazySingleton<ProfileCompletionRepository>(
+    () => ProfileCompletionRepositoryImpl(),
+  );
+
+  // Profile Completion UseCases
+  sl.registerLazySingleton<CalculateProfileCompletionUseCase>(
+    () => CalculateProfileCompletionUseCase(sl<ProfileCompletionRepository>()),
+  );
+
+  sl.registerLazySingleton<GetProfileCompletionUseCase>(
+    () => GetProfileCompletionUseCase(sl<ProfileCompletionRepository>()),
+  );
+
+  sl.registerLazySingleton<UpdateSectionCompletionUseCase>(
+    () => UpdateSectionCompletionUseCase(sl<ProfileCompletionRepository>()),
+  );
+
+  sl.registerLazySingleton<GetNextStepsUseCase>(
+    () => GetNextStepsUseCase(sl<ProfileCompletionRepository>()),
   );
 }
