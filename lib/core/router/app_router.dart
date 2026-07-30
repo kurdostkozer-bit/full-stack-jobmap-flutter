@@ -1,24 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
-import '../../features/profile/presentation/screens/profile_screen.dart';
+
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/map/presentation/screens/map_screen.dart';
+
+import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/bloc/profile_bloc.dart';
+
 import '../../features/education/presentation/bloc/education_bloc.dart';
 import '../../features/education/presentation/screens/education_screen.dart';
+
 import '../../features/languages/presentation/bloc/languages_bloc.dart';
 import '../../features/languages/presentation/screens/languages_screen.dart';
+
 import '../../features/projects/presentation/bloc/projects_bloc.dart';
 import '../../features/projects/presentation/screens/projects_screen.dart';
+
 import '../../features/certificates/presentation/bloc/certificates_bloc.dart';
 import '../../features/certificates/presentation/screens/certificates_screen.dart';
+
 import '../di/service_locator.dart';
 
-/// App Router configuration with GoRouter
 final goRouter = GoRouter(
   initialLocation: '/',
   routes: [
@@ -46,17 +54,23 @@ final goRouter = GoRouter(
       builder: (context, state) => const RegisterScreen(),
     ),
 
-    // Home
+    // Home (مؤقتًا يعرض الخريطة)
     GoRoute(
       path: HomeScreen.routeName,
-      builder: (context, state) => const HomeScreen(),
+      builder: (context, state) => const MapScreen(),
+    ),
+
+    // Map
+    GoRoute(
+      path: MapScreen.routeName,
+      builder: (context, state) => const MapScreen(),
     ),
 
     // Profile
     GoRoute(
       path: ProfileScreen.routeName,
       builder: (context, state) => BlocProvider(
-        create: (context) => sl<ProfileBloc>(),
+        create: (_) => sl<ProfileBloc>(),
         child: const ProfileScreen(),
       ),
     ),
@@ -65,7 +79,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: EducationScreen.routeName,
       builder: (context, state) => BlocProvider(
-        create: (context) => sl<EducationBloc>(),
+        create: (_) => sl<EducationBloc>(),
         child: const EducationScreen(),
       ),
     ),
@@ -74,7 +88,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: LanguagesScreen.routeName,
       builder: (context, state) => BlocProvider(
-        create: (context) => sl<LanguagesBloc>(),
+        create: (_) => sl<LanguagesBloc>(),
         child: const LanguagesScreen(),
       ),
     ),
@@ -83,7 +97,7 @@ final goRouter = GoRouter(
     GoRoute(
       path: ProjectsScreen.routeName,
       builder: (context, state) => BlocProvider(
-        create: (context) => sl<ProjectsBloc>(),
+        create: (_) => sl<ProjectsBloc>(),
         child: const ProjectsScreen(),
       ),
     ),
@@ -92,13 +106,12 @@ final goRouter = GoRouter(
     GoRoute(
       path: CertificatesScreen.routeName,
       builder: (context, state) => BlocProvider(
-        create: (context) => sl<CertificatesBloc>(),
+        create: (_) => sl<CertificatesBloc>(),
         child: const CertificatesScreen(),
       ),
     ),
   ],
 
-  // Error handler
   errorBuilder: (context, state) => Scaffold(
     body: Center(
       child: Text('Page not found: ${state.error}'),

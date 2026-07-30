@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../core/navigation/navigation_map.dart';
+import '../../../home/presentation/screens/home_screen.dart';
+import '../bloc/social_auth_bloc.dart';
 
 /// Login screen
 class LoginScreen extends StatefulWidget {
@@ -45,10 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
       context.showSuccess('Login successful!');
-      // Placeholder navigation: return to root. Replace with
-      // `GoRouter.of(context).go(NavigationMap.Auth.home)` or the
-      // app's preferred navigation approach.
-      Navigator.of(context).popUntil((route) => route.isFirst);
+      context.go(HomeScreen.routeName);
     } catch (e) {
       if (!mounted) return;
       context.showError('Login failed: $e');
@@ -59,114 +59,125 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppAppBar(
-        title: 'Login',
-        showBackButton: true,
-      ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Welcome Back',
-              style: context.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
+    return BlocListener<SocialAuthBloc, SocialAuthState>(
+      listener: (context, state) {
+        if (state is SocialAuthSuccess) {
+          context.showSuccess('Logged in successfully!');
+          context.go(HomeScreen.routeName);
+        } else if (state is SocialAuthFailure) {
+          context.showError('Login failed: ${state.message}');
+        }
+      },
+      child: Scaffold(
+        appBar: AppAppBar(
+          title: 'Login',
+          showBackButton: true,
+        ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome Back',
+                style: context.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            SizedBox(height: AppSpacing.sm),
-            Text(
-              'Login to continue',
-              style: context.textTheme.bodyMedium?.copyWith(
-                color: context.colorScheme.outline,
+              SizedBox(height: AppSpacing.sm),
+              Text(
+                'Login to continue',
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: context.colorScheme.outline,
+                ),
               ),
-            ),
-            SizedBox(height: AppSpacing.lg),
+              SizedBox(height: AppSpacing.lg),
 
-            // Email field
-            AppTextField.email(
-              controller: _emailController,
-              hintText: 'Enter your email',
-            ),
-            SizedBox(height: AppSpacing.md),
+              // Email field
+              AppTextField.email(
+                controller: _emailController,
+                hintText: 'Enter your email',
+              ),
+              SizedBox(height: AppSpacing.md),
 
-            // Password field
-            AppTextField.password(
-              controller: _passwordController,
-              hintText: 'Enter your password',
-            ),
-            SizedBox(height: AppSpacing.md),
+              // Password field
+              AppTextField.password(
+                controller: _passwordController,
+                hintText: 'Enter your password',
+              ),
+              SizedBox(height: AppSpacing.md),
 
-            // Forgot password
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  // Navigate to forgot-password screen
-                  context.go(NavigationMap.authRoutes.forgotPassword);
-                },
-                child: Text(
-                  'Forgot Password?',
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.primary,
+              // Forgot password
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    // Navigate to forgot-password screen
+                    context.go(NavigationMap.authRoutes.forgotPassword);
+                  },
+                  child: Text(
+                    'Forgot Password?',
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: context.colorScheme.primary,
+                    ),
                   ),
                 ),
               ),
-            ),
-            SizedBox(height: AppSpacing.lg),
+              SizedBox(height: AppSpacing.lg),
 
-            // Login button
-            AppButton(
-              label: 'Login',
-              isLoading: _isLoading,
-              onPressed: _handleLogin,
-            ),
-            SizedBox(height: AppSpacing.md),
+              // Login button
+              AppButton(
+                label: 'Login',
+                isLoading: _isLoading,
+                onPressed: _handleLogin,
+              ),
+              SizedBox(height: AppSpacing.md),
 
-            // Divider
-            Row(
-              children: [
-                Expanded(child: Divider(color: context.colorScheme.outline)),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                  child: Text('OR', style: context.textTheme.labelSmall),
-                ),
-                Expanded(child: Divider(color: context.colorScheme.outline)),
-              ],
-            ),
-            SizedBox(height: AppSpacing.md),
+              // Divider
+              Row(
+                children: [
+                  Expanded(child: Divider(color: context.colorScheme.outline)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                    child: Text('OR', style: context.textTheme.labelSmall),
+                  ),
+                  Expanded(child: Divider(color: context.colorScheme.outline)),
+                ],
+              ),
+              SizedBox(height: AppSpacing.md),
 
-            // Social login buttons
-            AppButton.outline(
-              label: 'Continue with Google',
-              prefixIcon: const Icon(Icons.login),
-              onPressed: () {
-                // Placeholder Google login flow. Replace with real OAuth logic.
-                context.showSnackBar('Google login (TODO)');
-              },
-            ),
-            SizedBox(height: AppSpacing.md),
+              // Social login buttons
+              AppButton.outline(
+                label: 'Continue with Google',
+                prefixIcon: const Icon(Icons.login),
+                onPressed: () {
+                  context.read<SocialAuthBloc>().add(
+                        const GoogleSignInRequested(),
+                      );
+                },
+              ),
+              SizedBox(height: AppSpacing.md),
 
-            // Sign up link
-            Center(
-              child: RichText(
-                text: TextSpan(
-                  text: "Don't have an account? ",
-                  style: context.textTheme.bodySmall,
-                  children: [
-                    TextSpan(
-                      text: 'Sign up',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colorScheme.primary,
-                        fontWeight: FontWeight.bold,
+              // Sign up link
+              Center(
+                child: RichText(
+                  text: TextSpan(
+                    text: "Don't have an account? ",
+                    style: context.textTheme.bodySmall,
+                    children: [
+                      TextSpan(
+                        text: 'Sign up',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: context.colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

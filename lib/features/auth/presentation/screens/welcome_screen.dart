@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import 'login_screen.dart';
@@ -59,12 +60,12 @@ class WelcomeScreen extends StatelessWidget {
               // Buttons
               AppButton(
                 label: 'Login',
-                onPressed: () => Navigator.of(context).pushNamed(LoginScreen.routeName),
+                onPressed: () => context.go(LoginScreen.routeName),
               ),
               SizedBox(height: AppSpacing.md),
               AppButton.outline(
                 label: 'Create Account',
-                onPressed: () => Navigator.of(context).pushNamed(RegisterScreen.routeName),
+                onPressed: () => context.go(RegisterScreen.routeName),
               ),
 
               SizedBox(height: AppSpacing.md),

@@ -104,7 +104,15 @@ class ApiClient {
 
     // If fromJson is provided, use it to convert data
     if (fromJson != null) {
-      return fromJson(data);
+      try {
+        return fromJson(data);
+      } catch (e) {
+        throw ApiException(
+          message: 'Failed to parse response: $e',
+          statusCode: response.statusCode,
+          originalException: Exception(e),
+        );
+      }
     }
 
     // Otherwise return data as is

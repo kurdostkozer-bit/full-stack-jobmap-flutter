@@ -40,7 +40,7 @@ abstract class _EnvironmentConfig {
 /// Development environment
 class _DevelopmentConfig extends _EnvironmentConfig {
   @override
-  String get apiBaseUrl => 'http://159.69.54.76:3000/api';
+  String get apiBaseUrl => 'https://api.kurdwins.com/api';
 
   @override
   bool get enableLogging => true;
@@ -52,7 +52,7 @@ class _DevelopmentConfig extends _EnvironmentConfig {
 /// Staging environment
 class _StagingConfig extends _EnvironmentConfig {
   @override
-  String get apiBaseUrl => 'https://staging-api.jobmap.app/api';
+  String get apiBaseUrl => 'https://api.kurdwins.com/api';
 
   @override
   bool get enableLogging => true;
@@ -64,7 +64,7 @@ class _StagingConfig extends _EnvironmentConfig {
 /// Production environment
 class _ProductionConfig extends _EnvironmentConfig {
   @override
-  String get apiBaseUrl => 'https://api.jobmap.app/api';
+  String get apiBaseUrl => 'https://api.kurdwins.com/api';
 
   @override
   bool get enableLogging => false;

@@ -22,9 +22,12 @@ class AuthInterceptor extends Interceptor {
       final token = await secureStorage.read(key: 'auth_token');
       if (token != null) {
         options.headers['Authorization'] = 'Bearer $token';
+        debugPrint('🔐 AuthInterceptor: Token attached (length: ${token.length})');
+      } else {
+        debugPrint('🔐 AuthInterceptor: No token found in storage');
       }
     } catch (e) {
-      debugPrint('Error reading token: $e');
+      debugPrint('❌ AuthInterceptor: Error reading token - $e');
     }
     return handler.next(options);
   }
@@ -36,10 +39,12 @@ class AuthInterceptor extends Interceptor {
   ) async {
     // Handle 401 Unauthorized - attempt token refresh
     if (err.response?.statusCode == 401) {
+      debugPrint('🔐 AuthInterceptor: 401 Unauthorized detected');
       try {
         final refreshToken = await secureStorage.read(key: 'refresh_token');
         
         if (refreshToken != null && dio != null && !_isRefreshing) {
+          debugPrint('🔐 AuthInterceptor: Attempting token refresh...');
           _isRefreshing = true;
 
           try {
@@ -58,6 +63,8 @@ class AuthInterceptor extends Interceptor {
               key: 'refresh_token',
               value: newRefreshToken,
             );
+
+            debugPrint('✅ AuthInterceptor: Token refreshed successfully');
 
             // Retry original request with new token
             err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
@@ -84,7 +91,7 @@ class AuthInterceptor extends Interceptor {
             await secureStorage.delete(key: 'auth_token');
             await secureStorage.delete(key: 'refresh_token');
             
-            debugPrint('Token refresh failed: ${refreshErr.message}');
+            debugPrint('❌ AuthInterceptor: Token refresh failed - ${refreshErr.message}');
             return handler.next(err);
           }
         } else {
@@ -92,11 +99,11 @@ class AuthInterceptor extends Interceptor {
           if (!_isRefreshing) {
             await secureStorage.delete(key: 'auth_token');
             await secureStorage.delete(key: 'refresh_token');
+            debugPrint('❌ AuthInterceptor: No refresh token or already refreshing - tokens cleared');
           }
-          debugPrint('No refresh token available or already refreshing');
         }
       } catch (e) {
-        debugPrint('Error handling 401: $e');
+        debugPrint('❌ AuthInterceptor: Error handling 401 - $e');
       }
     }
     return handler.next(err);

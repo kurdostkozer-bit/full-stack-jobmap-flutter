@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/entities/experience_entities.dart';
 import '../../domain/usecases/experience_usecases.dart';
-import '../../../../core/network/app_exception.dart';
+import '../../../../core/network/models/api_exception.dart';
 import 'experience_event.dart';
 import 'experience_state.dart';
 
@@ -32,7 +33,8 @@ class ExperienceBloc extends Bloc<ExperienceEvent, ExperienceState> {
     try {
       final experiences = await getExperiencesUseCase(event.careerProfileId);
       emit(ExperiencesLoaded(experiences: experiences));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ ExperienceBloc: Error - ${e.message}');
       emit(ExperienceError(message: e.message));
     } catch (e) {
       emit(ExperienceError(message: 'Failed to load experiences: $e'));
@@ -64,7 +66,8 @@ class ExperienceBloc extends Bloc<ExperienceEvent, ExperienceState> {
 
       final updatedExperiences = [...previousExperiences, newExperience];
       emit(ExperienceCreated(experiences: updatedExperiences));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ ExperienceBloc: Error - ${e.message}');
       emit(ExperienceError(
         message: e.message,
         previousExperiences: previousExperiences,
@@ -104,7 +107,8 @@ class ExperienceBloc extends Bloc<ExperienceEvent, ExperienceState> {
       }).toList();
 
       emit(ExperienceUpdated(experiences: updatedExperiences));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ ExperienceBloc: Error - ${e.message}');
       emit(ExperienceError(
         message: e.message,
         previousExperiences: previousExperiences,
@@ -134,7 +138,8 @@ class ExperienceBloc extends Bloc<ExperienceEvent, ExperienceState> {
           previousExperiences.where((e) => e.id != event.experienceId).toList();
 
       emit(ExperienceDeleted(experiences: updatedExperiences));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ ExperienceBloc: Error - ${e.message}');
       emit(ExperienceError(
         message: e.message,
         previousExperiences: previousExperiences,
@@ -154,7 +159,8 @@ class ExperienceBloc extends Bloc<ExperienceEvent, ExperienceState> {
     try {
       final experiences = await getExperiencesUseCase(event.careerProfileId);
       emit(ExperiencesLoaded(experiences: experiences));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ ExperienceBloc: Error - ${e.message}');
       emit(ExperienceError(message: e.message));
     } catch (e) {
       emit(ExperienceError(message: 'Failed to refresh experiences: $e'));

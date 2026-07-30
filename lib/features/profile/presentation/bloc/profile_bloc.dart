@@ -1,6 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/usecases/profile_usecases.dart';
-import '../../../../core/network/app_exception.dart';
+import '../../../../core/network/models/api_exception.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
 
@@ -26,11 +28,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ) async {
     emit(const ProfileLoading());
     try {
+      debugPrint('🔄 ProfileBloc: Loading profile...');
       final profile = await getProfileUseCase();
+      debugPrint('✅ ProfileBloc: Profile loaded successfully');
       emit(ProfileLoaded(profile: profile));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ ProfileBloc: ApiException - Status: ${e.statusCode}, Message: ${e.message}');
+      debugPrint('   Original Exception: ${e.originalException}');
+      if (e.originalException is DioException) {
+        final dioEx = e.originalException as DioException;
+        debugPrint('   Response Body: ${dioEx.response?.data}');
+      }
       emit(ProfileError(message: e.message));
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('❌ ProfileBloc: Unexpected exception - $e');
+      debugPrint('   StackTrace: $st');
       emit(ProfileError(message: 'Failed to load profile: $e'));
     }
   }
@@ -58,6 +70,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
 
       // Call update usecase
+      debugPrint('🔄 ProfileBloc: Updating profile...');
       final updatedProfile = await updateProfileUseCase(
         firstName: event.firstName,
         lastName: event.lastName,
@@ -71,13 +84,22 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         githubUrl: event.githubUrl,
       );
 
+      debugPrint('✅ ProfileBloc: Profile updated successfully');
       emit(ProfileUpdated(profile: updatedProfile));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ ProfileBloc: Update failed - Status: ${e.statusCode}, Message: ${e.message}');
+      debugPrint('   Original Exception: ${e.originalException}');
+      if (e.originalException is DioException) {
+        final dioEx = e.originalException as DioException;
+        debugPrint('   Response Body: ${dioEx.response?.data}');
+      }
       emit(ProfileError(
         message: e.message,
         previousProfile: previousProfile,
       ));
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('❌ ProfileBloc: Unexpected exception during update - $e');
+      debugPrint('   StackTrace: $st');
       emit(ProfileError(
         message: 'Failed to update profile: $e',
         previousProfile: previousProfile,

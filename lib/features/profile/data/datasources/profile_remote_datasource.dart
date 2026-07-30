@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import '../../../../core/network/api_client.dart';
 import '../models/profile_models.dart';
 
@@ -18,20 +19,39 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<CareerProfileResponse> getProfile() async {
-    return await apiClient.get(
-      '/profile',
-      fromJson: (json) => CareerProfileResponse.fromJson(json),
-    );
+    try {
+      debugPrint('🌐 ProfileRemoteDataSource: GET /career-profiles/me');
+      final response = await apiClient.get(
+        '/career-profiles/me',
+        fromJson: (json) => CareerProfileResponse.fromJson(json),
+      );
+      debugPrint('🌐 ProfileRemoteDataSource: Response received successfully');
+      return response;
+    } catch (e, st) {
+      debugPrint('❌ ProfileRemoteDataSource: GET /career-profiles/me failed - $e');
+      debugPrint('   StackTrace: $st');
+      rethrow;
+    }
   }
 
   @override
   Future<CareerProfileResponse> updateProfile(
     Map<String, dynamic> updateData,
   ) async {
-    return await apiClient.patch(
-      '/profile',
-      data: updateData,
-      fromJson: (json) => CareerProfileResponse.fromJson(json),
-    );
+    try {
+      debugPrint('🌐 ProfileRemoteDataSource: PATCH /career-profiles/me');
+      debugPrint('   Data: $updateData');
+      final response = await apiClient.patch(
+        '/career-profiles/me',
+        data: updateData,
+        fromJson: (json) => CareerProfileResponse.fromJson(json),
+      );
+      debugPrint('🌐 ProfileRemoteDataSource: Update successful');
+      return response;
+    } catch (e, st) {
+      debugPrint('❌ ProfileRemoteDataSource: PATCH /career-profiles/me failed - $e');
+      debugPrint('   StackTrace: $st');
+      rethrow;
+    }
   }
 }

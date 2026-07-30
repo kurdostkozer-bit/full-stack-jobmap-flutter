@@ -1,4 +1,4 @@
-package com.example.jobmap
+package com.jobmap.iraq
 
 import io.flutter.embedding.android.FlutterActivity
 

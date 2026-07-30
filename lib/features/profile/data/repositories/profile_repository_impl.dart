@@ -18,19 +18,33 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<CareerProfile> getProfile() async {
     try {
       // Try to get from remote (API)
+      debugPrint('📦 ProfileRepository: Fetching profile from remote...');
       final response = await remoteDataSource.getProfile();
+      
+      debugPrint('📦 ProfileRepository: Got profile response - ID: ${response.id}');
       
       // Cache locally
       await localDataSource.cacheProfile(response);
+      debugPrint('📦 ProfileRepository: Profile cached locally');
       
       // Convert to domain entity
       return response.toDomain();
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('❌ ProfileRepository: Error fetching profile - $e');
+      debugPrint('   StackTrace: $st');
+      
       // If remote fails, try to get from cache
-      final cached = await localDataSource.getCachedProfile();
-      if (cached != null) {
-        return cached.toDomain();
+      try {
+        debugPrint('📦 ProfileRepository: Attempting to load from cache...');
+        final cached = await localDataSource.getCachedProfile();
+        if (cached != null) {
+          debugPrint('✅ ProfileRepository: Loaded profile from cache');
+          return cached.toDomain();
+        }
+      } catch (cacheErr) {
+        debugPrint('❌ ProfileRepository: Cache retrieval also failed - $cacheErr');
       }
+      
       rethrow;
     }
   }
@@ -49,6 +63,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
     String? githubUrl,
   }) async {
     try {
+      debugPrint('📦 ProfileRepository: Updating profile...');
+      
       // Create request object
       final request = UpdateProfileRequest(
         firstName: firstName,
@@ -68,12 +84,16 @@ class ProfileRepositoryImpl implements ProfileRepository {
         request.toApiJson(),
       );
 
+      debugPrint('📦 ProfileRepository: Profile updated - ID: ${response.id}');
+
       // Cache locally
       await localDataSource.cacheProfile(response);
 
       // Return domain entity
       return response.toDomain();
-    } catch (e) {
+    } catch (e, st) {
+      debugPrint('❌ ProfileRepository: Error updating profile - $e');
+      debugPrint('   StackTrace: $st');
       rethrow;
     }
   }
@@ -84,6 +104,7 @@ class ProfileRepositoryImpl implements ProfileRepository {
       final cached = await localDataSource.getCachedProfile();
       return cached?.toDomain();
     } catch (e) {
+      debugPrint('❌ ProfileRepository: Error getting cached profile - $e');
       return null;
     }
   }
@@ -92,8 +113,9 @@ class ProfileRepositoryImpl implements ProfileRepository {
   Future<void> clearCachedProfile() async {
     try {
       await localDataSource.clearProfile();
+      debugPrint('✅ ProfileRepository: Cached profile cleared');
     } catch (e) {
-      debugPrint('Error clearing cached profile: $e');
+      debugPrint('❌ ProfileRepository: Error clearing cached profile - $e');
     }
   }
 }

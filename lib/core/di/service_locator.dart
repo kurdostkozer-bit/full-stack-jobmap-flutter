@@ -67,7 +67,8 @@ import '../infrastructure/cache_service.dart';
 import '../infrastructure/offline_service.dart';
 import '../infrastructure/connectivity_service.dart';
 import '../infrastructure/analytics_service.dart';
-import '../infrastructure/crash_service.dart';
+import '../../features/auth/presentation/bloc/social_auth_bloc.dart';
+import '../../core/services/social_auth_service.dart';
 
 final sl = GetIt.instance;
 
@@ -95,10 +96,6 @@ Future<void> setupServiceLocator() async {
 
   sl.registerLazySingleton<AnalyticsService>(
     () => SimpleAnalyticsService(),
-  );
-
-  sl.registerLazySingleton<CrashService>(
-    () => SimpleCrashService(),
   );
 
   // Dio
@@ -182,6 +179,19 @@ Future<void> setupServiceLocator() async {
       checkAuthUseCase: sl<CheckAuthUseCase>(),
       getCurrentSessionUseCase: sl<GetCurrentSessionUseCase>(),
       refreshSessionUseCase: sl<RefreshSessionUseCase>(),
+    ),
+  );
+
+  // Social Auth Service
+  sl.registerLazySingleton<SocialAuthService>(
+    () => SocialAuthService(),
+  );
+
+  // Social Auth Bloc
+  sl.registerLazySingleton<SocialAuthBloc>(
+    () => SocialAuthBloc(
+      socialAuthService: sl<SocialAuthService>(),
+      authRepository: sl<AuthRepository>(),
     ),
   );
 

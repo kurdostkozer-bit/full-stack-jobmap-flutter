@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/entities/education_entities.dart';
 import '../../domain/usecases/education_usecases.dart';
-import '../../../../core/network/app_exception.dart';
+import '../../../../core/network/models/api_exception.dart';
 import 'education_event.dart';
 import 'education_state.dart';
 
@@ -32,7 +33,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     try {
       final educations = await getEducationsUseCase(event.careerProfileId);
       emit(EducationsLoaded(educations: educations));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ EducationBloc: Error - ${e.message}');
       emit(EducationError(message: e.message));
     } catch (e) {
       emit(EducationError(message: 'Failed to load educations: $e'));
@@ -63,7 +65,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
 
       final updatedEducations = [...previousEducations, newEducation];
       emit(EducationCreated(educations: updatedEducations));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ EducationBloc: Error - ${e.message}');
       emit(EducationError(
         message: e.message,
         previousEducations: previousEducations,
@@ -103,7 +106,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
       }).toList();
 
       emit(EducationUpdated(educations: updatedEducations));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ EducationBloc: Error - ${e.message}');
       emit(EducationError(
         message: e.message,
         previousEducations: previousEducations,
@@ -133,7 +137,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
           previousEducations.where((e) => e.id != event.educationId).toList();
 
       emit(EducationDeleted(educations: updatedEducations));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ EducationBloc: Error - ${e.message}');
       emit(EducationError(
         message: e.message,
         previousEducations: previousEducations,
@@ -153,7 +158,8 @@ class EducationBloc extends Bloc<EducationEvent, EducationState> {
     try {
       final educations = await getEducationsUseCase(event.careerProfileId);
       emit(EducationsLoaded(educations: educations));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ EducationBloc: Error - ${e.message}');
       emit(EducationError(message: e.message));
     } catch (e) {
       emit(EducationError(message: 'Failed to refresh educations: $e'));

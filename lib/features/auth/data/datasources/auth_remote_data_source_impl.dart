@@ -46,6 +46,34 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
+  Future<AuthSessionModel?> socialLogin({
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String provider,
+    required String providerId,
+    required String idToken,
+  }) async {
+    try {
+      final response = await apiClient.post(
+        '/auth/social-login',
+        data: {
+          'email': email,
+          'firstName': firstName,
+          'lastName': lastName,
+          'provider': provider,
+          'providerId': providerId,
+          'idToken': idToken,
+        },
+      );
+
+      return AuthSessionModel.fromJson(response);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
   Future<void> verifyEmail({
     required String email,
     required String code,

@@ -16,6 +16,17 @@ dependencies:
   # Networking
   dio: ^5.9.0
 
+  # Firebase & Social Auth
+  firebase_core: ^4.12.1
+  firebase_auth: ^6.5.6
+  google_sign_in: ^6.3.0
+
+  # Maps
+  flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+  geolocator: ^14.0.3
+  permission_handler: ^12.0.1
+
   # State Management
   bloc: ^9.2.1
   flutter_bloc: ^9.1.1
@@ -24,7 +35,7 @@ dependencies:
   flutter_riverpod: ^2.4.0
 
   # Secure Storage
-  flutter_secure_storage: ^9.2.4
+  flutter_secure_storage: ^10.3.1
 
   # Dependency Injection
   get_it: ^8.2.0
@@ -34,6 +45,7 @@ dependencies:
   flutter_svg: ^2.0.7
   cached_network_image: ^3.3.0
   shimmer: ^3.0.0
+  font_awesome_flutter: ^10.7.0
 
   # Navigation
   go_router: ^13.0.0
@@ -49,7 +61,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
-  
+
   # Code Generation
   build_runner: ^2.4.6
   freezed: ^2.4.5
@@ -60,7 +72,6 @@ flutter:
 
   assets:
     - assets/images/
-    - logo.png
 
   # fonts:
   #   - family: Cairo

@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/entities/certificates_entities.dart';
 import '../../domain/usecases/certificates_usecases.dart';
-import '../../../../core/network/app_exception.dart';
+import '../../../../core/network/models/api_exception.dart';
 import 'certificates_event.dart';
 import 'certificates_state.dart';
 
@@ -32,7 +33,8 @@ class CertificatesBloc extends Bloc<CertificatesEvent, CertificatesState> {
     try {
       final certificates = await getCertificatesUseCase(event.careerProfileId);
       emit(CertificatesLoaded(certificates: certificates));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ CertificatesBloc: Error - ${e.message}');
       emit(CertificatesError(message: e.message));
     } catch (e) {
       emit(CertificatesError(message: 'Failed to load certificates: $e'));
@@ -64,7 +66,8 @@ class CertificatesBloc extends Bloc<CertificatesEvent, CertificatesState> {
 
       final updatedCertificates = [...previousCertificates, newCertificate];
       emit(CertificateCreated(certificates: updatedCertificates));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ CertificatesBloc: Error - ${e.message}');
       emit(CertificatesError(
         message: e.message,
         previousCertificates: previousCertificates,
@@ -104,7 +107,8 @@ class CertificatesBloc extends Bloc<CertificatesEvent, CertificatesState> {
       }).toList();
 
       emit(CertificateUpdated(certificates: updatedCertificates));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ CertificatesBloc: Error - ${e.message}');
       emit(CertificatesError(
         message: e.message,
         previousCertificates: previousCertificates,
@@ -135,7 +139,8 @@ class CertificatesBloc extends Bloc<CertificatesEvent, CertificatesState> {
           .toList();
 
       emit(CertificateDeleted(certificates: updatedCertificates));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ CertificatesBloc: Error - ${e.message}');
       emit(CertificatesError(
         message: e.message,
         previousCertificates: previousCertificates,
@@ -155,7 +160,8 @@ class CertificatesBloc extends Bloc<CertificatesEvent, CertificatesState> {
     try {
       final certificates = await getCertificatesUseCase(event.careerProfileId);
       emit(CertificatesLoaded(certificates: certificates));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ CertificatesBloc: Error - ${e.message}');
       emit(CertificatesError(message: e.message));
     } catch (e) {
       emit(CertificatesError(message: 'Failed to refresh certificates: $e'));

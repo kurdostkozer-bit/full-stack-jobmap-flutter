@@ -6,6 +6,7 @@ import 'core/router/app_router.dart';
 import 'design_system/theme.dart';
 
 import 'features/auth/presentation/bloc/auth_bloc.dart';
+import 'features/auth/presentation/bloc/social_auth_bloc.dart';
 
 class JobMapApp extends StatelessWidget {
   const JobMapApp({super.key});
@@ -16,6 +17,9 @@ class JobMapApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(
           create: (_) => sl<AuthBloc>(),
+        ),
+        BlocProvider<SocialAuthBloc>(
+          create: (_) => sl<SocialAuthBloc>(),
         ),
       ],
       child: MaterialApp.router(

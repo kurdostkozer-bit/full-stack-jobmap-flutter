@@ -1,7 +1,8 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 import '../../domain/entities/languages_entities.dart';
 import '../../domain/usecases/languages_usecases.dart';
-import '../../../../core/network/app_exception.dart';
+import '../../../../core/network/models/api_exception.dart';
 import 'languages_event.dart';
 import 'languages_state.dart';
 
@@ -32,7 +33,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
     try {
       final languages = await getLanguagesUseCase(event.careerProfileId);
       emit(LanguagesLoaded(languages: languages));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ LanguagesBloc: Error - ${e.message}');
       emit(LanguagesError(message: e.message));
     } catch (e) {
       emit(LanguagesError(message: 'Failed to load languages: $e'));
@@ -58,7 +60,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
 
       final updatedLanguages = [...previousLanguages, newLanguage];
       emit(LanguageCreated(languages: updatedLanguages));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ LanguagesBloc: Error - ${e.message}');
       emit(LanguagesError(
         message: e.message,
         previousLanguages: previousLanguages,
@@ -93,7 +96,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
       }).toList();
 
       emit(LanguageUpdated(languages: updatedLanguages));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ LanguagesBloc: Error - ${e.message}');
       emit(LanguagesError(
         message: e.message,
         previousLanguages: previousLanguages,
@@ -123,7 +127,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
           previousLanguages.where((l) => l.id != event.languageId).toList();
 
       emit(LanguageDeleted(languages: updatedLanguages));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ LanguagesBloc: Error - ${e.message}');
       emit(LanguagesError(
         message: e.message,
         previousLanguages: previousLanguages,
@@ -143,7 +148,8 @@ class LanguagesBloc extends Bloc<LanguagesEvent, LanguagesState> {
     try {
       final languages = await getLanguagesUseCase(event.careerProfileId);
       emit(LanguagesLoaded(languages: languages));
-    } on AppException catch (e) {
+    } on ApiException catch (e) {
+      debugPrint('❌ LanguagesBloc: Error - ${e.message}');
       emit(LanguagesError(message: e.message));
     } catch (e) {
       emit(LanguagesError(message: 'Failed to refresh languages: $e'));

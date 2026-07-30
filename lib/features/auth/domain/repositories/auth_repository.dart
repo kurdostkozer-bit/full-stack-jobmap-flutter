@@ -18,6 +18,15 @@ abstract class AuthRepository {
     required String password,
   });
 
+  Future<AuthSession?> socialLogin({
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String provider,
+    required String providerId,
+    required String idToken,
+  });
+
   Future<void> logout();
 
   Future<void> forgotPassword({required String email});
@@ -34,3 +43,4 @@ abstract class AuthRepository {
 
   Future<AuthSession?> getCurrentSession();
 }
+

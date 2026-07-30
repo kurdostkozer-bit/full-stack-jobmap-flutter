@@ -42,6 +42,20 @@ export class CareerProfilesController {
     return this.careerProfilesService.findAll(query);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  async findMe(
+    @Req() req: AuthenticatedRequest,
+  ): Promise<CareerProfileResponseDto> {
+    const profile = await this.careerProfilesService.findByUserId(req.user.id);
+
+    if (!profile) {
+      throw new NotFoundException('Career profile not found');
+    }
+
+    return profile;
+  }
+
   @Get(':id')
   async findById(
     @Param('id', ParseUUIDPipe) id: string,

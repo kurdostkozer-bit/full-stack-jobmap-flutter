@@ -15,6 +15,16 @@ abstract class AuthRemoteDataSource {
     String? phone,
   });
 
+  /// Social login (Google, Facebook, etc.)
+  Future<AuthSessionModel?> socialLogin({
+    required String email,
+    required String firstName,
+    required String lastName,
+    required String provider,
+    required String providerId,
+    required String idToken,
+  });
+
   /// Verify email with code.
   Future<void> verifyEmail({
     required String email,

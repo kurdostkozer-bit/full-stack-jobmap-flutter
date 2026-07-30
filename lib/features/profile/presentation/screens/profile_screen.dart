@@ -68,35 +68,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _saveProfile() {
     context.read<ProfileBloc>().add(
-          UpdateProfileEvent(
-            firstName: _firstNameController.text.isNotEmpty
-                ? _firstNameController.text
-                : null,
-            lastName: _lastNameController.text.isNotEmpty
-                ? _lastNameController.text
-                : null,
-            phoneNumber: _phoneController.text.isNotEmpty
-                ? _phoneController.text
-                : null,
-            bio:
-                _bioController.text.isNotEmpty ? _bioController.text : null,
-            headline: _headlineController.text.isNotEmpty
-                ? _headlineController.text
-                : null,
-            location: _locationController.text.isNotEmpty
-                ? _locationController.text
-                : null,
-            website: _websiteController.text.isNotEmpty
-                ? _websiteController.text
-                : null,
-            linkedinUrl: _linkedinController.text.isNotEmpty
-                ? _linkedinController.text
-                : null,
-            githubUrl: _githubController.text.isNotEmpty
-                ? _githubController.text
-                : null,
-          ),
-        );
+      UpdateProfileEvent(
+        firstName: _firstNameController.text.isNotEmpty
+            ? _firstNameController.text
+            : null,
+        lastName: _lastNameController.text.isNotEmpty
+            ? _lastNameController.text
+            : null,
+        phoneNumber: _phoneController.text.isNotEmpty
+            ? _phoneController.text
+            : null,
+        bio: _bioController.text.isNotEmpty ? _bioController.text : null,
+        headline: _headlineController.text.isNotEmpty
+            ? _headlineController.text
+            : null,
+        location: _locationController.text.isNotEmpty
+            ? _locationController.text
+            : null,
+        website: _websiteController.text.isNotEmpty
+            ? _websiteController.text
+            : null,
+        linkedinUrl: _linkedinController.text.isNotEmpty
+            ? _linkedinController.text
+            : null,
+        githubUrl: _githubController.text.isNotEmpty
+            ? _githubController.text
+            : null,
+      ),
+    );
+  }
+
+  int _completionPercentage(CareerProfile profile) {
+    final fields = <bool>[
+      profile.firstName?.isNotEmpty ?? false,
+      profile.lastName?.isNotEmpty ?? false,
+      profile.headline?.isNotEmpty ?? false,
+      profile.bio?.isNotEmpty ?? false,
+      profile.location?.isNotEmpty ?? false,
+      profile.phoneNumber?.isNotEmpty ?? false,
+      profile.website?.isNotEmpty ?? false,
+      profile.linkedinUrl?.isNotEmpty ?? false,
+      profile.githubUrl?.isNotEmpty ?? false,
+    ];
+
+    final completed = fields.where((value) => value).length;
+    return ((completed / fields.length) * 100).round();
   }
 
   @override
@@ -117,11 +133,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('My Profile'),
         actions: [
           if (!_isEditing)
             IconButton(
-              icon: const Icon(Icons.edit),
+              icon: const Icon(Icons.edit_outlined),
               onPressed: () => setState(() => _isEditing = true),
             ),
         ],
@@ -187,7 +203,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
 
             if (profile == null) {
-              return const Center(child: Text('No profile data'));
+              return Center(
+                child: Padding(
+                  padding: EdgeInsets.all(AppSpacing.lg),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.person_outline, size: 56, color: context.colorScheme.primary),
+                      SizedBox(height: AppSpacing.md),
+                      Text(
+                        'No profile data yet',
+                        style: context.textTheme.titleMedium,
+                      ),
+                      SizedBox(height: AppSpacing.sm),
+                      Text(
+                        'Start by adding your information to complete your profile.',
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.colorScheme.outline,
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.lg),
+                      ElevatedButton.icon(
+                        onPressed: () => setState(() => _isEditing = true),
+                        icon: const Icon(Icons.edit_outlined),
+                        label: const Text('Create Profile'),
+                      ),
+                    ],
+                  ),
+                ),
+              );
             }
 
             return SingleChildScrollView(
@@ -195,17 +240,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Profile header
                   _buildProfileHeader(profile),
-                  SizedBox(height: AppSpacing.xl),
-
-                  // Profile form
+                  SizedBox(height: AppSpacing.lg),
                   if (_isEditing) ...[
                     _buildProfileForm(),
                     SizedBox(height: AppSpacing.lg),
                     _buildActionButtons(),
                   ] else ...[
-                    _buildProfileInfo(profile),
+                    _buildCompletionCard(profile),
+                    SizedBox(height: AppSpacing.lg),
+                    _buildAboutCard(profile),
+                    SizedBox(height: AppSpacing.lg),
+                    _buildContactCard(profile),
+                    SizedBox(height: AppSpacing.lg),
+                    _buildQuickActions(),
                   ],
                 ],
               ),
@@ -217,45 +265,249 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildProfileHeader(CareerProfile profile) {
-    return Column(
-      children: [
-        // Profile image
-        Container(
-          width: 120,
-          height: 120,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: context.colorScheme.primaryContainer,
-            image: profile.profileImageUrl != null
-                ? DecorationImage(
-                    image: NetworkImage(profile.profileImageUrl!),
-                    fit: BoxFit.cover,
+    final fullName = '${profile.firstName ?? ''} ${profile.lastName ?? ''}'.trim();
+
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        gradient: LinearGradient(
+          colors: [
+            context.colorScheme.primary,
+            context.colorScheme.primary.withValues(alpha: 0.85),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 90,
+            height: 90,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.2),
+              image: profile.profileImageUrl != null
+                  ? DecorationImage(
+                      image: NetworkImage(profile.profileImageUrl!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: profile.profileImageUrl == null
+                ? Icon(
+                    Icons.person,
+                    size: 42,
+                    color: Colors.white,
                   )
                 : null,
           ),
-          child: profile.profileImageUrl == null
-              ? Icon(
-                  Icons.person,
-                  size: 60,
-                  color: context.colorScheme.primary,
-                )
-              : null,
-        ),
-        SizedBox(height: AppSpacing.md),
-        Text(
-          '${profile.firstName ?? ''} ${profile.lastName ?? ''}'.trim(),
-          style: context.textTheme.headlineSmall,
-          textAlign: TextAlign.center,
-        ),
-        if (profile.headline != null) ...[
-          SizedBox(height: AppSpacing.sm),
-          Text(
-            profile.headline!,
-            style: context.textTheme.bodyLarge,
-            textAlign: TextAlign.center,
+          SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  fullName.isEmpty ? 'Your Name' : fullName,
+                  style: context.textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: AppSpacing.xs),
+                Text(
+                  profile.headline?.isNotEmpty == true
+                      ? profile.headline!
+                      : 'Add your professional headline',
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.9),
+                  ),
+                ),
+                SizedBox(height: AppSpacing.sm),
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined, size: 16, color: Colors.white),
+                    SizedBox(width: AppSpacing.xs),
+                    Expanded(
+                      child: Text(
+                        profile.location?.isNotEmpty == true
+                            ? profile.location!
+                            : 'Add your location',
+                        style: context.textTheme.bodySmall?.copyWith(
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCompletionCard(CareerProfile profile) {
+    final percent = _completionPercentage(profile);
+
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: context.colorScheme.surfaceContainerHighest.withValues(alpha: 0.45),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Profile completion',
+                style: context.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '$percent%',
+                style: context.textTheme.titleMedium?.copyWith(
+                  color: context.colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: AppSpacing.sm),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: LinearProgressIndicator(
+              value: percent / 100,
+              minHeight: 10,
+              color: context.colorScheme.primary,
+              backgroundColor: context.colorScheme.surfaceContainerHighest,
+            ),
+          ),
+          SizedBox(height: AppSpacing.sm),
+          Text(
+            'Complete your profile to unlock better job opportunities.',
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colorScheme.outline,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAboutCard(CareerProfile profile) {
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: context.colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: context.colorScheme.outlineVariant.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'About',
+            style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: AppSpacing.sm),
+          Text(
+            profile.bio?.isNotEmpty == true
+                ? profile.bio!
+                : 'Tell employers a bit about yourself and your goals.',
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: context.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContactCard(CareerProfile profile) {
+    return Container(
+      padding: EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: context.colorScheme.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: context.colorScheme.outlineVariant.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Contact & Links',
+            style: context.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: AppSpacing.md),
+          _buildInfoRow(Icons.phone_outlined, 'Phone', profile.phoneNumber),
+          _buildInfoRow(Icons.language_outlined, 'Website', profile.website),
+          _buildInfoRow(Icons.business_outlined, 'LinkedIn', profile.linkedinUrl),
+          _buildInfoRow(Icons.code_outlined, 'GitHub', profile.githubUrl),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String label, String? value) {
+    final displayValue = value?.isNotEmpty == true ? value! : 'Not added yet';
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: context.colorScheme.primary),
+          SizedBox(width: AppSpacing.sm),
+          Text('$label: ', style: context.textTheme.labelMedium),
+          Expanded(
+            child: Text(
+              displayValue,
+              style: context.textTheme.bodyMedium,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActions() {
+    return Wrap(
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.sm,
+      children: [
+        _buildActionChip('Edit Profile', Icons.edit_outlined, () => setState(() => _isEditing = true)),
+        _buildActionChip('Add Skills', Icons.star_outline, () {}),
+        _buildActionChip('Add Experience', Icons.work_outline, () {}),
       ],
+    );
+  }
+
+  Widget _buildActionChip(String label, IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(999),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        decoration: BoxDecoration(
+          color: context.colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 18, color: context.colorScheme.primary),
+            SizedBox(width: AppSpacing.xs),
+            Text(label, style: context.textTheme.labelMedium),
+          ],
+        ),
+      ),
     );
   }
 
@@ -298,45 +550,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.md),
         ),
-      ),
-    );
-  }
-
-  Widget _buildProfileInfo(CareerProfile profile) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildInfoCard('Phone', profile.phoneNumber),
-        _buildInfoCard('Headline', profile.headline),
-        _buildInfoCard('Bio', profile.bio),
-        _buildInfoCard('Location', profile.location),
-        _buildInfoCard('Website', profile.website),
-        _buildInfoCard('LinkedIn', profile.linkedinUrl),
-        _buildInfoCard('GitHub', profile.githubUrl),
-      ],
-    );
-  }
-
-  Widget _buildInfoCard(String label, String? value) {
-    if (value == null || value.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    return Padding(
-      padding: EdgeInsets.only(bottom: AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: context.textTheme.labelSmall,
-          ),
-          SizedBox(height: AppSpacing.sm),
-          Text(
-            value,
-            style: context.textTheme.bodyMedium,
-          ),
-        ],
       ),
     );
   }

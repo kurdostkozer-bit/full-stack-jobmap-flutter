@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "636597585856",
+    "project_id": "jobmap-90f38",
+    "storage_bucket": "jobmap-90f38.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636597585856:android:c622c581fdb3e2b31d2a25",
+        "android_client_info": {
+          "package_name": "com.jobmap.iraq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636597585856-ibqfqnsotitlcni1jkqe901i13ed7elr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqDfOqWFD6-Ih7B0wOnAZFNvCTwoNIOOc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636597585856-ibqfqnsotitlcni1jkqe901i13ed7elr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "636597585856-8mut7gqkncb3tkj2vqgbelu9t5tbscq7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.jobmap"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
