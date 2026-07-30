@@ -6,6 +6,7 @@ export class JobMapper {
     return {
       id: job.id,
       companyId: job.companyId,
+      recruiterId: job.recruiterId,
       title: job.title,
       slug: job.slug,
       description: job.description,

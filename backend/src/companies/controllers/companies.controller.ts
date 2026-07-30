@@ -8,24 +8,34 @@ import {
   Body,
   Query,
   ParseUUIDPipe,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { CompaniesService } from '../services/companies.service';
 import { CompanyResponseDto } from '../dto/company-response.dto';
 import { CreateCompanyDto } from '../dto/create-company.dto';
 import { UpdateCompanyDto } from '../dto/update-company.dto';
 import { CompanyQueryDto } from '../dto/company-query.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email: string;
+  };
+}
 
 @Controller({ path: 'companies', version: '1' })
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(
+    @Request() req: AuthenticatedRequest,
     @Body() dto: CreateCompanyDto,
   ): Promise<CompanyResponseDto> {
-    // TODO: Get userId from auth context
-    const userId = 'placeholder-user-id';
-    return this.companiesService.create(dto, userId);
+    return this.companiesService.create(dto, req.user.id);
   }
 
   @Get()
@@ -43,20 +53,22 @@ export class CompaniesController {
     return this.companiesService.findById(id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
+    @Request() req: AuthenticatedRequest,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateCompanyDto,
   ): Promise<CompanyResponseDto> {
-    // TODO: Get userId from auth context
-    const userId = 'placeholder-user-id';
-    return this.companiesService.update(id, dto, userId);
+    return this.companiesService.update(id, dto, req.user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<CompanyResponseDto> {
-    // TODO: Get userId from auth context
-    const userId = 'placeholder-user-id';
-    return this.companiesService.delete(id, userId);
+  async delete(
+    @Request() req: AuthenticatedRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<CompanyResponseDto> {
+    return this.companiesService.delete(id, req.user.id);
   }
 }

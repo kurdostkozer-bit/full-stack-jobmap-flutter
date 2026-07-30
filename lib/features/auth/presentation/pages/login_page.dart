@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../bloc/auth_bloc.dart';
+import '../bloc/social_auth_bloc.dart';
 import '../../../home/presentation/screens/home_screen.dart';
 
 class LoginPage extends StatefulWidget {
@@ -35,49 +35,63 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginWithGoogle() {
-    // TODO: Implement Google login
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Google login coming soon')),
-    );
+    context.read<SocialAuthBloc>().add(const GoogleSignInEvent());
   }
 
-  void _loginWithApple() {
-    // TODO: Implement Apple login
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Apple login coming soon')),
-    );
-  }
-
-  void _loginWithFacebook() {
-    // TODO: Implement Facebook login
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Facebook login coming soon')),
-    );
+  void _signUp() {
+    context.go('/register');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-              ),
-            );
-          }
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
 
-          if (state is AuthAuthenticated) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Login Successful'),
-              ),
-            );
+              if (state is AuthAuthenticated) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Login Successful'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                context.go(HomeScreen.routeName);
+              }
+            },
+          ),
+          BlocListener<SocialAuthBloc, SocialAuthState>(
+            listener: (context, state) {
+              if (state is SocialAuthError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
 
-            context.go(HomeScreen.routeName);
-          }
-        },
+              if (state is SocialAuthSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Google Sign-In Successful'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                context.go(HomeScreen.routeName);
+              }
+            },
+          ),
+        ],
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
@@ -233,35 +247,44 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 24),
 
                   // Social Login Buttons (Circular Icons)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Google
-                      _SocialLoginButton(
-                        icon: FontAwesomeIcons.google,
-                        onPressed: _loginWithGoogle,
-                        backgroundColor: Colors.red.shade50,
-                        iconColor: Colors.red.shade600,
-                      ),
-                      const SizedBox(width: 20),
+                  BlocBuilder<SocialAuthBloc, SocialAuthState>(
+                    builder: (context, state) {
+                      final isLoading = state is SocialAuthLoading;
 
-                      // Apple
-                      _SocialLoginButton(
-                        icon: FontAwesomeIcons.apple,
-                        onPressed: _loginWithApple,
-                        backgroundColor: Colors.grey.shade200,
-                        iconColor: Colors.black,
-                      ),
-                      const SizedBox(width: 20),
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Google
+                          _SocialLoginButton(
+                            icon: FontAwesomeIcons.google,
+                            onPressed: isLoading ? null : _loginWithGoogle,
+                            backgroundColor: Colors.red.shade50,
+                            iconColor: Colors.red.shade600,
+                            isLoading: isLoading,
+                          ),
+                          const SizedBox(width: 20),
 
-                      // Facebook
-                      _SocialLoginButton(
-                        icon: FontAwesomeIcons.facebook,
-                        onPressed: _loginWithFacebook,
-                        backgroundColor: Colors.blue.shade50,
-                        iconColor: Colors.blue.shade600,
-                      ),
-                    ],
+                          // Apple (Disabled for now)
+                          _SocialLoginButton(
+                            icon: FontAwesomeIcons.apple,
+                            onPressed: null,
+                            backgroundColor: Colors.grey.shade200,
+                            iconColor: Colors.black,
+                            isLoading: false,
+                          ),
+                          const SizedBox(width: 20),
+
+                          // Facebook (Disabled for now)
+                          _SocialLoginButton(
+                            icon: FontAwesomeIcons.facebook,
+                            onPressed: null,
+                            backgroundColor: Colors.blue.shade50,
+                            iconColor: Colors.blue.shade600,
+                            isLoading: false,
+                          ),
+                        ],
+                      );
+                    },
                   ),
                   const SizedBox(height: 32),
 
@@ -274,9 +297,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(color: Colors.grey[600]),
                       ),
                       TextButton(
-                        onPressed: () {
-                          // TODO: Navigate to register page
-                        },
+                        onPressed: _signUp,
                         child: const Text('Sign Up'),
                       ),
                     ],
@@ -294,15 +315,17 @@ class _LoginPageState extends State<LoginPage> {
 /// Reusable Social Login Button Widget
 class _SocialLoginButton extends StatelessWidget {
   final IconData icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color backgroundColor;
   final Color iconColor;
+  final bool isLoading;
 
   const _SocialLoginButton({
     required this.icon,
     required this.onPressed,
     required this.backgroundColor,
     required this.iconColor,
+    this.isLoading = false,
   });
 
   @override
@@ -324,14 +347,20 @@ class _SocialLoginButton extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onPressed,
+          onTap: isLoading ? null : onPressed,
           borderRadius: BorderRadius.circular(30),
           child: Center(
-            child: FaIcon(
-              icon,
-              size: 24,
-              color: iconColor,
-            ),
+            child: isLoading
+                ? const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : FaIcon(
+                    icon,
+                    size: 24,
+                    color: onPressed == null ? Colors.grey : iconColor,
+                  ),
           ),
         ),
       ),

@@ -9,7 +9,13 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
+  ForbiddenException,
+  Request,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 import { CreateJobDto } from '../dto/create-job.dto';
 import { JobQueryDto } from '../dto/job-query.dto';
@@ -61,22 +67,55 @@ export class JobsController {
   }
 
   @Post()
-  async create(@Body() dto: CreateJobDto): Promise<JobResponseDto> {
-    return this.jobsService.create(dto);
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.CREATED)
+  async create(
+    @Body() dto: CreateJobDto,
+    @Request() req: any,
+  ): Promise<JobResponseDto> {
+    // For now, any authenticated user can create jobs
+    // TODO: Add role-based check once roles are in JWT payload
+    return this.jobsService.create(dto, req.user.id);
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateJobDto,
+    @Request() req: any,
   ): Promise<JobResponseDto> {
+    const record = await this.jobsService.findById(id);
+
+    if (!record) {
+      throw new NotFoundException('Job not found.');
+    }
+
+    // Only creator or admin can modify
+    if (record.recruiterId !== req.user.id) {
+      throw new ForbiddenException('You can only modify your own jobs');
+    }
+
     return this.jobsService.update(id, dto);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
+    @Request() req: any,
   ): Promise<JobResponseDto> {
+    const record = await this.jobsService.findById(id);
+
+    if (!record) {
+      throw new NotFoundException('Job not found.');
+    }
+
+    // Only creator can delete
+    if (record.recruiterId !== req.user.id) {
+      throw new ForbiddenException('You can only delete your own jobs');
+    }
+
     return this.jobsService.remove(id);
   }
 }

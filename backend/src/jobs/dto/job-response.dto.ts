@@ -3,6 +3,8 @@ export class JobResponseDto {
 
   companyId!: string;
 
+  recruiterId!: string;
+
   title!: string;
 
   slug!: string;

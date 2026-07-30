@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
 import { CompaniesRepository } from '../repositories/companies.repository';
 import { CompanyResponseDto } from '../dto/company-response.dto';
 import { CreateCompanyDto } from '../dto/create-company.dto';
@@ -43,19 +43,41 @@ export class CompaniesService {
   }
 
   async update(id: string, dto: UpdateCompanyDto, userId: string): Promise<CompanyResponseDto> {
-    const company = await this.companiesRepository.update(id, dto, userId);
+    // First, fetch the company to check ownership
+    const company = await this.companiesRepository.findById(id);
     if (!company) {
       throw new NotFoundException('Company not found');
     }
-    return CompanyMapper.toResponse(company);
+    
+    // Check ownership
+    if (company.createdBy !== userId) {
+      throw new ForbiddenException('You do not have permission to update this company');
+    }
+    
+    const updated = await this.companiesRepository.update(id, dto, userId);
+    if (!updated) {
+      throw new NotFoundException('Company not found');
+    }
+    return CompanyMapper.toResponse(updated);
   }
 
   async delete(id: string, userId: string): Promise<CompanyResponseDto> {
-    const company = await this.companiesRepository.softDelete(id, userId);
+    // First, fetch the company to check ownership
+    const company = await this.companiesRepository.findById(id);
     if (!company) {
       throw new NotFoundException('Company not found');
     }
-    return CompanyMapper.toResponse(company);
+    
+    // Check ownership
+    if (company.createdBy !== userId) {
+      throw new ForbiddenException('You do not have permission to delete this company');
+    }
+    
+    const deleted = await this.companiesRepository.softDelete(id, userId);
+    if (!deleted) {
+      throw new NotFoundException('Company not found');
+    }
+    return CompanyMapper.toResponse(deleted);
   }
 
   async findByCreator(userId: string): Promise<CompanyResponseDto[]> {

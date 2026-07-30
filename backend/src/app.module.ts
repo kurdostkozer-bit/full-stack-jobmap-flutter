@@ -23,6 +23,13 @@ import { CompanyMembersModule } from './company-members/company-members.module';
 import { RecruitersModule } from './recruiters/recruiters.module';
 import { DepartmentsModule } from './departments/departments.module';
 import { CompanyLocationsModule } from './company-locations/company-locations.module';
+import { JobsModule } from './jobs/jobs.module';
+import { MapsModule } from './maps/maps.module';
+import { SavedJobsModule } from './saved-jobs/saved-jobs.module';
+import { ApplicationsModule } from './applications/applications.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { ChatModule } from './chat/chat.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -51,6 +58,13 @@ import { CompanyLocationsModule } from './company-locations/company-locations.mo
     RecruitersModule,
     DepartmentsModule,
     CompanyLocationsModule,
+    JobsModule,
+    MapsModule,
+    SavedJobsModule,
+    ApplicationsModule,
+    NotificationsModule,
+    ChatModule,
+    SearchModule,
   ],
 })
 export class AppModule {}

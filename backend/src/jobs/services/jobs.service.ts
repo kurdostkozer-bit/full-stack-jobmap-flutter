@@ -15,14 +15,14 @@ import { JobsRepository } from '../repositories/jobs.repository';
 export class JobsService {
   constructor(private readonly jobsRepository: JobsRepository) {}
 
-  async create(dto: CreateJobDto): Promise<JobResponseDto> {
+  async create(dto: CreateJobDto, recruiterId: string): Promise<JobResponseDto> {
     const existing = await this.jobsRepository.findBySlug(dto.slug);
 
     if (existing) {
       throw new ConflictException('Job slug already exists.');
     }
 
-    const record = await this.jobsRepository.create(dto);
+    const record = await this.jobsRepository.create(dto, recruiterId);
     return JobMapper.toResponse(record);
   }
 

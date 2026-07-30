@@ -6,7 +6,9 @@ import {
   text,
   timestamp,
   uuid,
+  foreignKey,
 } from 'drizzle-orm/pg-core';
+import { recruiters } from './recruiters.schema';
 
 export const jobs = pgTable(
   'jobs',
@@ -14,6 +16,8 @@ export const jobs = pgTable(
     id: uuid('id').defaultRandom().primaryKey(),
 
     companyId: uuid('company_id').notNull(),
+
+    recruiterId: uuid('recruiter_id').notNull(),
 
     title: text('title').notNull(),
 
@@ -57,11 +61,16 @@ export const jobs = pgTable(
   },
   (table) => ({
     companyIdIdx: index('jobs_company_id_idx').on(table.companyId),
+    recruiterIdIdx: index('jobs_recruiter_id_idx').on(table.recruiterId),
     slugIdx: index('jobs_slug_idx').on(table.slug),
     statusIdx: index('jobs_status_idx').on(table.status),
     employmentTypeIdx: index('jobs_employment_type_idx').on(
       table.employmentType,
     ),
     isActiveIdx: index('jobs_is_active_idx').on(table.isActive),
+    recruiterFk: foreignKey({
+      columns: [table.recruiterId],
+      foreignColumns: [recruiters.id],
+    }),
   }),
 );

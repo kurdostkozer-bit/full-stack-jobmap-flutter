@@ -3,6 +3,8 @@ export class JobEntity {
 
   companyId!: string;
 
+  recruiterId!: string;
+
   title!: string;
 
   slug!: string;

@@ -1,0 +1,234 @@
+### Auth Tests Collection
+### Base URL: http://localhost:3000/v1
+
+### ============================================
+### HAPPY PATH TESTS
+### ============================================
+
+### 1. Register - Create New User
+POST http://localhost:3000/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "TestPassword123!"
+}
+
+### 2. Register - Different User for Testing
+POST http://localhost:3000/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "anotheruser@example.com",
+  "password": "AnotherPassword456!"
+}
+
+### 3. Login - Get Access Token
+POST http://localhost:3000/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "TestPassword123!"
+}
+
+### Response will have:
+### {
+###   "message": "Login successful.",
+###   "accessToken": "eyJ...",
+###   "refreshToken": "eyJ...",
+###   "user": {...}
+### }
+
+### Store the accessToken and refreshToken for next tests
+
+### ============================================
+### PROTECTED ENDPOINTS - Use Token in Header
+### ============================================
+
+### 4. Get Current User (Me)
+GET http://localhost:3000/v1/auth/me
+Authorization: Bearer {accessToken}
+
+### 5. Refresh Token - Get New Access Token
+POST http://localhost:3000/v1/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "{refreshToken}"
+}
+
+### 6. Change Password
+PATCH http://localhost:3000/v1/auth/change-password
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+
+{
+  "currentPassword": "TestPassword123!",
+  "newPassword": "NewPassword789!",
+  "confirmPassword": "NewPassword789!"
+}
+
+### 7. Logout
+POST http://localhost:3000/v1/auth/logout
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+
+### ============================================
+### VALIDATION TESTS - Invalid Input
+### ============================================
+
+### 8. Register - Invalid Email
+POST http://localhost:3000/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "invalid-email",
+  "password": "TestPassword123!"
+}
+
+### Expected: 400 Bad Request
+
+### 9. Register - Password Too Short
+POST http://localhost:3000/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "newuser@example.com",
+  "password": "short"
+}
+
+### Expected: 400 Bad Request (password must be at least 8 chars)
+
+### 10. Register - Empty Password
+POST http://localhost:3000/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "newuser2@example.com",
+  "password": ""
+}
+
+### Expected: 400 Bad Request
+
+### 11. Register - Missing Email
+POST http://localhost:3000/v1/auth/register
+Content-Type: application/json
+
+{
+  "password": "TestPassword123!"
+}
+
+### Expected: 400 Bad Request
+
+### 12. Register - Duplicate Email
+POST http://localhost:3000/v1/auth/register
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "AnotherPassword123!"
+}
+
+### Expected: 409 Conflict (Email already registered)
+
+### 13. Login - Wrong Password
+POST http://localhost:3000/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "WrongPassword123!"
+}
+
+### Expected: 401 Unauthorized
+
+### 14. Login - User Not Found
+POST http://localhost:3000/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "nonexistent@example.com",
+  "password": "TestPassword123!"
+}
+
+### Expected: 401 Unauthorized
+
+### ============================================
+### AUTHORIZATION TESTS
+### ============================================
+
+### 15. Get Me - Without Token
+GET http://localhost:3000/v1/auth/me
+
+### Expected: 401 Unauthorized
+
+### 16. Get Me - Invalid Token
+GET http://localhost:3000/v1/auth/me
+Authorization: Bearer invalid.token.here
+
+### Expected: 401 Unauthorized
+
+### 17. Get Me - Expired Token
+GET http://localhost:3000/v1/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZW1haWwiOiJ0ZXN0QGV4YW1wbGUuY29tIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+
+### Expected: 401 Unauthorized
+
+### 18. Change Password - Without Token
+PATCH http://localhost:3000/v1/auth/change-password
+Content-Type: application/json
+
+{
+  "currentPassword": "TestPassword123!",
+  "newPassword": "NewPassword789!",
+  "confirmPassword": "NewPassword789!"
+}
+
+### Expected: 401 Unauthorized
+
+### ============================================
+### ERROR CASES
+### ============================================
+
+### 19. Change Password - Wrong Current Password
+PATCH http://localhost:3000/v1/auth/change-password
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+
+{
+  "currentPassword": "WrongPassword123!",
+  "newPassword": "NewPassword789!",
+  "confirmPassword": "NewPassword789!"
+}
+
+### Expected: 401 Unauthorized
+
+### 20. Change Password - New Password Same as Current
+PATCH http://localhost:3000/v1/auth/change-password
+Authorization: Bearer {accessToken}
+Content-Type: application/json
+
+{
+  "currentPassword": "TestPassword123!",
+  "newPassword": "TestPassword123!",
+  "confirmPassword": "TestPassword123!"
+}
+
+### Expected: 400 Bad Request
+
+### ============================================
+### RESPONSE FORMAT VERIFICATION
+### ============================================
+
+### All endpoints should return consistent response format:
+### Success: { "message": "...", "data": {...} or "accessToken": "..." }
+### Error: { "statusCode": 4xx|5xx, "message": "...", "error": "..." }
+
+### Status Codes Expected:
+### - 200: Success GET/PATCH
+### - 201: Success POST (register)
+### - 400: Bad Request (validation)
+### - 401: Unauthorized (auth failed or no token)
+### - 409: Conflict (duplicate email)
+### - 500: Server Error

@@ -10,11 +10,12 @@ import { JobEntity } from '../entities/job.entity';
 
 @Injectable()
 export class JobsRepository {
-  async create(dto: CreateJobDto): Promise<JobEntity> {
+  async create(dto: CreateJobDto, recruiterId: string): Promise<JobEntity> {
     const [record] = await db
       .insert(jobs)
       .values({
         companyId: dto.companyId,
+        recruiterId: recruiterId,
         title: dto.title,
         slug: dto.slug,
         description: dto.description,

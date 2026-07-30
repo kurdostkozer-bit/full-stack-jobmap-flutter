@@ -17,7 +17,7 @@ import { ProfilesModule } from '../profiles/profiles.module';
       useFactory: (config: ConfigService) => ({
         secret: config.getOrThrow<string>('JWT_SECRET'),
         signOptions: {
-          expiresIn: '7d',
+          expiresIn: '15m',
         },
       }),
     }),
