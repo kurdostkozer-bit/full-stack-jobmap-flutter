@@ -18,14 +18,11 @@ extension GoogleAccountsIdExtension on GoogleAccountsId {
 
 @JS()
 @staticInterop
+@anonymous
 class GoogleIdentityInitConfig {
   external factory GoogleIdentityInitConfig({
-    required String client_id,
-    required JSFunction callback,
-    bool? auto_select,
-    bool? cancel_on_tap_outside,
-    String? context,
-    String? ux_mode,
+    String client_id,
+    JSFunction callback,
   });
 }
 
