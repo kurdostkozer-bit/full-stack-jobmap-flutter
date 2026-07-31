@@ -278,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             // Facebook button
                             _SocialLoginButton(
-                              imagePath: 'assets/images/facebook-logo.jpg',
+                              imagePath: 'assets/images/facebook-logo.png',
                               onPressed: _handleFacebookLogin,
                               backgroundColor: Colors.black.withValues(alpha: 0.15),
                             ),
