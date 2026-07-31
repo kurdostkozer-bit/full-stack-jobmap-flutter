@@ -8,23 +8,29 @@ import {
   Body,
   Query,
   ParseUUIDPipe,
+  UseGuards,
+  Req,
+  ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { RecruitersService } from '../services/recruiters.service';
 import { RecruiterResponseDto } from '../dto/recruiter-response.dto';
 import { CreateRecruiterDto } from '../dto/create-recruiter.dto';
 import { UpdateRecruiterDto } from '../dto/update-recruiter.dto';
 import { RecruiterQueryDto } from '../dto/recruiter-query.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+
+interface AuthenticatedRequest extends Request {
+  user: {
+    id: string;
+    email: string;
+  };
+}
 
 @Controller({ path: 'recruiters', version: '1' })
 export class RecruitersController {
   constructor(private readonly recruitersService: RecruitersService) {}
-
-  @Post()
-  async create(@Body() dto: CreateRecruiterDto): Promise<RecruiterResponseDto> {
-    // TODO: Get userId from auth context
-    const userId = 'placeholder-user-id';
-    return this.recruitersService.create(dto, userId);
-  }
 
   @Get()
   async findAll(@Query() query: RecruiterQueryDto): Promise<RecruiterResponseDto[]> {
@@ -50,20 +56,53 @@ export class RecruitersController {
     return this.recruitersService.findById(id);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  async create(
+    @Req() req: AuthenticatedRequest,
+    @Body() dto: CreateRecruiterDto,
+  ): Promise<RecruiterResponseDto> {
+    return this.recruitersService.create(dto, req.user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
+    @Req() req: AuthenticatedRequest,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateRecruiterDto,
   ): Promise<RecruiterResponseDto> {
-    // TODO: Get userId from auth context
-    const userId = 'placeholder-user-id';
-    return this.recruitersService.update(id, dto, userId);
+    // Get recruiter and check ownership
+    const recruiter = await this.recruitersService.findById(id);
+    if (!recruiter) {
+      throw new NotFoundException('Recruiter not found');
+    }
+    
+    // Only creator (createdBy) can update
+    if (recruiter.createdBy !== req.user.id) {
+      throw new ForbiddenException('Not authorized to update this recruiter');
+    }
+    
+    return this.recruitersService.update(id, dto, req.user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<RecruiterResponseDto> {
-    // TODO: Get userId from auth context
-    const userId = 'placeholder-user-id';
-    return this.recruitersService.delete(id, userId);
+  async delete(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<RecruiterResponseDto> {
+    // Get recruiter and check ownership
+    const recruiter = await this.recruitersService.findById(id);
+    if (!recruiter) {
+      throw new NotFoundException('Recruiter not found');
+    }
+    
+    // Only creator (createdBy) can delete
+    if (recruiter.createdBy !== req.user.id) {
+      throw new ForbiddenException('Not authorized to delete this recruiter');
+    }
+    
+    return this.recruitersService.delete(id, req.user.id);
   }
 }
