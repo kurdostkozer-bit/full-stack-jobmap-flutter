@@ -3,62 +3,116 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/auth_session.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../../../../core/services/social_auth_service.dart';
+import '../../../../core/services/email_auth_service.dart';
 
 part 'social_auth_event.dart';
 part 'social_auth_state.dart';
 
 class SocialAuthBloc extends Bloc<SocialAuthEvent, SocialAuthState> {
-  final SocialAuthService socialAuthService;
+  final EmailAuthService emailAuthService;
   final AuthRepository authRepository;
 
   SocialAuthBloc({
-    required this.socialAuthService,
+    required this.emailAuthService,
     required this.authRepository,
   }) : super(SocialAuthInitial()) {
-    on<GoogleSignInRequested>(_onGoogleSignIn);
-    on<SocialSignOutRequested>(_onSocialSignOut);
+    on<LoginRequested>(_onLoginRequested);
+    on<RegisterRequested>(_onRegisterRequested);
+    on<LogoutRequested>(_onLogoutRequested);
   }
 
-  Future<void> _onGoogleSignIn(
-    GoogleSignInRequested event,
+  Future<void> _onLoginRequested(
+    LoginRequested event,
     Emitter<SocialAuthState> emit,
   ) async {
     emit(SocialAuthLoading());
     try {
-      final googleIdToken = await socialAuthService.signInWithGoogle();
-
-      if (googleIdToken == null) {
-        emit(SocialAuthInitial());
+      // Validate email format
+      if (!emailAuthService.isValidEmail(event.email)) {
+        emit(const SocialAuthFailure(message: 'Invalid email format'));
         return;
       }
 
-      final authSession = await authRepository.socialLogin(
-        idToken: googleIdToken.token,
+      // Validate password
+      if (event.password.isEmpty) {
+        emit(const SocialAuthFailure(message: 'Password is required'));
+        return;
+      }
+
+      final authSession = await authRepository.login(
+        email: event.email,
+        password: event.password,
       );
 
-      if (authSession != null) {
-        emit(SocialAuthSuccess(authSession: authSession));
-      } else {
-        emit(const SocialAuthFailure(message: 'Google sign-in failed'));
-      }
+      emit(SocialAuthSuccess(authSession: authSession));
+      emailAuthService.logAuthEvent('User logged in', email: event.email);
     } catch (e) {
-      debugPrint('Google sign-in error: $e');
-      emit(const SocialAuthFailure(message: 'Google sign-in failed'));
+      debugPrint('Login error: $e');
+      emit(SocialAuthFailure(message: e.toString()));
+      emailAuthService.logAuthEvent('Login failed', email: event.email, error: e.toString());
     }
   }
 
-  Future<void> _onSocialSignOut(
-    SocialSignOutRequested event,
+  Future<void> _onRegisterRequested(
+    RegisterRequested event,
     Emitter<SocialAuthState> emit,
   ) async {
     emit(SocialAuthLoading());
     try {
-      await socialAuthService.signOut();
-      emit(SocialSignOutSuccess());
+      // Validate full name
+      if (!emailAuthService.isValidFullName(event.fullName)) {
+        emit(const SocialAuthFailure(message: 'Invalid full name'));
+        return;
+      }
+
+      // Validate email format
+      if (!emailAuthService.isValidEmail(event.email)) {
+        emit(const SocialAuthFailure(message: 'Invalid email format'));
+        return;
+      }
+
+      // Validate password strength
+      if (!emailAuthService.isValidPassword(event.password)) {
+        final feedback = emailAuthService.getPasswordStrengthFeedback(event.password);
+        emit(SocialAuthFailure(message: feedback));
+        return;
+      }
+
+      // Validate phone if provided
+      if (!emailAuthService.isValidPhone(event.phone)) {
+        emit(const SocialAuthFailure(message: 'Invalid phone number'));
+        return;
+      }
+
+      final authSession = await authRepository.register(
+        fullName: event.fullName,
+        email: event.email,
+        password: event.password,
+        phone: event.phone,
+      );
+
+      emit(SocialAuthSuccess(authSession: authSession));
+      emailAuthService.logAuthEvent('User registered', email: event.email);
     } catch (e) {
-      debugPrint('Google sign-out error: $e');
-      emit(const SocialAuthFailure(message: 'Google sign-out failed'));
+      debugPrint('Registration error: $e');
+      emit(SocialAuthFailure(message: e.toString()));
+      emailAuthService.logAuthEvent('Registration failed', email: event.email, error: e.toString());
+    }
+  }
+
+  Future<void> _onLogoutRequested(
+    LogoutRequested event,
+    Emitter<SocialAuthState> emit,
+  ) async {
+    emit(SocialAuthLoading());
+    try {
+      await authRepository.logout();
+      emit(SocialAuthInitial());
+      emailAuthService.logAuthEvent('User logged out');
+    } catch (e) {
+      debugPrint('Logout error: $e');
+      emit(SocialAuthFailure(message: e.toString()));
+      emailAuthService.logAuthEvent('Logout failed', error: e.toString());
     }
   }
 }

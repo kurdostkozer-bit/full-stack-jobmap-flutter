@@ -34,7 +34,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _loginWithGoogle() {
-    context.read<SocialAuthBloc>().add(const GoogleSignInEvent());
+    // Google Sign-In removed - Email/Password only
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Please use Email and Password to login'),
+        backgroundColor: Colors.orange.shade600,
+      ),
+    );
   }
 
   void _signUp() {
@@ -70,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           BlocListener<SocialAuthBloc, SocialAuthState>(
             listener: (context, state) {
-              if (state is SocialAuthError) {
+              if (state is SocialAuthFailure) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(state.message),
@@ -82,7 +88,7 @@ class _LoginPageState extends State<LoginPage> {
               if (state is SocialAuthSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Google Sign-In Successful'),
+                    content: Text('Login Successful'),
                     backgroundColor: Colors.green,
                   ),
                 );
@@ -256,10 +262,11 @@ class _LoginPageState extends State<LoginPage> {
                           // Google
                           _SocialLoginButton(
                             icon: Icons.g_translate,
-                            onPressed: isLoading ? null : _loginWithGoogle,
-                            backgroundColor: Colors.red.shade50,
-                            iconColor: Colors.red.shade600,
-                            isLoading: isLoading,
+                            onPressed: null,
+                            backgroundColor: Colors.grey.shade200,
+                            iconColor: Colors.grey,
+                            isLoading: false,
+                            label: 'Disabled',
                           ),
                           const SizedBox(width: 20),
 
@@ -318,6 +325,7 @@ class _SocialLoginButton extends StatelessWidget {
   final Color backgroundColor;
   final Color iconColor;
   final bool isLoading;
+  final String? label;
 
   const _SocialLoginButton({
     required this.icon,
@@ -325,6 +333,7 @@ class _SocialLoginButton extends StatelessWidget {
     required this.backgroundColor,
     required this.iconColor,
     this.isLoading = false,
+    this.label,
   });
 
   @override
@@ -355,7 +364,7 @@ class _SocialLoginButton extends StatelessWidget {
                     width: 24,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : FaIcon(
+                : Icon(
                     icon,
                     size: 24,
                     color: onPressed == null ? Colors.grey : iconColor,

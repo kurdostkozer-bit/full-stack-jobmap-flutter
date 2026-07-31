@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/navigation/navigation_map.dart';
-import '../../../home/presentation/screens/home_screen.dart';
 import '../../../map/presentation/screens/map_screen.dart';
 import '../bloc/social_auth_bloc.dart';
 import 'register_screen.dart';
@@ -63,7 +61,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   void _handleGoogleLogin() {
-    context.read<SocialAuthBloc>().add(const GoogleSignInRequested());
+    context.showError('Email/Password authentication only');
   }
 
   void _handleAppleLogin() {

@@ -9,10 +9,16 @@ abstract class SocialAuthState extends Equatable {
 
 class SocialAuthInitial extends SocialAuthState {
   const SocialAuthInitial();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class SocialAuthLoading extends SocialAuthState {
   const SocialAuthLoading();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class SocialAuthSuccess extends SocialAuthState {
@@ -35,4 +41,7 @@ class SocialAuthFailure extends SocialAuthState {
 
 class SocialSignOutSuccess extends SocialAuthState {
   const SocialSignOutSuccess();
+
+  @override
+  List<Object?> get props => [];
 }

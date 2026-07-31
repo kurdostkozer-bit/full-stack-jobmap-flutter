@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
-import '../../../home/presentation/screens/home_screen.dart';
 import '../../../map/presentation/screens/map_screen.dart';
 import '../bloc/social_auth_bloc.dart';
 
@@ -185,9 +184,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 label: 'Sign up with Google',
                 prefixIcon: const Icon(Icons.login),
                 onPressed: () {
-                  context.read<SocialAuthBloc>().add(
-                        const GoogleSignInRequested(),
-                      );
+                  context.showError('Email/Password authentication only');
                 },
               ),
               SizedBox(height: AppSpacing.md),

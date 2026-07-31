@@ -16,9 +16,6 @@ dependencies:
   # Networking
   dio: ^5.9.0
 
-  # Web support for JS Interop
-  web: ^1.1.0
-
   # Maps
   flutter_map: ^8.2.2
   latlong2: ^0.9.1

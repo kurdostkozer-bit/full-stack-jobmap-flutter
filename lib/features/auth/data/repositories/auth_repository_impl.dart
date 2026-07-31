@@ -50,18 +50,7 @@ class AuthRepositoryImpl implements AuthRepository {
     return session;
   }
 
-  @override
-  Future<AuthSession?> socialLogin({
-    required String idToken,
-  }) async {
-    final session = await remoteDataSource.socialLogin(
-      idToken: idToken,
-    );
-    if (session != null) {
-      await localDataSource.saveAuthSession(session);
-    }
-    return session;
-  }
+
 
   @override
   Future<void> logout() async {

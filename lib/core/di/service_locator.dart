@@ -68,7 +68,7 @@ import '../infrastructure/offline_service.dart';
 import '../infrastructure/connectivity_service.dart';
 import '../infrastructure/analytics_service.dart';
 import '../../features/auth/presentation/bloc/social_auth_bloc.dart';
-import '../../core/services/social_auth_service.dart';
+import '../../core/services/email_auth_service.dart';
 
 final sl = GetIt.instance;
 
@@ -182,15 +182,15 @@ Future<void> setupServiceLocator() async {
     ),
   );
 
-  // Social Auth Service
-  sl.registerLazySingleton<SocialAuthService>(
-    () => SocialAuthService(),
+  // Email Auth Service
+  sl.registerLazySingleton<EmailAuthService>(
+    () => EmailAuthService(),
   );
 
   // Social Auth Bloc
   sl.registerLazySingleton<SocialAuthBloc>(
     () => SocialAuthBloc(
-      socialAuthService: sl<SocialAuthService>(),
+      emailAuthService: sl<EmailAuthService>(),
       authRepository: sl<AuthRepository>(),
     ),
   );
