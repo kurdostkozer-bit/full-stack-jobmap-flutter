@@ -18,7 +18,7 @@ class GoogleIdToken {
 
 class SocialAuthService {
   static const String googleClientId =
-      '636597585856-8mut7gqkncb3tkj2vqgbelu9t5tbscq7.apps.googleusercontent.com';
+      '215370690483-meevd4ubn4mbde9ssb8545p8r9meovu0.apps.googleusercontent.com';
 
   Future<GoogleIdToken?> signInWithGoogle() async {
     try {
