@@ -14,31 +14,41 @@ export class CareerProfilesRepository {
     userId: string,
     dto: CreateCareerProfileDto,
   ): Promise<CareerProfileEntity> {
-    const [profile] = await db
-      .insert(careerProfiles)
-      .values({
-        userId,
-        headline: dto.headline ?? null,
-        summary: dto.summary ?? null,
-        professionTitle: dto.professionTitle ?? null,
-        location: dto.location ?? null,
-        preferredJobTitles: dto.preferredJobTitles ?? null,
-        preferredIndustries: dto.preferredIndustries ?? null,
-        salaryMin: dto.salaryMin ?? null,
-        salaryMax: dto.salaryMax ?? null,
-        currency: dto.currency ?? 'USD',
-        workPreference: dto.workPreference ?? 'any',
-        remotePreference: dto.remotePreference ?? 'hybrid',
-        relocationPreference: dto.relocationPreference ?? 'open',
-        profileStatus: dto.profileStatus ?? 'draft',
-        privacyLevel: dto.privacyLevel ?? 'private',
-        isPublic: dto.isPublic ?? false,
-        resumeUrl: dto.resumeUrl ?? null,
-        profileCompletion: 0,
-      })
-      .returning();
+    try {
+      const [profile] = await db
+        .insert(careerProfiles)
+        .values({
+          userId,
+          headline: dto.headline ?? null,
+          summary: dto.summary ?? null,
+          professionTitle: dto.professionTitle ?? null,
+          location: dto.location ?? null,
+          preferredJobTitles: dto.preferredJobTitles ?? null,
+          preferredIndustries: dto.preferredIndustries ?? null,
+          salaryMin: dto.salaryMin ?? null,
+          salaryMax: dto.salaryMax ?? null,
+          currency: dto.currency ?? 'USD',
+          workPreference: dto.workPreference ?? 'any',
+          remotePreference: dto.remotePreference ?? 'hybrid',
+          relocationPreference: dto.relocationPreference ?? 'open',
+          profileStatus: dto.profileStatus ?? 'draft',
+          privacyLevel: dto.privacyLevel ?? 'private',
+          isPublic: dto.isPublic ?? false,
+          resumeUrl: dto.resumeUrl ?? null,
+          profileCompletion: 0,
+        })
+        .returning();
 
-    return profile;
+      return profile;
+    } catch (error: any) {
+      console.error('CareerProfilesRepository.create() - Database error:', {
+        code: error.code,
+        message: error.message,
+        detail: error.detail,
+        sqlState: error.sqlState,
+      });
+      throw error;
+    }
   }
 
   async update(

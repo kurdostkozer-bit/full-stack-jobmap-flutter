@@ -6,6 +6,7 @@ import {
   IsUUID,
   MaxLength,
   Min,
+  IsIn,
 } from 'class-validator';
 
 export class CreateCareerProfileDto {
@@ -56,27 +57,27 @@ export class CreateCareerProfileDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(50)
+  @IsIn(['full-time', 'part-time', 'contract', 'freelance', 'internship', 'temporary'])
   workPreference?: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(50)
+  @IsIn(['remote', 'onsite', 'hybrid'])
   remotePreference?: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(50)
+  @IsIn(['open', 'not-open', 'willing'])
   relocationPreference?: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(50)
+  @IsIn(['draft', 'active', 'inactive', 'archived'])
   profileStatus?: string;
 
   @IsOptional()
   @IsString()
-  @MaxLength(50)
+  @IsIn(['private', 'public', 'friends-only'])
   privacyLevel?: string;
 
   @IsOptional()

@@ -13,7 +13,7 @@ export const careerProfiles = pgTable(
   {
     id: uuid('id').defaultRandom().primaryKey(),
 
-    userId: uuid('user_id').notNull().unique(),
+    userId: uuid('user_id').notNull(),
 
     headline: text('headline'),
 

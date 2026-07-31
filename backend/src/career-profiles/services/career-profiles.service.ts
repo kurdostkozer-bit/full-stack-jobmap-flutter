@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 
 import { CreateCareerProfileDto } from '../dto/create-career-profile.dto';
 import { CareerProfileQueryDto } from '../dto/career-profile-query.dto';
@@ -19,12 +19,40 @@ export class CareerProfilesService {
     userId: string,
     dto: CreateCareerProfileDto,
   ): Promise<CareerProfileResponseDto> {
-    const profile = await this.careerProfilesRepository.create(userId, dto);
+    // Check if profile already exists
+    const existingProfile = await this.careerProfilesRepository.findByUserId(userId);
+    if (existingProfile) {
+      throw new ConflictException('Career profile already exists for this user');
+    }
 
-    // Trigger referral completion if user was referred
-    await this.referralsService.completeReferralOnProfileCreation(userId);
+    try {
+      const profile = await this.careerProfilesRepository.create(userId, dto);
 
-    return CareerProfileMapper.toResponse(profile);
+      // Trigger referral completion if user was referred
+      await this.referralsService.completeReferralOnProfileCreation(userId);
+
+      return CareerProfileMapper.toResponse(profile);
+    } catch (error: any) {
+      console.error('CareerProfilesService.create() error caught:', {
+        code: error.code,
+        message: error.message,
+        name: error.name,
+        detail: error.detail,
+      });
+
+      // Fallback: Handle unique constraint violation if somehow missed above
+      const errorMessage = (error.message || '').toLowerCase();
+      const isDuplicate =
+        error.code === '23505' ||
+        errorMessage.includes('unique') ||
+        errorMessage.includes('duplicate');
+
+      if (isDuplicate) {
+        throw new ConflictException('Career profile already exists for this user');
+      }
+
+      throw error;
+    }
   }
 
   async update(
@@ -44,6 +72,14 @@ export class CareerProfilesService {
     query?: CareerProfileQueryDto,
   ): Promise<CareerProfileResponseDto[]> {
     const profiles = await this.careerProfilesRepository.findAll(query);
+
+    // Filter out private profiles (unless explicitly queried with privacyLevel)
+    // Default behavior: show only public profiles
+    if (!query?.privacyLevel) {
+      return profiles
+        .filter(p => p.privacyLevel !== 'private')
+        .map(profile => CareerProfileMapper.toResponse(profile));
+    }
 
     return profiles.map((profile) => CareerProfileMapper.toResponse(profile));
   }

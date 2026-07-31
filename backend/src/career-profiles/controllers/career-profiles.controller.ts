@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -94,6 +95,27 @@ export class CareerProfilesController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async updateById(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateCareerProfileDto,
+  ): Promise<CareerProfileResponseDto> {
+    const profile = await this.careerProfilesService.findById(id);
+
+    if (!profile) {
+      throw new NotFoundException('Career profile not found');
+    }
+
+    // Authorization check - only owner can update
+    if (profile.userId !== req.user.id) {
+      throw new ForbiddenException('Not authorized to update this profile');
+    }
+
+    return this.careerProfilesService.update(id, dto);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Delete('me')
   async removeMe(
     @Req() req: AuthenticatedRequest,
@@ -105,5 +127,25 @@ export class CareerProfilesController {
     }
 
     return this.careerProfilesService.remove(profile.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete(':id')
+  async removeById(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<CareerProfileResponseDto> {
+    const profile = await this.careerProfilesService.findById(id);
+
+    if (!profile) {
+      throw new NotFoundException('Career profile not found');
+    }
+
+    // Authorization check - only owner can delete
+    if (profile.userId !== req.user.id) {
+      throw new ForbiddenException('Not authorized to delete this profile');
+    }
+
+    return this.careerProfilesService.remove(id);
   }
 }

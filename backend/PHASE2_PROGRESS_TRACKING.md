@@ -12,7 +12,7 @@
 | **Auth** | ✅ VERIFIED | 18/18 | PASS | Comprehensive testing, all guards working |
 | **Jobs** | ✅ VERIFIED | 21/21 | PASS | Fixed recruiterId FK + auth guards |
 | **Companies** | ✅ VERIFIED | 24/24 | PASS | Fixed authorization bypass (non-owner UPDATE/DELETE) |
-| Career Profiles | ⏳ PENDING | - | - | Next in queue |
+| Career Profiles | 🔍 DISCOVERY | - | - | Discovery & Design complete, ready for test implementation |
 | Recruiters | ⏳ PENDING | - | - | Blocked on Companies |
 | Applications | ⏳ PENDING | - | - | Blocked on Jobs |
 | Search | ⏳ PENDING | - | - | Blocked on Jobs |
@@ -65,6 +65,29 @@
   - Final Result: 24/24 PASS
   - All tests now passing including authorization checks
 - **Verification Status**: ✅ APPROVED
+
+---
+
+### Session 4: Career Profiles Module Discovery (CURRENT)
+- **Status**: 🔍 DISCOVERY PHASE COMPLETE
+- **Date**: July 31, 2026 (current)
+- **Phase 1 - Discovery**: Analyzed module architecture
+  - Controller: `/me` pattern for owner's profile, guards present
+  - Service: Manages profiles, triggers referral system
+  - Repository: Soft delete with isDeleted flag
+  - Schema: 20 columns, userId UNIQUE (1:1), cascade delete to Applications & SavedJobs
+  - Relationships: CareerProfile ← Applications (CASCADE), SavedJobs (CASCADE)
+  - Identified Issues: 4 (1 HIGH, 2 MEDIUM, 1 LOW)
+- **Phase 2 - Test Design**: Created comprehensive test cases
+  - Total Tests: 35-40 cases across 9 categories
+  - Critical Areas: Authorization (7 tests), Cascade delete (3 tests), Privacy control (4 tests)
+  - Expected Bugs: 2-3 (likely authorization bypass + cascade clarification)
+- **Phase 3 - Ready**: Test implementation ready to start
+- **Key Findings**:
+  - ✅ Good architecture, clean separation
+  - ⚠️ Likely has same authorization bypass bug as Companies
+  - ⚠️ Cascade delete behavior needs verification (deletes Applications & SavedJobs)
+  - ⚠️ Privacy controls need verification (isPublic vs privacyLevel)
 
 ---
 
