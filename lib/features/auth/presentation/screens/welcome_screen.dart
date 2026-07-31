@@ -356,7 +356,7 @@ class _SocialLoginButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(30),
           child: Center(
-            child: FaIcon(
+            child: Icon(
               icon,
               size: 24,
               color: iconColor,
