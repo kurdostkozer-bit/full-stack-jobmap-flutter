@@ -148,8 +148,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: AppSpacing.lg),
 
-                // Login button
-                AppButton(
+                // Login button - Glass Green
+                AppButton.glassGreen(
                   label: 'Login',
                   isLoading: _isLoading,
                   onPressed: _handleLogin,

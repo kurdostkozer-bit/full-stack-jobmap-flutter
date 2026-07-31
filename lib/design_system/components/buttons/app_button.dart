@@ -154,6 +154,27 @@ class AppButton extends StatelessWidget {
       key: key,
     );
   }
+
+  /// Glass Green variant (green glassmorphism style)
+  factory AppButton.glassGreen({
+    Key? key,
+    required String label,
+    VoidCallback? onPressed,
+    bool isLoading = false,
+    bool isFullWidth = true,
+    Icon? prefixIcon,
+    Icon? suffixIcon,
+  }) {
+    return _GlassGreenButton(
+      label: label,
+      onPressed: onPressed,
+      isLoading: isLoading,
+      isFullWidth: isFullWidth,
+      prefixIcon: prefixIcon,
+      suffixIcon: suffixIcon,
+      key: key,
+    );
+  }
 }
 
 /// Secondary button (filled with secondary color)
@@ -375,5 +396,67 @@ class _IconButton extends AppButton {
         padding: EdgeInsets.all(AppSpacing.sm),
       ),
     );
+  }
+}
+
+/// Glass Green button (green glassmorphism style)
+class _GlassGreenButton extends AppButton {
+  const _GlassGreenButton({
+    super.key,
+    required super.label,
+    super.onPressed,
+    super.isLoading = false,
+    super.isFullWidth = true,
+    super.prefixIcon,
+    super.suffixIcon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final child = isLoading
+        ? SizedBox(
+            height: 20,
+            width: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: const AlwaysStoppedAnimation(
+                Colors.white,
+              ),
+            ),
+          )
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (prefixIcon != null) ...[
+                prefixIcon!,
+                SizedBox(width: AppSpacing.sm),
+              ],
+              Text(label),
+              if (suffixIcon != null) ...[
+                SizedBox(width: AppSpacing.sm),
+                suffixIcon!,
+              ],
+            ],
+          );
+
+    final button = ElevatedButton(
+      onPressed: isLoading ? null : onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color(0xFF10B981), // Glass Green
+        foregroundColor: Colors.white,
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+        elevation: 4,
+        shadowColor: const Color(0xFF10B981).withValues(alpha: 0.5),
+      ),
+      child: child,
+    );
+
+    return isFullWidth ? SizedBox(width: double.infinity, child: button) : button;
   }
 }

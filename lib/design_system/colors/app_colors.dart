@@ -20,6 +20,11 @@ class AppColors {
   static const Color accentLight = Color(0xFFFBBF24);
   static const Color accentDark = Color(0xFFD97706);
 
+  // ============= GLASS GREEN (GLASSMORPHISM) =============
+  static const Color glassGreen = Color(0xFF10B981);
+  static const Color glassGreenLight = Color(0xFF34D399);
+  static const Color glassGreenDark = Color(0xFF059669);
+
   // ============= STATUS COLORS =============
   static const Color success = Color(0xFF10B981);
   static const Color error = Color(0xFFEF4444);
