@@ -34,8 +34,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   /// Check if user is already authenticated
   void _checkAuthentication() {
-    // Delay to show splash screen briefly
-    Future.delayed(const Duration(seconds: 1), () {
+    // Delay to show splash screen for 5 seconds
+    Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
         context.read<AuthBloc>().add(const CheckAuthEvent());
       }
