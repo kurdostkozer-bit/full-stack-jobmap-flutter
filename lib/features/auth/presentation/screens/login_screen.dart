@@ -138,8 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: AppSpacing.lg),
                       Center(
-                        child: GestureDetector(
-                          onTap: () {
+                        child: TextButton(
+                          onPressed: () {
                             context.go(RegisterScreen.routeName);
                           },
                           child: RichText(
@@ -154,6 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: context.textTheme.bodySmall?.copyWith(
                                     color: Colors.black.withValues(alpha: 0.95),
                                     fontWeight: FontWeight.bold,
+                                    decoration: TextDecoration.underline,
                                   ),
                                 ),
                               ],
