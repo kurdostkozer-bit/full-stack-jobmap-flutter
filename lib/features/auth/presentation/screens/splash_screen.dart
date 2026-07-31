@@ -48,11 +48,11 @@ class _SplashScreenState extends State<SplashScreen>
           // User already logged in, go to home
           context.go('/home');
         } else if (state is AuthUnauthenticated) {
-          // No active session, show welcome
-          context.go('/welcome');
+          // No active session, show login directly
+          context.go(LoginScreen.routeName);
         } else if (state is AuthError) {
-          // Error during auth check, show welcome
-          context.go('/welcome');
+          // Error during auth check, show login directly
+          context.go(LoginScreen.routeName);
         }
       },
       child: _buildSplashUI(),

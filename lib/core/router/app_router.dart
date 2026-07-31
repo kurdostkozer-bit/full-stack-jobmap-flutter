@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../features/auth/presentation/screens/splash_screen.dart';
-import '../../features/auth/presentation/screens/welcome_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/register_screen.dart';
 
@@ -34,12 +33,6 @@ final goRouter = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const SplashScreen(),
-    ),
-
-    // Welcome
-    GoRoute(
-      path: WelcomeScreen.routeName,
-      builder: (context, state) => const WelcomeScreen(),
     ),
 
     // Login
