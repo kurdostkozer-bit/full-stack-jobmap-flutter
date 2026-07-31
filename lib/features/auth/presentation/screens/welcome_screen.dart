@@ -253,38 +253,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     ),
                     SizedBox(height: AppSpacing.lg),
 
-                    // Social login buttons - Circular with icons
+                    // Social login buttons - Circular with logos
                     Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           // Google button
                           _SocialLoginButton(
-                            icon: Icons.g_mobiledata,
-                            label: 'G',
+                            imagePath: 'assets/images/google-logo.png',
                             onPressed: _handleGoogleLogin,
                             backgroundColor: Colors.white,
-                            iconColor: Colors.red.shade600,
                           ),
                           SizedBox(width: AppSpacing.xl),
 
                           // Apple button
                           _SocialLoginButton(
-                            icon: Icons.apple,
-                            label: '🍎',
+                            imagePath: 'assets/images/apple-logo.png',
                             onPressed: _handleAppleLogin,
                             backgroundColor: Colors.white,
-                            iconColor: Colors.black87,
                           ),
                           SizedBox(width: AppSpacing.xl),
 
                           // Facebook button
                           _SocialLoginButton(
-                            icon: Icons.facebook,
-                            label: 'f',
+                            imagePath: 'assets/images/facebook-logo.png',
                             onPressed: _handleFacebookLogin,
                             backgroundColor: Colors.white,
-                            iconColor: Colors.blue.shade600,
                           ),
                         ],
                       ),
@@ -325,18 +319,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
 /// Social login button widget
 class _SocialLoginButton extends StatelessWidget {
-  final IconData icon;
-  final String? label;
+  final String imagePath;
   final VoidCallback onPressed;
   final Color backgroundColor;
-  final Color iconColor;
 
   const _SocialLoginButton({
-    required this.icon,
-    this.label,
+    required this.imagePath,
     required this.onPressed,
     required this.backgroundColor,
-    required this.iconColor,
   });
 
   @override
@@ -361,20 +351,12 @@ class _SocialLoginButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(32),
           child: Center(
-            child: label != null
-                ? Text(
-                    label!,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: iconColor,
-                    ),
-                  )
-                : Icon(
-                    icon,
-                    size: 28,
-                    color: iconColor,
-                  ),
+            child: Image.asset(
+              imagePath,
+              height: 40,
+              width: 40,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       ),

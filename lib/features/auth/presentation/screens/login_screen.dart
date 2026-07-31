@@ -169,42 +169,36 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(height: AppSpacing.lg),
 
-                // Social login buttons - Circular with icons
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Google button
-                      _SocialLoginButton(
-                        icon: Icons.g_mobiledata,
-                        label: 'G',
-                        onPressed: _handleGoogleLogin,
-                        backgroundColor: Colors.white,
-                        iconColor: Colors.red.shade600,
-                      ),
-                      SizedBox(width: AppSpacing.xl),
+                    // Social login buttons - Circular with logos
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Google button
+                          _SocialLoginButton(
+                            imagePath: 'assets/images/google-logo.png',
+                            onPressed: _handleGoogleLogin,
+                            backgroundColor: Colors.white,
+                          ),
+                          SizedBox(width: AppSpacing.xl),
 
-                      // Apple button
-                      _SocialLoginButton(
-                        icon: Icons.apple,
-                        label: '🍎',
-                        onPressed: _handleAppleLogin,
-                        backgroundColor: Colors.white,
-                        iconColor: Colors.black87,
-                      ),
-                      SizedBox(width: AppSpacing.xl),
+                          // Apple button
+                          _SocialLoginButton(
+                            imagePath: 'assets/images/apple-logo.png',
+                            onPressed: _handleAppleLogin,
+                            backgroundColor: Colors.white,
+                          ),
+                          SizedBox(width: AppSpacing.xl),
 
-                      // Facebook button
-                      _SocialLoginButton(
-                        icon: Icons.facebook,
-                        label: 'f',
-                        onPressed: _handleFacebookLogin,
-                        backgroundColor: Colors.white,
-                        iconColor: Colors.blue.shade600,
+                          // Facebook button
+                          _SocialLoginButton(
+                            imagePath: 'assets/images/facebook-logo.png',
+                            onPressed: _handleFacebookLogin,
+                            backgroundColor: Colors.white,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
                 SizedBox(height: AppSpacing.lg),
 
                 // Sign up link
@@ -236,18 +230,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
 /// Social login button widget
 class _SocialLoginButton extends StatelessWidget {
-  final IconData icon;
-  final String? label;
+  final String imagePath;
   final VoidCallback onPressed;
   final Color backgroundColor;
-  final Color iconColor;
 
   const _SocialLoginButton({
-    required this.icon,
-    this.label,
+    required this.imagePath,
     required this.onPressed,
     required this.backgroundColor,
-    required this.iconColor,
   });
 
   @override
@@ -272,20 +262,12 @@ class _SocialLoginButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(32),
           child: Center(
-            child: label != null
-                ? Text(
-                    label!,
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: iconColor,
-                    ),
-                  )
-                : Icon(
-                    icon,
-                    size: 28,
-                    color: iconColor,
-                  ),
+            child: Image.asset(
+              imagePath,
+              height: 40,
+              width: 40,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       ),
