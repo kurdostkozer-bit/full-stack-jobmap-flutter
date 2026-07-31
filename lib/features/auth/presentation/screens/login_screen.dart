@@ -6,6 +6,7 @@ import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/navigation/navigation_map.dart';
 import '../../../map/presentation/screens/map_screen.dart';
 import '../bloc/auth_bloc.dart';
+import 'register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -137,21 +138,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       SizedBox(height: AppSpacing.lg),
                       Center(
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Don't have an account? ",
-                            style: context.textTheme.bodySmall?.copyWith(
-                              color: Colors.black.withValues(alpha: 0.7),
-                            ),
-                            children: [
-                              TextSpan(
-                                text: 'Sign up',
-                                style: context.textTheme.bodySmall?.copyWith(
-                                  color: Colors.black.withValues(alpha: 0.95),
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        child: GestureDetector(
+                          onTap: () {
+                            context.go(RegisterScreen.routeName);
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Don't have an account? ",
+                              style: context.textTheme.bodySmall?.copyWith(
+                                color: Colors.black.withValues(alpha: 0.7),
                               ),
-                            ],
+                              children: [
+                                TextSpan(
+                                  text: 'Sign up',
+                                  style: context.textTheme.bodySmall?.copyWith(
+                                    color: Colors.black.withValues(alpha: 0.95),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
