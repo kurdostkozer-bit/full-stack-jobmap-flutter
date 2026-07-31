@@ -439,24 +439,52 @@ class _GlassGreenButton extends AppButton {
             ],
           );
 
-    final button = ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF10B981), // Glass Green
-        foregroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.md,
-          vertical: AppSpacing.sm,
+    final button = Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0xFF10B981).withValues(alpha: 0.9), // Glass Green
+            const Color(0xFF059669).withValues(alpha: 0.85), // Dark Green
+          ],
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF10B981).withValues(alpha: 0.4),
+            blurRadius: 15,
+            spreadRadius: 2,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: const Color(0xFF10B981).withValues(alpha: 0.2),
+            blurRadius: 25,
+            spreadRadius: 5,
+          ),
+        ],
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.3),
+          width: 1.5,
         ),
-        elevation: 4,
-        shadowColor: const Color(0xFF10B981).withValues(alpha: 0.5),
       ),
-      child: child,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isLoading ? null : onPressed,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            child: Center(child: child),
+          ),
+        ),
+      ),
     );
 
     return isFullWidth ? SizedBox(width: double.infinity, child: button) : button;
   }
 }
+
