@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:google_identity_services_web/google_identity_services_web.dart';
+import 'dart:js_interop';
+import 'google_identity_interop.dart';
 
 class GoogleIdToken {
   final String token;
@@ -20,9 +22,37 @@ class SocialAuthService {
   static const String googleClientId =
       '215370690483-meevd4ubn4mbde9ssb8545p8r9meovu0.apps.googleusercontent.com';
 
+  late GoogleAccountsId _gis;
+  bool _initialized = false;
+
+  Future<void> initialize() async {
+    if (_initialized) return;
+
+    try {
+      _gis = googleAccountsId;
+
+      void initCallback(GoogleIdentityResponse response) {
+        // Callback handled in signInWithGoogle
+      }
+
+      final configJs = GoogleIdentityInitConfig(
+        client_id: googleClientId,
+        callback: initCallback.toJS as JSFunction,
+      );
+
+      _gis.initialize(configJs as JSObject);
+      _initialized = true;
+      debugPrint('Google Identity Services initialized');
+    } catch (e) {
+      debugPrint('Failed to initialize Google Identity Services: $e');
+      rethrow;
+    }
+  }
+
   Future<GoogleIdToken?> signInWithGoogle() async {
     try {
       if (kIsWeb) {
+        await initialize();
         return await _signInWithGIS();
       } else {
         return await _signInWithNativeFlow();
@@ -34,40 +64,49 @@ class SocialAuthService {
   }
 
   Future<GoogleIdToken?> _signInWithGIS() async {
-    final gis = google_identity_services_web.id;
+    final completer = Completer<GoogleIdToken?>();
 
-    return await Future<GoogleIdToken?>(
-      (completer) {
-        gis.oneTap(OneTapRequest(
-          client_id: googleClientId,
-          callback: (OneTapResponse response) {
-            if (response.credential != null) {
-              final parts = response.credential!.split('.');
-              if (parts.length != 3) {
-                completer.completeError('Invalid JWT format');
-                return;
-              }
+    void promptCallback(GoogleIdentityResponse response) {
+      if (response.credential != null && response.credential!.isNotEmpty) {
+        try {
+          final idToken = _parseIdToken(response.credential!);
+          completer.complete(idToken);
+        } catch (e) {
+          debugPrint('Failed to parse ID token: $e');
+          completer.completeError(e);
+        }
+      } else {
+        completer.complete(null);
+      }
+    }
 
-              final payload = json.decode(
-                utf8.decode(
-                  base64Url.decode(base64Url.normalize(parts[1])),
-                ),
-              ) as Map<String, dynamic>;
+    _gis.prompt(promptCallback.toJS as JSFunction);
 
-              final idToken = GoogleIdToken(
-                token: response.credential!,
-                email: payload['email'] as String? ?? '',
-                name: payload['name'] as String? ?? '',
-                picture: payload['picture'] as String?,
-              );
+    return completer.future;
+  }
 
-              completer.complete(idToken);
-            }
-          },
-          cancel_on_tap_outside: true,
-        ));
-      },
-    );
+  GoogleIdToken _parseIdToken(String token) {
+    final parts = token.split('.');
+    if (parts.length != 3) {
+      throw Exception('Invalid JWT format');
+    }
+
+    try {
+      final payload = json.decode(
+        utf8.decode(
+          base64Url.decode(base64Url.normalize(parts[1])),
+        ),
+      ) as Map<String, dynamic>;
+
+      return GoogleIdToken(
+        token: token,
+        email: payload['email'] as String? ?? '',
+        name: payload['name'] as String? ?? '',
+        picture: payload['picture'] as String?,
+      );
+    } catch (e) {
+      throw Exception('Failed to parse JWT payload: $e');
+    }
   }
 
   Future<GoogleIdToken?> _signInWithNativeFlow() async {
@@ -78,9 +117,9 @@ class SocialAuthService {
 
   Future<void> signOut() async {
     try {
-      if (kIsWeb) {
-        final gis = google_identity_services_web.id;
-        gis.disableAutoSelect();
+      if (kIsWeb && _initialized) {
+        _gis.disableAutoSelect();
+        debugPrint('Google Sign-Out completed');
       }
     } catch (e) {
       debugPrint('Sign Out Error: $e');

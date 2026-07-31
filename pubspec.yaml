@@ -16,8 +16,8 @@ dependencies:
   # Networking
   dio: ^5.9.0
 
-  # Google Identity Services
-  google_identity_services_web: ^0.2.0
+  # Web support for JS Interop
+  web: ^1.1.0
 
   # Maps
   flutter_map: ^8.2.2

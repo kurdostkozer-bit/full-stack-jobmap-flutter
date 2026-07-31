@@ -33,15 +33,6 @@ class SocialAuthFailure extends SocialAuthState {
   List<Object?> get props => [message];
 }
 
-class SocialAuthAuthenticated extends SocialAuthState {
-  final User user;
-
-  const SocialAuthAuthenticated({required this.user});
-
-  @override
-  List<Object?> get props => [user];
-}
-
 class SocialSignOutSuccess extends SocialAuthState {
   const SocialSignOutSuccess();
 }
