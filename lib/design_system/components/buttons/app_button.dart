@@ -399,7 +399,7 @@ class _IconButton extends AppButton {
   }
 }
 
-/// Glass Green button (green glassmorphism style)
+/// Glass Green button (green glassmorphism style - Emerald)
 class _GlassGreenButton extends AppButton {
   const _GlassGreenButton({
     super.key,
@@ -446,25 +446,25 @@ class _GlassGreenButton extends AppButton {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            const Color(0xFF10B981).withValues(alpha: 0.9), // Glass Green
-            const Color(0xFF059669).withValues(alpha: 0.85), // Dark Green
+            const Color(0xFF50C878).withValues(alpha: 0.95), // Emerald Green
+            const Color(0xFF2D7A4A).withValues(alpha: 0.9), // Dark Emerald
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF10B981).withValues(alpha: 0.4),
-            blurRadius: 15,
+            color: const Color(0xFF50C878).withValues(alpha: 0.45),
+            blurRadius: 16,
             spreadRadius: 2,
             offset: const Offset(0, 4),
           ),
           BoxShadow(
-            color: const Color(0xFF10B981).withValues(alpha: 0.2),
-            blurRadius: 25,
-            spreadRadius: 5,
+            color: const Color(0xFF50C878).withValues(alpha: 0.25),
+            blurRadius: 30,
+            spreadRadius: 6,
           ),
         ],
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
+          color: Colors.white.withValues(alpha: 0.35),
           width: 1.5,
         ),
       ),
