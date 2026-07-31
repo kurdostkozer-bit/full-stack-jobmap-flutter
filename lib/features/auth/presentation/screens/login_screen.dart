@@ -260,7 +260,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             // Google button
                             _SocialLoginButton(
-                              imagePath: 'assets/images/google-logo.png',
+                              icon: Icons.g_mobiledata,
+                              label: 'G',
                               onPressed: _handleGoogleLogin,
                               backgroundColor: Colors.black.withValues(alpha: 0.15),
                             ),
@@ -268,7 +269,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             // Apple button
                             _SocialLoginButton(
-                              imagePath: 'assets/images/apple-logo.png',
+                              icon: Icons.apple,
+                              label: 'A',
                               onPressed: _handleAppleLogin,
                               backgroundColor: Colors.black.withValues(alpha: 0.15),
                             ),
@@ -319,12 +321,16 @@ class _LoginScreenState extends State<LoginScreen> {
 
 /// Social login button widget
 class _SocialLoginButton extends StatelessWidget {
-  final String imagePath;
+  final String? imagePath;
+  final IconData? icon;
+  final String? label;
   final VoidCallback onPressed;
   final Color backgroundColor;
 
   const _SocialLoginButton({
-    required this.imagePath,
+    this.imagePath,
+    this.icon,
+    this.label,
     required this.onPressed,
     required this.backgroundColor,
   });
@@ -351,12 +357,27 @@ class _SocialLoginButton extends StatelessWidget {
           onTap: onPressed,
           borderRadius: BorderRadius.circular(32),
           child: Center(
-            child: Image.asset(
-              imagePath,
-              height: 40,
-              width: 40,
-              fit: BoxFit.contain,
-            ),
+            child: imagePath != null
+                ? Image.asset(
+                    imagePath!,
+                    height: 40,
+                    width: 40,
+                    fit: BoxFit.contain,
+                  )
+                : icon != null
+                    ? Icon(
+                        icon,
+                        size: 32,
+                        color: Colors.black.withValues(alpha: 0.8),
+                      )
+                    : Text(
+                        label ?? '',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
           ),
         ),
       ),
