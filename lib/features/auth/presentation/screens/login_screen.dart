@@ -148,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () => GoRouter.of(context).pop(),
                         child: Icon(
                           Icons.arrow_back,
-                          color: Colors.white.withValues(alpha: 0.9),
+                          color: Colors.black.withValues(alpha: 0.8),
                         ),
                       ),
                       SizedBox(height: AppSpacing.md),
@@ -158,10 +158,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         'Welcome Back',
                         style: context.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white.withValues(alpha: 0.95),
+                          color: Colors.black.withValues(alpha: 0.95),
                           shadows: [
                             Shadow(
-                              color: Colors.black.withValues(alpha: 0.2),
+                              color: Colors.white.withValues(alpha: 0.3),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -172,10 +172,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         'Login to your account',
                         style: context.textTheme.bodyMedium?.copyWith(
-                          color: Colors.white.withValues(alpha: 0.85),
+                          color: Colors.black.withValues(alpha: 0.75),
                           shadows: [
                             Shadow(
-                              color: Colors.black.withValues(alpha: 0.15),
+                              color: Colors.white.withValues(alpha: 0.2),
                               blurRadius: 4,
                               offset: const Offset(0, 1),
                             ),
@@ -209,7 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             'Forgot Password?',
                             style: context.textTheme.bodySmall?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.9),
+                              color: Colors.black.withValues(alpha: 0.8),
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -230,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Expanded(
                             child: Divider(
-                              color: Colors.white.withValues(alpha: 0.3),
+                              color: Colors.black.withValues(alpha: 0.2),
                             ),
                           ),
                           Padding(
@@ -240,13 +240,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Text(
                               'OR',
                               style: context.textTheme.labelSmall?.copyWith(
-                                color: Colors.white.withValues(alpha: 0.7),
+                                color: Colors.black.withValues(alpha: 0.6),
                               ),
                             ),
                           ),
                           Expanded(
                             child: Divider(
-                              color: Colors.white.withValues(alpha: 0.3),
+                              color: Colors.black.withValues(alpha: 0.2),
                             ),
                           ),
                         ],
@@ -262,7 +262,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _SocialLoginButton(
                               imagePath: 'assets/images/google-logo.png',
                               onPressed: _handleGoogleLogin,
-                              backgroundColor: Colors.white.withValues(alpha: 0.9),
+                              backgroundColor: Colors.black.withValues(alpha: 0.15),
                             ),
                             SizedBox(width: AppSpacing.xl),
 
@@ -270,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _SocialLoginButton(
                               imagePath: 'assets/images/apple-logo.png',
                               onPressed: _handleAppleLogin,
-                              backgroundColor: Colors.white.withValues(alpha: 0.9),
+                              backgroundColor: Colors.black.withValues(alpha: 0.15),
                             ),
                             SizedBox(width: AppSpacing.xl),
 
@@ -278,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             _SocialLoginButton(
                               imagePath: 'assets/images/facebook-logo.png',
                               onPressed: _handleFacebookLogin,
-                              backgroundColor: Colors.white.withValues(alpha: 0.9),
+                              backgroundColor: Colors.black.withValues(alpha: 0.15),
                             ),
                           ],
                         ),
@@ -291,13 +291,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           text: TextSpan(
                             text: "Don't have an account? ",
                             style: context.textTheme.bodySmall?.copyWith(
-                              color: Colors.white.withValues(alpha: 0.8),
+                              color: Colors.black.withValues(alpha: 0.7),
                             ),
                             children: [
                               TextSpan(
                                 text: 'Sign up',
                                 style: context.textTheme.bodySmall?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.95),
+                                  color: Colors.black.withValues(alpha: 0.95),
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
