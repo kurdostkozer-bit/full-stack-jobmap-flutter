@@ -40,7 +40,7 @@ class SocialAuthService {
         callback: initCallback.toJS as JSFunction,
       );
 
-      _gis.initialize(configJs as JSObject);
+      _gis.initialize(configJs);
       _initialized = true;
       debugPrint('Google Identity Services initialized');
     } catch (e) {
@@ -66,21 +66,7 @@ class SocialAuthService {
   Future<GoogleIdToken?> _signInWithGIS() async {
     final completer = Completer<GoogleIdToken?>();
 
-    void promptCallback(GoogleIdentityResponse response) {
-      if (response.credential != null && response.credential!.isNotEmpty) {
-        try {
-          final idToken = _parseIdToken(response.credential!);
-          completer.complete(idToken);
-        } catch (e) {
-          debugPrint('Failed to parse ID token: $e');
-          completer.completeError(e);
-        }
-      } else {
-        completer.complete(null);
-      }
-    }
-
-    _gis.prompt(promptCallback.toJS as JSFunction);
+    _gis.prompt();
 
     return completer.future;
   }

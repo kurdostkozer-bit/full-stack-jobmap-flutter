@@ -4,9 +4,15 @@ import 'dart:js_interop';
 external GoogleAccountsId get googleAccountsId;
 
 @JS()
-extension type GoogleAccountsId(JSObject _) implements JSObject {
-  external void initialize(JSObject config);
-  external void prompt(JSFunction callback);
+@staticInterop
+class GoogleAccountsId {}
+
+extension GoogleAccountsIdExtension on GoogleAccountsId {
+  external void initialize(GoogleIdentityInitConfig config);
+
+  external void prompt();
+
+  @JS('disableAutoSelect')
   external void disableAutoSelect();
 }
 
@@ -16,17 +22,19 @@ class GoogleIdentityInitConfig {
   external factory GoogleIdentityInitConfig({
     required String client_id,
     required JSFunction callback,
+    bool? auto_select,
+    bool? cancel_on_tap_outside,
+    String? context,
+    String? ux_mode,
   });
 }
 
 @JS()
-extension type GoogleIdentityResponse(JSObject _) implements JSObject {
+@staticInterop
+class GoogleIdentityResponse {}
+
+extension GoogleIdentityResponseExtension on GoogleIdentityResponse {
   external String? get credential;
+
+  external String? get select_by;
 }
-
-typedef GoogleIdentityCallback = void Function(GoogleIdentityResponse response);
-
-
-
-
-
