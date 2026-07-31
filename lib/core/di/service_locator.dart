@@ -8,7 +8,8 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source_impl.dart';
-import '../../features/auth/data/datasources/auth_local_datasource.dart';
+import '../../features/auth/data/datasources/auth_local_data_source.dart';
+import '../../features/auth/data/datasources/auth_local_data_source_impl.dart';
 import '../../features/profile/presentation/bloc/profile_bloc.dart';
 import '../../features/profile/domain/usecases/profile_usecases.dart';
 import '../../features/profile/data/repositories/profile_repository_impl.dart';
@@ -63,7 +64,6 @@ import '../../features/profile_completion/domain/repositories/profile_completion
 import '../network/api_client.dart';
 import '../network/dio_provider.dart';
 import '../config/app_config.dart';
-import '../infrastructure/cache_service.dart';
 import '../infrastructure/offline_service.dart';
 import '../infrastructure/connectivity_service.dart';
 import '../../core/localization/localization_service.dart';
@@ -82,9 +82,7 @@ Future<void> setupServiceLocator() async {
   );
 
   // Localization Service
-  sl.registerLazySingleton<LocalizationService>(
-    () => LocalizationService(secureStorage: sl<FlutterSecureStorage>()),
-  );
+  await LocalizationService.initialize(sl<FlutterSecureStorage>());
 
   sl.registerLazySingleton<ConnectivityService>(
     () => SimpleConnectivityService(),
@@ -92,10 +90,6 @@ Future<void> setupServiceLocator() async {
 
   sl.registerLazySingleton<OfflineService>(
     () => SimpleOfflineService(),
-  );
-
-  sl.registerLazySingleton<AnalyticsService>(
-    () => SimpleAnalyticsService(),
   );
 
   // Dio

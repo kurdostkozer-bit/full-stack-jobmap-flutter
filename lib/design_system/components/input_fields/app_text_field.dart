@@ -159,6 +159,9 @@ class _AppTextFieldState extends State<AppTextField> {
           validator: widget.validator,
           decoration: InputDecoration(
             hintText: widget.hintText,
+            hintStyle: TextStyle(
+              color: Colors.black.withValues(alpha: 0.6),
+            ),
             helperText: widget.helperText,
             errorText: widget.errorText,
             prefixIcon: widget.prefixIcon,

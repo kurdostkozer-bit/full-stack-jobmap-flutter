@@ -5,11 +5,22 @@ class LocalizationService {
   static const String _languageKey = 'app_language';
   static const String _defaultLanguage = 'en';
   
+  static LocalizationService? _instance;
+
   final FlutterSecureStorage _secureStorage;
   String _currentLanguage = _defaultLanguage;
 
-  LocalizationService({required FlutterSecureStorage secureStorage})
-      : _secureStorage = secureStorage;
+  LocalizationService._internal({required this._secureStorage});
+
+  static LocalizationService get instance {
+    return _instance ??
+        (throw Exception('LocalizationService not initialized'));
+  }
+
+  static Future<void> initialize(FlutterSecureStorage secureStorage) async {
+    _instance ??= LocalizationService._internal(secureStorage: secureStorage);
+    await _instance!._initializeLanguage();
+  }
 
   String get currentLanguage => _currentLanguage;
 
@@ -17,7 +28,7 @@ class LocalizationService {
 
   bool get isRTL => AppLocalizations.isRTL(_currentLanguage);
 
-  Future<void> initialize() async {
+  Future<void> _initializeLanguage() async {
     final savedLanguage = await _getLanguage();
     _currentLanguage = savedLanguage;
   }

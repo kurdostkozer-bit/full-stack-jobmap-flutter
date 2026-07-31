@@ -24,19 +24,15 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       value: jsonEncode(session.toJson()),
     );
     
-    // CRITICAL FIX: Also save tokens individually for interceptor
-    if (session.accessToken != null) {
-      await secureStorage.write(
-        key: _authTokenKey,
-        value: session.accessToken!,
-      );
-    }
-    if (session.refreshToken != null) {
-      await secureStorage.write(
-        key: _refreshTokenKey,
-        value: session.refreshToken!,
-      );
-    }
+    // Save tokens individually for interceptor
+    await secureStorage.write(
+      key: _authTokenKey,
+      value: session.accessToken,
+    );
+    await secureStorage.write(
+      key: _refreshTokenKey,
+      value: session.refreshToken,
+    );
   }
 
   @override

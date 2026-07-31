@@ -1,4 +1,4 @@
-import '../datasources/auth_local_datasource.dart';
+import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_remote_data_source.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../domain/entities/auth_session.dart';
@@ -25,7 +25,7 @@ class AuthRepositoryImpl implements AuthRepository {
       password: password,
       phone: phone,
     );
-    await localDataSource.saveAuthSession(session);
+    await localDataSource.saveSession(session);
     return session;
   }
 
@@ -46,7 +46,7 @@ class AuthRepositoryImpl implements AuthRepository {
       email: email,
       password: password,
     );
-    await localDataSource.saveAuthSession(session);
+    await localDataSource.saveSession(session);
     return session;
   }
 
@@ -55,7 +55,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<void> logout() async {
     await remoteDataSource.logout();
-    await localDataSource.clearAuth();
+    await localDataSource.clearSession();
   }
 
   @override
@@ -79,17 +79,17 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<AuthSession> refreshSession({required String refreshToken}) async {
     final session = await remoteDataSource.refreshSession(refreshToken);
-    await localDataSource.saveAuthSession(session);
+    await localDataSource.saveSession(session);
     return session;
   }
 
   @override
   Future<bool> isAuthenticated() async {
-    return await localDataSource.hasValidToken();
+    return await localDataSource.hasSession();
   }
 
   @override
   Future<AuthSession?> getCurrentSession() async {
-    return await localDataSource.getAuthSession();
+    return await localDataSource.getSession();
   }
 }

@@ -3,12 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
-import '../../../../core/navigation/navigation_map.dart';
-import '../../../map/presentation/screens/map_screen.dart';
 import '../bloc/auth_bloc.dart';
-import 'register_screen.dart';
 import '../../../../core/localization/localization_service.dart';
-import '../../../../core/di/service_locator.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,18 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    _localizationService = sl<LocalizationService>();
+    _localizationService = LocalizationService.instance;
     _selectedLanguage = _localizationService.currentLanguage;
-    _initializeLocalization();
-  }
-
-  Future<void> _initializeLocalization() async {
-    await _localizationService.initialize();
-    if (mounted) {
-      setState(() {
-        _selectedLanguage = _localizationService.currentLanguage;
-      });
-    }
   }
 
   @override
@@ -78,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is AuthAuthenticated) {
           context.showSuccess(_localizationService.translate('logged_in_successfully'));
-          context.go(MapScreen.routeName);
+          context.go('/home');
         } else if (state is AuthError) {
           context.showError('${_localizationService.translate('login_failed')}: ${state.message}');
         }
@@ -86,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           final isLoading = state is AuthLoading;
-          final isRTL = _localizationService.isRTL;
+          final isRTL = _selectedLanguage == 'ar' || _selectedLanguage == 'ku';
 
           return Directionality(
             textDirection: isRTL ? TextDirection.rtl : TextDirection.ltr,
@@ -112,10 +98,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             TextButton(
-                              onPressed: () => GoRouter.of(context).pop(),
+                              onPressed: () => context.go('/welcome'),
                               child: Icon(
                                 isRTL ? Icons.arrow_forward : Icons.arrow_back,
-                                color: Colors.black.withValues(alpha: 0.8),
+                                color: Colors.black,
                               ),
                             ),
                             DropdownButton<String>(
@@ -124,19 +110,63 @@ class _LoginScreenState extends State<LoginScreen> {
                               items: [
                                 DropdownMenuItem(
                                   value: 'en',
-                                  child: Text('English'),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/usa-flag.png',
+                                        width: 24,
+                                        height: 16,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text('English'),
+                                    ],
+                                  ),
                                 ),
                                 DropdownMenuItem(
                                   value: 'ar',
-                                  child: Text('العربية'),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/iraq-flag.png',
+                                        width: 24,
+                                        height: 16,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text('العربية'),
+                                    ],
+                                  ),
                                 ),
                                 DropdownMenuItem(
                                   value: 'ku',
-                                  child: Text('کوردی'),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/kurdish-flag.png',
+                                        width: 24,
+                                        height: 16,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text('کوردی'),
+                                    ],
+                                  ),
                                 ),
                                 DropdownMenuItem(
                                   value: 'tr',
-                                  child: Text('Türkçe'),
+                                  child: Row(
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/turkish-flag.png',
+                                        width: 24,
+                                        height: 16,
+                                        fit: BoxFit.cover,
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text('Türkçe'),
+                                    ],
+                                  ),
                                 ),
                               ],
                               onChanged: (value) {
@@ -152,14 +182,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           _localizationService.translate('welcome_back'),
                           style: context.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.black.withValues(alpha: 0.95),
+                            color: Colors.black,
                           ),
                         ),
                         SizedBox(height: AppSpacing.sm),
                         Text(
                           _localizationService.translate('login_to_account'),
                           style: context.textTheme.bodyMedium?.copyWith(
-                            color: Colors.black.withValues(alpha: 0.75),
+                            color: Colors.black,
                           ),
                         ),
                         SizedBox(height: AppSpacing.lg),
@@ -177,12 +207,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: isRTL ? Alignment.centerLeft : Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {
-                              context.go(NavigationMap.authRoutes.forgotPassword);
+                              context.go('/forgot-password');
                             },
                             child: Text(
                               _localizationService.translate('forgot_password'),
                               style: context.textTheme.bodySmall?.copyWith(
-                                color: Colors.black.withValues(alpha: 0.8),
+                                color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -198,19 +228,19 @@ class _LoginScreenState extends State<LoginScreen> {
                         Center(
                           child: TextButton(
                             onPressed: () {
-                              context.go(RegisterScreen.routeName);
+                              context.go('/register');
                             },
                             child: RichText(
                               text: TextSpan(
                                 text: "${_localizationService.translate('dont_have_account')} ",
                                 style: context.textTheme.bodySmall?.copyWith(
-                                  color: Colors.black.withValues(alpha: 0.7),
+                                  color: Colors.black,
                                 ),
                                 children: [
                                   TextSpan(
                                     text: _localizationService.translate('sign_up'),
                                     style: context.textTheme.bodySmall?.copyWith(
-                                      color: Colors.black.withValues(alpha: 0.95),
+                                      color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                       decoration: TextDecoration.underline,
                                     ),
