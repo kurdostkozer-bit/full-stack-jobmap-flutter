@@ -41,8 +41,22 @@ export class ConversationsRepository {
     // Filter in application layer (normally you'd use PostgreSQL's JSON operators)
     return convos
       .filter((c) => {
-        const participantIds = JSON.parse(c.participantIds as any);
-        return participantIds.includes(userId);
+        try {
+          // Safe JSON parsing with fallback
+          const participantIds = typeof c.participantIds === 'string' 
+            ? JSON.parse(c.participantIds) 
+            : c.participantIds;
+          
+          // Handle both array and non-array cases
+          if (!Array.isArray(participantIds)) {
+            return false;
+          }
+          
+          return participantIds.includes(userId);
+        } catch (e) {
+          // If JSON parsing fails, skip this conversation
+          return false;
+        }
       })
       .map(this.mapToEntity);
   }
@@ -73,14 +87,35 @@ export class ConversationsRepository {
   }
 
   private mapToEntity(record: any): ConversationEntity {
-    return {
-      id: record.id,
-      participantIds: JSON.parse(record.participantIds as any),
-      title: record.title,
-      lastMessageAt: record.lastMessageAt,
-      isActive: record.isActive,
-      createdAt: record.createdAt,
-      updatedAt: record.updatedAt,
-    };
+    try {
+      // Safe JSON parsing with fallback
+      let participantIds: string[] = [];
+      if (typeof record.participantIds === 'string') {
+        participantIds = JSON.parse(record.participantIds);
+      } else if (Array.isArray(record.participantIds)) {
+        participantIds = record.participantIds;
+      }
+      
+      return {
+        id: record.id,
+        participantIds,
+        title: record.title,
+        lastMessageAt: record.lastMessageAt,
+        isActive: record.isActive,
+        createdAt: record.createdAt,
+        updatedAt: record.updatedAt,
+      };
+    } catch (e) {
+      // Fallback on parse error
+      return {
+        id: record.id,
+        participantIds: [],
+        title: record.title,
+        lastMessageAt: record.lastMessageAt,
+        isActive: record.isActive,
+        createdAt: record.createdAt,
+        updatedAt: record.updatedAt,
+      };
+    }
   }
 }

@@ -6,17 +6,20 @@ import {
   Body,
   Query,
   ParseUUIDPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { MapsService } from '../services/maps.service';
 import { MapResponseDto } from '../dto/map-response.dto';
 import { CreateLocationDto } from '../dto/create-location.dto';
 import { LocationSearchDto } from '../dto/location-search.dto';
 import { GeoFilterDto } from '../dto/geo-filter.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 
 @Controller({ path: 'maps', version: '1' })
 export class MapsController {
   constructor(private readonly mapsService: MapsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post('locations')
   async createLocation(@Body() dto: CreateLocationDto): Promise<MapResponseDto> {
     return this.mapsService.createLocation(dto);
@@ -37,6 +40,7 @@ export class MapsController {
     return this.mapsService.searchLocations(dto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('geo-filter')
   async findByGeoRadius(@Body() dto: GeoFilterDto): Promise<MapResponseDto[]> {
     return this.mapsService.findByGeoRadius(dto);
