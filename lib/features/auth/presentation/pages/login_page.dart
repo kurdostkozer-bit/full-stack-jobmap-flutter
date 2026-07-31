@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../bloc/auth_bloc.dart';
 import '../bloc/social_auth_bloc.dart';
 import '../../../home/presentation/screens/home_screen.dart';
@@ -256,7 +254,7 @@ class _LoginPageState extends State<LoginPage> {
                         children: [
                           // Google
                           _SocialLoginButton(
-                            icon: FontAwesomeIcons.google,
+                            icon: Icons.g_translate,
                             onPressed: isLoading ? null : _loginWithGoogle,
                             backgroundColor: Colors.red.shade50,
                             iconColor: Colors.red.shade600,
@@ -266,7 +264,7 @@ class _LoginPageState extends State<LoginPage> {
 
                           // Apple (Disabled for now)
                           _SocialLoginButton(
-                            icon: FontAwesomeIcons.apple,
+                            icon: Icons.apple,
                             onPressed: null,
                             backgroundColor: Colors.grey.shade200,
                             iconColor: Colors.black,
@@ -276,7 +274,7 @@ class _LoginPageState extends State<LoginPage> {
 
                           // Facebook (Disabled for now)
                           _SocialLoginButton(
-                            icon: FontAwesomeIcons.facebook,
+                            icon: Icons.facebook,
                             onPressed: null,
                             backgroundColor: Colors.blue.shade50,
                             iconColor: Colors.blue.shade600,

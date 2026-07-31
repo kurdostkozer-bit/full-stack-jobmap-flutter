@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/navigation/navigation_map.dart';
@@ -260,7 +260,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         children: [
                           // Google button
                           _SocialLoginButton(
-                            icon: FontAwesomeIcons.google,
+                            icon: Icons.g_translate,
                             onPressed: _handleGoogleLogin,
                             backgroundColor: Colors.red.shade50,
                             iconColor: Colors.red.shade600,
@@ -269,7 +269,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                           // Apple button
                           _SocialLoginButton(
-                            icon: FontAwesomeIcons.apple,
+                            icon: Icons.apple,
                             onPressed: _handleAppleLogin,
                             backgroundColor: Colors.grey.shade200,
                             iconColor: Colors.black87,
@@ -278,7 +278,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                           // Facebook button
                           _SocialLoginButton(
-                            icon: FontAwesomeIcons.facebook,
+                            icon: Icons.facebook,
                             onPressed: _handleFacebookLogin,
                             backgroundColor: Colors.blue.shade50,
                             iconColor: Colors.blue.shade600,
