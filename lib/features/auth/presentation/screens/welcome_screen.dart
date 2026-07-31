@@ -299,7 +299,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               text: 'Sign up',
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () =>
-                                    context.go(RegisterScreen.routeName),
+                                    GoRouter.of(context).go(RegisterScreen.routeName),
                               style: context.textTheme.bodySmall?.copyWith(
                                 color: context.colorScheme.primary,
                                 fontWeight: FontWeight.bold,

@@ -92,7 +92,7 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 // Back button
                 TextButton(
-                  onPressed: () => context.pop(),
+                  onPressed: () => GoRouter.of(context).pop(),
                   child: Icon(
                     Icons.arrow_back,
                     color: context.colorScheme.primary,
