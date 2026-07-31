@@ -20,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
+  String _selectedLanguage = 'en';
 
   @override
   void initState() {
@@ -47,6 +48,11 @@ class _LoginScreenState extends State<LoginScreen> {
         password: _passwordController.text,
       ),
     );
+  }
+
+  void _changeLanguage(String languageCode) {
+    setState(() => _selectedLanguage = languageCode);
+    // TODO: Implement language change when app supports i18n
   }
 
   @override
@@ -82,12 +88,40 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TextButton(
-                        onPressed: () => GoRouter.of(context).pop(),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: Colors.black.withValues(alpha: 0.8),
-                        ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(
+                            onPressed: () => GoRouter.of(context).pop(),
+                            child: Icon(
+                              Icons.arrow_back,
+                              color: Colors.black.withValues(alpha: 0.8),
+                            ),
+                          ),
+                          DropdownButton<String>(
+                            value: _selectedLanguage,
+                            underline: Container(),
+                            items: const [
+                              DropdownMenuItem(
+                                value: 'en',
+                                child: Text('English'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'ar',
+                                child: Text('العربية'),
+                              ),
+                              DropdownMenuItem(
+                                value: 'ku',
+                                child: Text('کوردی'),
+                              ),
+                            ],
+                            onChanged: (value) {
+                              if (value != null) {
+                                _changeLanguage(value);
+                              }
+                            },
+                          ),
+                        ],
                       ),
                       SizedBox(height: AppSpacing.md),
                       Text(
