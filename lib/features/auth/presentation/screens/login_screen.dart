@@ -176,9 +176,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       // Google button
                       _SocialLoginButton(
-                        icon: Icons.g_translate,
+                        icon: Icons.g_mobiledata,
+                        label: 'G',
                         onPressed: _handleGoogleLogin,
-                        backgroundColor: Colors.red.shade50,
+                        backgroundColor: Colors.white,
                         iconColor: Colors.red.shade600,
                       ),
                       SizedBox(width: AppSpacing.xl),
@@ -186,8 +187,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Apple button
                       _SocialLoginButton(
                         icon: Icons.apple,
+                        label: '🍎',
                         onPressed: _handleAppleLogin,
-                        backgroundColor: Colors.grey.shade200,
+                        backgroundColor: Colors.white,
                         iconColor: Colors.black87,
                       ),
                       SizedBox(width: AppSpacing.xl),
@@ -195,8 +197,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Facebook button
                       _SocialLoginButton(
                         icon: Icons.facebook,
+                        label: 'f',
                         onPressed: _handleFacebookLogin,
-                        backgroundColor: Colors.blue.shade50,
+                        backgroundColor: Colors.white,
                         iconColor: Colors.blue.shade600,
                       ),
                     ],
@@ -234,12 +237,14 @@ class _LoginScreenState extends State<LoginScreen> {
 /// Social login button widget
 class _SocialLoginButton extends StatelessWidget {
   final IconData icon;
+  final String? label;
   final VoidCallback onPressed;
   final Color backgroundColor;
   final Color iconColor;
 
   const _SocialLoginButton({
     required this.icon,
+    this.label,
     required this.onPressed,
     required this.backgroundColor,
     required this.iconColor,
@@ -248,14 +253,14 @@ class _SocialLoginButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
-      width: 60,
+      height: 64,
+      width: 64,
       decoration: BoxDecoration(
         color: backgroundColor,
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withOpacity(0.2),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -265,13 +270,22 @@ class _SocialLoginButton extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onPressed,
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(32),
           child: Center(
-            child: Icon(
-              icon,
-              size: 24,
-              color: iconColor,
-            ),
+            child: label != null
+                ? Text(
+                    label!,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: iconColor,
+                    ),
+                  )
+                : Icon(
+                    icon,
+                    size: 28,
+                    color: iconColor,
+                  ),
           ),
         ),
       ),
