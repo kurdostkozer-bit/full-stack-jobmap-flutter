@@ -84,143 +84,232 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
       child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(AppSpacing.lg),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Back button
-                TextButton(
-                  onPressed: () => GoRouter.of(context).pop(),
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: context.colorScheme.primary,
-                  ),
-                ),
-                SizedBox(height: AppSpacing.md),
-
-                // Title
-                Text(
-                  'Welcome Back',
-                  style: context.textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: AppSpacing.sm),
-                Text(
-                  'Login to your account',
-                  style: context.textTheme.bodyMedium?.copyWith(
-                    color: context.colorScheme.outline,
-                  ),
-                ),
-                SizedBox(height: AppSpacing.lg),
-
-                // Email field
-                AppTextField.email(
-                  controller: _emailController,
-                  hintText: 'Enter your email',
-                ),
-                SizedBox(height: AppSpacing.md),
-
-                // Password field
-                AppTextField.password(
-                  controller: _passwordController,
-                  hintText: 'Enter your password',
-                ),
-                SizedBox(height: AppSpacing.md),
-
-                // Forgot password
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Navigate to forgot-password screen
-                      context.go(NavigationMap.authRoutes.forgotPassword);
-                    },
-                    child: Text(
-                      'Forgot Password?',
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colorScheme.primary,
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                const Color(0xFFFCD34D), // Glass Yellow
+                const Color(0xFFFDE047), // Glass Yellow Light
+              ],
+            ),
+          ),
+          child: Stack(
+            children: [
+              // Glassmorphism background elements
+              Positioned(
+                top: -50,
+                right: -50,
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.1),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        blurRadius: 40,
+                        spreadRadius: 10,
                       ),
-                    ),
+                    ],
                   ),
                 ),
-                SizedBox(height: AppSpacing.lg),
-
-                // Login button - Glass Green
-                AppButton.glassGreen(
-                  label: 'Login',
-                  isLoading: _isLoading,
-                  onPressed: _handleLogin,
+              ),
+              Positioned(
+                bottom: -80,
+                left: -80,
+                child: Container(
+                  width: 250,
+                  height: 250,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.08),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        blurRadius: 50,
+                        spreadRadius: 15,
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(height: AppSpacing.lg),
+              ),
+              // Main content
+              SafeArea(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(AppSpacing.lg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Back button
+                      TextButton(
+                        onPressed: () => GoRouter.of(context).pop(),
+                        child: Icon(
+                          Icons.arrow_back,
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.md),
 
-                // Divider
-                Row(
-                  children: [
-                    Expanded(child: Divider(color: context.colorScheme.outline)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.sm),
-                      child: Text('OR', style: context.textTheme.labelSmall),
-                    ),
-                    Expanded(child: Divider(color: context.colorScheme.outline)),
-                  ],
-                ),
-                SizedBox(height: AppSpacing.lg),
+                      // Title
+                      Text(
+                        'Welcome Back',
+                        style: context.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white.withValues(alpha: 0.95),
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withValues(alpha: 0.2),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.sm),
+                      Text(
+                        'Login to your account',
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white.withValues(alpha: 0.85),
+                          shadows: [
+                            Shadow(
+                              color: Colors.black.withValues(alpha: 0.15),
+                              blurRadius: 4,
+                              offset: const Offset(0, 1),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.lg),
 
-                    // Social login buttons - Circular with logos
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      // Email field
+                      AppTextField.email(
+                        controller: _emailController,
+                        hintText: 'Enter your email',
+                      ),
+                      SizedBox(height: AppSpacing.md),
+
+                      // Password field
+                      AppTextField.password(
+                        controller: _passwordController,
+                        hintText: 'Enter your password',
+                      ),
+                      SizedBox(height: AppSpacing.md),
+
+                      // Forgot password
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {
+                            // Navigate to forgot-password screen
+                            context.go(NavigationMap.authRoutes.forgotPassword);
+                          },
+                          child: Text(
+                            'Forgot Password?',
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.9),
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.lg),
+
+                      // Login button - Glass Green
+                      AppButton.glassGreen(
+                        label: 'Login',
+                        isLoading: _isLoading,
+                        onPressed: _handleLogin,
+                      ),
+                      SizedBox(height: AppSpacing.lg),
+
+                      // Divider
+                      Row(
                         children: [
-                          // Google button
-                          _SocialLoginButton(
-                            imagePath: 'assets/images/google-logo.png',
-                            onPressed: _handleGoogleLogin,
-                            backgroundColor: Colors.white,
+                          Expanded(
+                            child: Divider(
+                              color: Colors.white.withValues(alpha: 0.3),
+                            ),
                           ),
-                          SizedBox(width: AppSpacing.xl),
-
-                          // Apple button
-                          _SocialLoginButton(
-                            imagePath: 'assets/images/apple-logo.png',
-                            onPressed: _handleAppleLogin,
-                            backgroundColor: Colors.white,
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                            ),
+                            child: Text(
+                              'OR',
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: Colors.white.withValues(alpha: 0.7),
+                              ),
+                            ),
                           ),
-                          SizedBox(width: AppSpacing.xl),
-
-                          // Facebook button
-                          _SocialLoginButton(
-                            imagePath: 'assets/images/facebook-logo.png',
-                            onPressed: _handleFacebookLogin,
-                            backgroundColor: Colors.white,
+                          Expanded(
+                            child: Divider(
+                              color: Colors.white.withValues(alpha: 0.3),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                SizedBox(height: AppSpacing.lg),
+                      SizedBox(height: AppSpacing.lg),
 
-                // Sign up link
-                Center(
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Don't have an account? ",
-                      style: context.textTheme.bodySmall,
-                      children: [
-                        TextSpan(
-                          text: 'Sign up',
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: context.colorScheme.primary,
-                            fontWeight: FontWeight.bold,
+                      // Social login buttons - Circular with logos
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Google button
+                            _SocialLoginButton(
+                              imagePath: 'assets/images/google-logo.png',
+                              onPressed: _handleGoogleLogin,
+                              backgroundColor: Colors.white.withValues(alpha: 0.9),
+                            ),
+                            SizedBox(width: AppSpacing.xl),
+
+                            // Apple button
+                            _SocialLoginButton(
+                              imagePath: 'assets/images/apple-logo.png',
+                              onPressed: _handleAppleLogin,
+                              backgroundColor: Colors.white.withValues(alpha: 0.9),
+                            ),
+                            SizedBox(width: AppSpacing.xl),
+
+                            // Facebook button
+                            _SocialLoginButton(
+                              imagePath: 'assets/images/facebook-logo.png',
+                              onPressed: _handleFacebookLogin,
+                              backgroundColor: Colors.white.withValues(alpha: 0.9),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: AppSpacing.lg),
+
+                      // Sign up link
+                      Center(
+                        child: RichText(
+                          text: TextSpan(
+                            text: "Don't have an account? ",
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: Colors.white.withValues(alpha: 0.8),
+                            ),
+                            children: [
+                              TextSpan(
+                                text: 'Sign up',
+                                style: context.textTheme.bodySmall?.copyWith(
+                                  color: Colors.white.withValues(alpha: 0.95),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
