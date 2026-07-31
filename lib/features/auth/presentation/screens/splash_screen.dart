@@ -80,8 +80,8 @@ class _SplashScreenState extends State<SplashScreen>
             children: [
               // App Logo / Icon
               Container(
-                width: 120,
-                height: 120,
+                width: 140,
+                height: 140,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: context.colorScheme.surface,
@@ -93,10 +93,12 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   ],
                 ),
-                child: Icon(
-                  Icons.work_outline,
-                  size: 60,
-                  color: context.colorScheme.primary,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
               SizedBox(height: AppSpacing.lg),
