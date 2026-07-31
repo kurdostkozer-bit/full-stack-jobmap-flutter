@@ -18,6 +18,7 @@ import { ChangePasswordDto } from '../dto/change-password.dto';
 import { VerifyEmailDto } from '../dto/verify-email.dto';
 import { RequestPasswordResetDto } from '../dto/request-password-reset.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { GoogleSocialLoginDto } from '../dto/social-auth.dto';
 import { AuthService } from '../services/auth.service';
 
 interface AuthenticatedRequest extends Request {
@@ -77,7 +78,7 @@ export class AuthController {
 
   @Post('verify-email')
   async verifyEmail(@Body() dto: VerifyEmailDto) {
-    return this.authService.verifyEmail(dto.userId, dto.code);
+    return this.authService.verifyEmail(dto.email, dto.code);
   }
 
   @Post('request-password-reset')
@@ -88,5 +89,11 @@ export class AuthController {
   @Post('reset-password')
   async resetPassword(@Body() dto: ResetPasswordDto) {
     return this.authService.resetPassword(dto);
+  }
+
+  @Post('social/google')
+  @HttpCode(HttpStatus.OK)
+  async googleSocialLogin(@Body() dto: GoogleSocialLoginDto) {
+    return this.authService.googleSocialLogin(dto.idToken);
   }
 }

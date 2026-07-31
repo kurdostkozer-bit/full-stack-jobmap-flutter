@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../home/presentation/screens/home_screen.dart';
+import '../../../map/presentation/screens/map_screen.dart';
 import '../bloc/social_auth_bloc.dart';
 
 /// Register screen
@@ -82,7 +83,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       listener: (context, state) {
         if (state is SocialAuthSuccess) {
           context.showSuccess('Signed up successfully!');
-          context.go(HomeScreen.routeName);
+          context.go(MapScreen.routeName);
         } else if (state is SocialAuthFailure) {
           context.showError('Sign up failed: ${state.message}');
         }

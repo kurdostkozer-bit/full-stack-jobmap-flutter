@@ -52,19 +52,9 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<AuthSession?> socialLogin({
-    required String email,
-    required String firstName,
-    required String lastName,
-    required String provider,
-    required String providerId,
     required String idToken,
   }) async {
     final session = await remoteDataSource.socialLogin(
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      provider: provider,
-      providerId: providerId,
       idToken: idToken,
     );
     if (session != null) {

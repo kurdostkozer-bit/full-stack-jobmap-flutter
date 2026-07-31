@@ -26,8 +26,68 @@ export class UsersRepository {
     return result[0] ?? null;
   }
 
+  async findByGoogleId(googleId: string) {
+    const result = await db
+      .select()
+      .from(users)
+      .where(eq(users.googleId, googleId))
+      .limit(1);
+
+    return result[0] ?? null;
+  }
+
   async create(data: { email: string; passwordHash: string }) {
-    const [user] = await db.insert(users).values(data).returning();
+    const [user] = await db
+      .insert(users)
+      .values({
+        email: data.email,
+        passwordHash: data.passwordHash,
+        provider: 'local',
+      })
+      .returning();
+
+    return user;
+  }
+
+  async createFromGoogle(data: {
+    email: string;
+    googleId: string;
+    googleEmail: string;
+    fullName: string;
+    profileImage?: string;
+  }) {
+    const [user] = await db
+      .insert(users)
+      .values({
+        email: data.email,
+        googleId: data.googleId,
+        googleEmail: data.googleEmail,
+        profileImage: data.profileImage,
+        isEmailVerified: true,
+        provider: 'google',
+      })
+      .returning();
+
+    return user;
+  }
+
+  async linkGoogleId(
+    userId: string,
+    googleId: string,
+    googleEmail: string,
+    profileImage?: string,
+  ) {
+    const [user] = await db
+      .update(users)
+      .set({
+        googleId,
+        googleEmail,
+        profileImage,
+        provider: 'google',
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
 
     return user;
   }

@@ -46,31 +46,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthSessionModel?> socialLogin({
-    required String email,
-    required String firstName,
-    required String lastName,
-    required String provider,
-    required String providerId,
+  Future<AuthSessionModel> socialLogin({
     required String idToken,
   }) async {
-    try {
-      final response = await apiClient.post(
-        '/auth/social-login',
-        data: {
-          'email': email,
-          'firstName': firstName,
-          'lastName': lastName,
-          'provider': provider,
-          'providerId': providerId,
-          'idToken': idToken,
-        },
-      );
+    final response = await apiClient.post(
+      '/auth/social/google',
+      data: {
+        'idToken': idToken,
+      },
+    );
 
-      return AuthSessionModel.fromJson(response);
-    } catch (e) {
-      return null;
-    }
+    return AuthSessionModel.fromJson(response);
   }
 
   @override
@@ -90,7 +76,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> forgotPassword({required String email}) async {
     await apiClient.post(
-      '/auth/forgot-password',
+      '/auth/request-password-reset',
       data: {
         'email': email,
       },
@@ -118,7 +104,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     String refreshToken,
   ) async {
     final response = await apiClient.post(
-      '/auth/refresh',
+      '/auth/refresh-token',
       data: {
         'refreshToken': refreshToken,
       },

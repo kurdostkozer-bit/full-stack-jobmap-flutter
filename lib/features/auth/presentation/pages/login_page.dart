@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/social_auth_bloc.dart';
 import '../../../home/presentation/screens/home_screen.dart';
+import '../../../map/presentation/screens/map_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -63,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                     backgroundColor: Colors.green,
                   ),
                 );
-                context.go(HomeScreen.routeName);
+                context.go(MapScreen.routeName);
               }
             },
           ),
@@ -85,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                     backgroundColor: Colors.green,
                   ),
                 );
-                context.go(HomeScreen.routeName);
+                context.go(MapScreen.routeName);
               }
             },
           ),

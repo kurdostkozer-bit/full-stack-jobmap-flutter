@@ -47,8 +47,8 @@ class _SplashScreenState extends State<SplashScreen>
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          // User already logged in, go to home
-          context.go('/home');
+          // User already logged in, go to map
+          context.go('/map');
         } else if (state is AuthUnauthenticated) {
           // No active session, show login directly
           context.go(LoginScreen.routeName);

@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
   BadRequestException,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -14,19 +15,24 @@ import { RegisterDto } from '../dto/register.dto';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
 import { UsersRepository } from '../repositories/users.repository';
-import { ProfilesService } from '../../profiles/services/profiles.service';
+import { GoogleTokenVerifier } from './google-token-verifier';
+import { db } from '../../database/database';
+import { users } from '../../database/schema';
+import { profiles } from '../../database/schema';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly usersRepository: UsersRepository,
-    private readonly profilesService: ProfilesService,
+    private readonly googleTokenVerifier: GoogleTokenVerifier,
   ) {}
 
   /**
-   * Register a new user.
+   * Register a new user with profile in a single atomic transaction.
    */
   async register(dto: RegisterDto) {
     const existingUser = await this.usersRepository.findByEmail(dto.email);
@@ -37,27 +43,46 @@ export class AuthService {
 
     const passwordHash = await this.hashPassword(dto.password);
 
-    const user = await this.usersRepository.create({
-      email: dto.email,
-      passwordHash,
-    });
+    try {
+      const user = await db.transaction(async (tx) => {
+        const [newUser] = await tx
+          .insert(users)
+          .values({
+            email: dto.email,
+            passwordHash,
+            provider: 'local',
+          })
+          .returning();
 
-    await this.profilesService.create(user.id);
+        await tx
+          .insert(profiles)
+          .values({
+            userId: newUser.id,
+          });
 
-    const accessToken = await this.generateAccessToken(user.id, user.email);
-    const refreshToken = await this.generateRefreshToken(user.id, user.email);
+        return newUser;
+      });
 
-    return {
-      message: 'Registration completed successfully.',
-      accessToken,
-      refreshToken,
-      user: {
-        id: user.id,
-        email: user.email,
-        isEmailVerified: user.isEmailVerified,
-        createdAt: user.createdAt,
-      },
-    };
+      this.logger.debug(`User registered: ${user.email}`);
+
+      const accessToken = await this.generateAccessToken(user.id, user.email);
+      const refreshToken = await this.generateRefreshToken(user.id, user.email);
+
+      return {
+        message: 'Registration completed successfully.',
+        accessToken,
+        refreshToken,
+        user: {
+          id: user.id,
+          email: user.email,
+          isEmailVerified: user.isEmailVerified,
+          createdAt: user.createdAt,
+        },
+      };
+    } catch (error) {
+      this.logger.error(`Registration failed for ${dto.email}`, error instanceof Error ? error.stack : undefined);
+      throw error;
+    }
   }
 
   /**
@@ -67,6 +92,12 @@ export class AuthService {
     const user = await this.usersRepository.findByEmail(dto.email);
 
     if (!user) {
+      this.logger.warn(`Login attempt with non-existent email: ${dto.email}`);
+      throw new UnauthorizedException('Invalid email or password.');
+    }
+
+    if (!user.passwordHash) {
+      this.logger.warn(`Login attempt for Google-only user: ${dto.email}`);
       throw new UnauthorizedException('Invalid email or password.');
     }
 
@@ -76,8 +107,11 @@ export class AuthService {
     );
 
     if (!isValidPassword) {
+      this.logger.warn(`Invalid password for user: ${dto.email}`);
       throw new UnauthorizedException('Invalid email or password.');
     }
+
+    this.logger.debug(`User logged in: ${user.email}`);
 
     const accessToken = await this.generateAccessToken(user.id, user.email);
     const refreshToken = await this.generateRefreshToken(user.id, user.email);
@@ -104,19 +138,31 @@ export class AuthService {
         secret: this.configService.getOrThrow<string>('JWT_REFRESH_SECRET'),
       });
 
+      if (payload.type !== 'refresh') {
+        this.logger.warn(`Invalid token type used for refresh: ${payload.type}`);
+        throw new UnauthorizedException('Invalid token type');
+      }
+
       const user = await this.usersRepository.findById(payload.sub);
 
       if (!user) {
+        this.logger.warn(`Refresh token for non-existent user: ${payload.sub}`);
         throw new UnauthorizedException('User not found.');
       }
 
       const newAccessToken = await this.generateAccessToken(user.id, user.email);
+
+      this.logger.debug(`Token refreshed for user: ${user.email}`);
 
       return {
         message: 'Token refreshed successfully.',
         accessToken: newAccessToken,
       };
     } catch (error) {
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+      this.logger.warn(`Token refresh failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
       throw new UnauthorizedException('Invalid or expired refresh token.');
     }
   }
@@ -131,12 +177,17 @@ export class AuthService {
       throw new NotFoundException('User not found.');
     }
 
+    if (!user.passwordHash) {
+      throw new BadRequestException('This account does not have a password.');
+    }
+
     const isValidPassword = await this.verifyPassword(
       dto.currentPassword,
       user.passwordHash,
     );
 
     if (!isValidPassword) {
+      this.logger.warn(`Invalid password change attempt for user: ${userId}`);
       throw new UnauthorizedException('Current password is incorrect.');
     }
 
@@ -148,6 +199,8 @@ export class AuthService {
 
     await this.usersRepository.updatePasswordHash(userId, newPasswordHash);
 
+    this.logger.debug(`Password changed for user: ${userId}`);
+
     return {
       message: 'Password changed successfully.',
     };
@@ -156,9 +209,9 @@ export class AuthService {
   /**
    * Verify email (stub - would need email service).
    */
-  async verifyEmail(userId: string, code: string) {
+  async verifyEmail(email: string, code: string) {
     // This is a placeholder - implement with actual email verification logic
-    const user = await this.usersRepository.findById(userId);
+    const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
       throw new NotFoundException('User not found.');
@@ -169,7 +222,7 @@ export class AuthService {
     }
 
     // In production, validate the code against stored verification codes
-    await this.usersRepository.update(userId, {
+    await this.usersRepository.update(user.id, {
       isEmailVerified: true,
     });
 
@@ -232,6 +285,9 @@ export class AuthService {
     password: string,
     passwordHash: string,
   ): Promise<boolean> {
+    if (!password || !passwordHash) {
+      return false;
+    }
     return bcrypt.compare(password, passwordHash);
   }
 
@@ -266,5 +322,82 @@ export class AuthService {
         expiresIn: '7d',
       },
     );
+  }
+
+  /**
+   * Google social login with ID token verification.
+   */
+  async googleSocialLogin(idToken: string) {
+    const googlePayload = await this.googleTokenVerifier.verifyIdToken(
+      idToken,
+    );
+
+    let user = await this.usersRepository.findByGoogleId(googlePayload.sub);
+
+    if (!user) {
+      user = await this.usersRepository.findByEmail(googlePayload.email);
+
+      if (user) {
+        if (!user.isEmailVerified) {
+          this.logger.warn(`Attempted to link Google to unverified email: ${googlePayload.email}`);
+          throw new ConflictException('Email must be verified before linking Google account.');
+        }
+
+        user = await this.usersRepository.linkGoogleId(
+          user.id,
+          googlePayload.sub,
+          googlePayload.email,
+          googlePayload.picture,
+        );
+
+        this.logger.debug(`Google account linked to existing user: ${googlePayload.email}`);
+      } else {
+        try {
+          user = await db.transaction(async (tx) => {
+            const [newUser] = await tx
+              .insert(users)
+              .values({
+                email: googlePayload.email,
+                googleId: googlePayload.sub,
+                googleEmail: googlePayload.email,
+                profileImage: googlePayload.picture,
+                isEmailVerified: true,
+                provider: 'google',
+              })
+              .returning();
+
+            await tx
+              .insert(profiles)
+              .values({
+                userId: newUser.id,
+              });
+
+            return newUser;
+          });
+
+          this.logger.debug(`New Google user created: ${googlePayload.email}`);
+        } catch (error) {
+          this.logger.error(`Failed to create Google user: ${googlePayload.email}`, error instanceof Error ? error.stack : undefined);
+          throw error;
+        }
+      }
+    }
+
+    const accessToken = await this.generateAccessToken(user.id, user.email);
+    const refreshToken = await this.generateRefreshToken(user.id, user.email);
+
+    this.logger.debug(`Google login successful: ${user.email}`);
+
+    return {
+      message: 'Google login successful.',
+      accessToken,
+      refreshToken,
+      user: {
+        id: user.id,
+        email: user.email,
+        isEmailVerified: user.isEmailVerified,
+        createdAt: user.createdAt,
+      },
+    };
   }
 }

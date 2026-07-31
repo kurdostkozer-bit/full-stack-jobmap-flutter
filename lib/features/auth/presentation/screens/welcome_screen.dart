@@ -7,6 +7,7 @@ import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/navigation/navigation_map.dart';
 import '../../../home/presentation/screens/home_screen.dart';
+import '../../../map/presentation/screens/map_screen.dart';
 import '../bloc/social_auth_bloc.dart';
 import 'register_screen.dart';
 
@@ -52,7 +53,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
       context.showSuccess('Login successful!');
-      context.go(HomeScreen.routeName);
+      context.go(MapScreen.routeName);
     } catch (e) {
       if (!mounted) return;
       context.showError('Login failed: $e');
@@ -79,7 +80,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       listener: (context, state) {
         if (state is SocialAuthSuccess) {
           context.showSuccess('Logged in successfully!');
-          context.go(HomeScreen.routeName);
+          context.go(MapScreen.routeName);
         } else if (state is SocialAuthFailure) {
           context.showError('Login failed: ${state.message}');
         }
@@ -151,7 +152,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     // Continue as Guest
                     Center(
                       child: TextButton(
-                        onPressed: () => context.go(HomeScreen.routeName),
+                        onPressed: () => context.go(MapScreen.routeName),
                         child: Text(
                           'Continue as guest',
                           style: context.textTheme.bodySmall?.copyWith(
@@ -356,6 +357,13 @@ class _SocialLoginButton extends StatelessWidget {
               height: 40,
               width: 40,
               fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(
+                  Icons.image_not_supported,
+                  size: 32,
+                  color: Colors.red,
+                );
+              },
             ),
           ),
         ),

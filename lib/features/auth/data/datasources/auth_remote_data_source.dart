@@ -16,12 +16,7 @@ abstract class AuthRemoteDataSource {
   });
 
   /// Social login (Google, Facebook, etc.)
-  Future<AuthSessionModel?> socialLogin({
-    required String email,
-    required String firstName,
-    required String lastName,
-    required String provider,
-    required String providerId,
+  Future<AuthSessionModel> socialLogin({
     required String idToken,
   });
 

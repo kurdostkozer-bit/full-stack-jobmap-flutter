@@ -6,6 +6,7 @@ import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../../../../core/navigation/navigation_map.dart';
 import '../../../home/presentation/screens/home_screen.dart';
+import '../../../map/presentation/screens/map_screen.dart';
 import '../bloc/social_auth_bloc.dart';
 
 /// Login screen
@@ -49,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
       await Future.delayed(const Duration(seconds: 2));
       if (!mounted) return;
       context.showSuccess('Login successful!');
-      context.go(HomeScreen.routeName);
+      context.go(MapScreen.routeName);
     } catch (e) {
       if (!mounted) return;
       context.showError('Login failed: $e');
@@ -78,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is SocialAuthSuccess) {
           context.showSuccess('Logged in successfully!');
-          context.go(HomeScreen.routeName);
+          context.go(MapScreen.routeName);
         } else if (state is SocialAuthFailure) {
           context.showError('Login failed: ${state.message}');
         }
@@ -260,8 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             // Google button
                             _SocialLoginButton(
-                              icon: Icons.g_mobiledata,
-                              label: 'G',
+                              imagePath: 'assets/images/google-logo.png',
                               onPressed: _handleGoogleLogin,
                               backgroundColor: Colors.black.withValues(alpha: 0.15),
                             ),
@@ -269,8 +269,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             // Apple button
                             _SocialLoginButton(
-                              icon: Icons.apple,
-                              label: 'A',
+                              imagePath: 'assets/images/apple-logo.png',
                               onPressed: _handleAppleLogin,
                               backgroundColor: Colors.black.withValues(alpha: 0.15),
                             ),
@@ -363,6 +362,14 @@ class _SocialLoginButton extends StatelessWidget {
                     height: 40,
                     width: 40,
                     fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      // إذا الصورة ما اتحملت، اعرض Icon بدلها
+                      return Icon(
+                        Icons.image_not_supported,
+                        size: 32,
+                        color: Colors.red,
+                      );
+                    },
                   )
                 : icon != null
                     ? Icon(

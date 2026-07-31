@@ -3,7 +3,6 @@ import { eq } from 'drizzle-orm';
 
 import { db } from '../../database/database';
 import { profiles } from '../../database/schema';
-import { UpdateProfileDto } from '../dto/update-profile.dto';
 
 @Injectable()
 export class ProfilesRepository {
@@ -18,45 +17,36 @@ export class ProfilesRepository {
     return profile;
   }
 
-  async update(userId: string, dto: UpdateProfileDto) {
+  async findByUserId(userId: string) {
+    const result = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.userId, userId))
+      .limit(1);
+
+    return result[0] ?? null;
+  }
+
+  async findById(id: string) {
+    const result = await db
+      .select()
+      .from(profiles)
+      .where(eq(profiles.id, id))
+      .limit(1);
+
+    return result[0] ?? null;
+  }
+
+  async update(userId: string, data: any) {
     const [profile] = await db
       .update(profiles)
       .set({
-        firstName: dto.firstName,
-        lastName: dto.lastName,
-        headline: dto.headline,
-        bio: dto.bio,
-        avatarUrl: dto.avatarUrl,
-        country: dto.country,
-        city: dto.city,
-        dateOfBirth: dto.dateOfBirth ? new Date(dto.dateOfBirth) : undefined,
+        ...data,
         updatedAt: new Date(),
       })
       .where(eq(profiles.userId, userId))
       .returning();
 
-    return profile ?? null;
-  }
-
-  async findAll() {
-    return db.select().from(profiles);
-  }
-
-  async findById(id: string) {
-    const [profile] = await db
-      .select()
-      .from(profiles)
-      .where(eq(profiles.id, id));
-
-    return profile ?? null;
-  }
-
-  async findByUserId(userId: string) {
-    const [profile] = await db
-      .select()
-      .from(profiles)
-      .where(eq(profiles.userId, userId));
-
-    return profile ?? null;
+    return profile;
   }
 }

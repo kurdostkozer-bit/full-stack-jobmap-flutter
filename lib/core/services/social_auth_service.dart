@@ -1,64 +1,90 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:google_identity_services_web/google_identity_services_web.dart';
+
+class GoogleIdToken {
+  final String token;
+  final String email;
+  final String name;
+  final String? picture;
+
+  GoogleIdToken({
+    required this.token,
+    required this.email,
+    required this.name,
+    this.picture,
+  });
+}
 
 class SocialAuthService {
-  final FirebaseAuth _firebaseAuth;
-  final GoogleSignIn _googleSignIn;
+  static const String googleClientId =
+      '636597585856-8mut7gqkncb3tkj2vqgbelu9t5tbscq7.apps.googleusercontent.com';
 
-  SocialAuthService({
-    FirebaseAuth? firebaseAuth,
-    GoogleSignIn? googleSignIn,
-  })  : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _googleSignIn = googleSignIn ?? GoogleSignIn();
-
-  // Google Sign In
-  Future<UserCredential?> signInWithGoogle() async {
+  Future<GoogleIdToken?> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
-
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      return await _firebaseAuth.signInWithCredential(credential);
+      if (kIsWeb) {
+        return await _signInWithGIS();
+      } else {
+        return await _signInWithNativeFlow();
+      }
     } catch (e) {
+      debugPrint('Google Sign-In Error: $e');
       rethrow;
     }
   }
 
-  // Get Current User Token
-  Future<String?> getCurrentUserToken() async {
-    try {
-      final User? user = _firebaseAuth.currentUser;
-      if (user == null) return null;
-      return await user.getIdToken();
-    } catch (e) {
-      rethrow;
-    }
+  Future<GoogleIdToken?> _signInWithGIS() async {
+    final gis = google_identity_services_web.id;
+
+    return await Future<GoogleIdToken?>(
+      (completer) {
+        gis.oneTap(OneTapRequest(
+          client_id: googleClientId,
+          callback: (OneTapResponse response) {
+            if (response.credential != null) {
+              final parts = response.credential!.split('.');
+              if (parts.length != 3) {
+                completer.completeError('Invalid JWT format');
+                return;
+              }
+
+              final payload = json.decode(
+                utf8.decode(
+                  base64Url.decode(base64Url.normalize(parts[1])),
+                ),
+              ) as Map<String, dynamic>;
+
+              final idToken = GoogleIdToken(
+                token: response.credential!,
+                email: payload['email'] as String? ?? '',
+                name: payload['name'] as String? ?? '',
+                picture: payload['picture'] as String?,
+              );
+
+              completer.complete(idToken);
+            }
+          },
+          cancel_on_tap_outside: true,
+        ));
+      },
+    );
   }
 
-  // Sign Out
+  Future<GoogleIdToken?> _signInWithNativeFlow() async {
+    throw UnsupportedError(
+      'Native Google Sign-In flow must be implemented for Android/iOS',
+    );
+  }
+
   Future<void> signOut() async {
     try {
-      await _googleSignIn.signOut();
-      await _firebaseAuth.signOut();
+      if (kIsWeb) {
+        final gis = google_identity_services_web.id;
+        gis.disableAutoSelect();
+      }
     } catch (e) {
+      debugPrint('Sign Out Error: $e');
       rethrow;
     }
-  }
-
-  // Get Current User
-  User? getCurrentUser() {
-    return _firebaseAuth.currentUser;
-  }
-
-  // Check if user is authenticated
-  bool isAuthenticated() {
-    return _firebaseAuth.currentUser != null;
   }
 }

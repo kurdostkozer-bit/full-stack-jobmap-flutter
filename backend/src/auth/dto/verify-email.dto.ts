@@ -1,8 +1,8 @@
-import { IsString, IsUUID } from 'class-validator';
+import { IsString, IsEmail } from 'class-validator';
 
 export class VerifyEmailDto {
-  @IsUUID()
-  userId!: string;
+  @IsEmail()
+  email!: string;
 
   @IsString()
   code!: string;

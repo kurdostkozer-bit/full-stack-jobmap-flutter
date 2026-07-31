@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthController } from './controllers/auth.controller';
 import { UsersRepository } from './repositories/users.repository';
 import { AuthService } from './services/auth.service';
+import { GoogleTokenVerifier } from './services/google-token-verifier';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ProfilesModule } from '../profiles/profiles.module';
 
@@ -23,7 +24,7 @@ import { ProfilesModule } from '../profiles/profiles.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UsersRepository, JwtStrategy],
+  providers: [AuthService, UsersRepository, GoogleTokenVerifier, JwtStrategy],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
