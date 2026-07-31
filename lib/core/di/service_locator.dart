@@ -66,7 +66,7 @@ import '../config/app_config.dart';
 import '../infrastructure/cache_service.dart';
 import '../infrastructure/offline_service.dart';
 import '../infrastructure/connectivity_service.dart';
-import '../infrastructure/analytics_service.dart';
+import '../../core/localization/localization_service.dart';
 import '../../features/auth/presentation/bloc/social_auth_bloc.dart';
 import '../../core/services/email_auth_service.dart';
 
@@ -81,9 +81,9 @@ Future<void> setupServiceLocator() async {
     () => const FlutterSecureStorage(),
   );
 
-  // Infrastructure Services
-  sl.registerLazySingleton<CacheService>(
-    () => MemoryCacheService(),
+  // Localization Service
+  sl.registerLazySingleton<LocalizationService>(
+    () => LocalizationService(secureStorage: sl<FlutterSecureStorage>()),
   );
 
   sl.registerLazySingleton<ConnectivityService>(
