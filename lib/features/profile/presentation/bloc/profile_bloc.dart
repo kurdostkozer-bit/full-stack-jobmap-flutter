@@ -39,7 +39,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         final dioEx = e.originalException as DioException;
         debugPrint('   Response Body: ${dioEx.response?.data}');
       }
-      emit(ProfileError(message: e.message));
+      
+      // Handle 401 Unauthorized - user not logged in
+      if (e.statusCode == 401) {
+        emit(const ProfileError(
+          message: 'Please log in to view your profile',
+          isUnauthorized: true,
+        ));
+      } else {
+        emit(ProfileError(message: e.message));
+      }
     } catch (e, st) {
       debugPrint('❌ ProfileBloc: Unexpected exception - $e');
       debugPrint('   StackTrace: $st');

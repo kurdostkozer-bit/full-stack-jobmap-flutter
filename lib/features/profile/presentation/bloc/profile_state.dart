@@ -56,14 +56,16 @@ class ProfileUpdated extends ProfileState {
 class ProfileError extends ProfileState {
   final String message;
   final CareerProfile? previousProfile; // For rollback UI
+  final bool isUnauthorized; // True if 401 error
 
   const ProfileError({
     required this.message,
     this.previousProfile,
+    this.isUnauthorized = false,
   });
 
   @override
-  List<Object?> get props => [message, previousProfile];
+  List<Object?> get props => [message, previousProfile, isUnauthorized];
 }
 
 /// Profile cleared (on logout)

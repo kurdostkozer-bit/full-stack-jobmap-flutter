@@ -189,13 +189,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(height: AppSpacing.md),
                     Text(
-                      'Error: ${state.message}',
+                      state.isUnauthorized 
+                        ? 'You need to log in'
+                        : 'Error: ${state.message}',
                       textAlign: TextAlign.center,
+                      style: context.textTheme.titleMedium,
                     ),
                     SizedBox(height: AppSpacing.md),
+                    if (state.isUnauthorized)
+                      Text(
+                        'Please log in to view and manage your profile',
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: context.colorScheme.outline,
+                        ),
+                      )
+                    else
+                      Text(
+                        state.message,
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodySmall,
+                      ),
+                    SizedBox(height: AppSpacing.lg),
                     ElevatedButton(
-                      onPressed: _loadProfile,
-                      child: const Text('Retry'),
+                      onPressed: state.isUnauthorized
+                        ? () {
+                            // Navigate back to login
+                            Navigator.of(context).pop();
+                          }
+                        : _loadProfile,
+                      child: Text(state.isUnauthorized ? 'Go to Login' : 'Retry'),
                     ),
                   ],
                 ),
