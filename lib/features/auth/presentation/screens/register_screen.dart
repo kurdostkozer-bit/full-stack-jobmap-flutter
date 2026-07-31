@@ -113,7 +113,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TextButton(
-                        onPressed: () => GoRouter.of(context).pop(),
+                        onPressed: () => context.go('/login'),
                         child: Icon(
                           Icons.arrow_back,
                           color: Colors.black.withValues(alpha: 0.8),
