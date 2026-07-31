@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../design_system/index.dart';
 import '../../../../core/extensions/build_context_extensions.dart';
 import '../bloc/auth_bloc.dart';
+import 'login_screen.dart';
 
 /// Splash screen with auto-login
 class SplashScreen extends StatefulWidget {
